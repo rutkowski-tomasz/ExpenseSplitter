@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Services;
 using Frugal.Api.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +27,8 @@ namespace ExpenseSplitter.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<ExpenseSplitterContext>(options => options.UseSqlServer(_configuration.GetConnectionString("ExpenseSplitterContext")));
 
             services.AddScoped<ITestService, TestService>();
 
