@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using ExpenseSplitter.Api.Data.Entities;
 
 namespace ExpenseSplitter.Api.Data
 {
-    public class Expense
+    public class Expense : CreatedAtEntity, UpdatedAtEntity
     {
         [Key] public int Id { get; set; }
 
@@ -17,6 +17,7 @@ namespace ExpenseSplitter.Api.Data
         public ExpenseType Type { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public DateTime PaidAt { get; set; }
     }
 }

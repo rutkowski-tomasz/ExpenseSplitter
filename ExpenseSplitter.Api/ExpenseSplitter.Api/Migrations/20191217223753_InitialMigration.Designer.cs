@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseSplitter.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191217185303_InitialMigration")]
+    [Migration("20191217223753_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,9 @@ namespace ExpenseSplitter.Api.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AdderId");
@@ -64,14 +67,8 @@ namespace ExpenseSplitter.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int?>("ExpenseId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(12, 2)");
@@ -111,6 +108,9 @@ namespace ExpenseSplitter.Api.Migrations
                         .HasMaxLength(16);
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
@@ -167,6 +167,9 @@ namespace ExpenseSplitter.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
@@ -206,7 +209,7 @@ namespace ExpenseSplitter.Api.Migrations
             modelBuilder.Entity("ExpenseSplitter.Api.Data.TripUser", b =>
                 {
                     b.HasOne("ExpenseSplitter.Api.Data.Trip", "Trip")
-                        .WithMany()
+                        .WithMany("TripUsers")
                         .HasForeignKey("TripUid");
 
                     b.HasOne("ExpenseSplitter.Api.Data.User", "User")

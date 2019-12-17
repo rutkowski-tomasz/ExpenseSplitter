@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ExpenseSplitter.Api.Data
 {
@@ -7,6 +7,8 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
+
+        [JsonIgnore]
         public Trip Trip { get; set; }
         public User User { get; set; }
 

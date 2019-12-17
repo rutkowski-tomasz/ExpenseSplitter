@@ -15,7 +15,8 @@ namespace ExpenseSplitter.Api.Migrations
                     Uid = table.Column<string>(maxLength: 16, nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: true),
                     Description = table.Column<string>(maxLength: 100, nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    DeletedAt = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,6 +49,7 @@ namespace ExpenseSplitter.Api.Migrations
                     Name = table.Column<string>(maxLength: 50, nullable: true),
                     Type = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
                     PaidAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -107,9 +109,7 @@ namespace ExpenseSplitter.Api.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ExpenseId = table.Column<int>(nullable: true),
-                    Value = table.Column<decimal>(type: "decimal(12, 2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    Value = table.Column<decimal>(type: "decimal(12, 2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,6 +187,12 @@ namespace ExpenseSplitter.Api.Migrations
                 name: "IX_TripsUsers_UserId",
                 table: "TripsUsers",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

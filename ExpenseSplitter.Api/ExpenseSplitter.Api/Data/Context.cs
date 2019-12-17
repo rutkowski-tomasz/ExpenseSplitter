@@ -1,3 +1,7 @@
+using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using ExpenseSplitter.Api.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseSplitter.Api.Data
@@ -15,11 +19,50 @@ namespace ExpenseSplitter.Api.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        private static LambdaExpression GetIsDeletedRestriction(Type type)
         {
-            builder.Entity<User>()
+            var propertyMethod = typeof(EF).GetMethod(nameof(EF.Property), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(typeof(DateTime?));
+            var parm = Expression.Parameter(type, "it");
+            var prop = Expression.Call(propertyMethod, parm, Expression.Constant("DeletedAt"));
+            var condition = Expression.MakeBinary(ExpressionType.Equal, prop, Expression.Constant(null));
+            var lambda = Expression.Lambda(condition, parm);
+            return lambda;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(SoftDeletesEntity).IsAssignableFrom(entity.ClrType))
+                    modelBuilder.Entity(entity.ClrType).HasQueryFilter(GetIsDeletedRestriction(entity.ClrType));
+            }
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is CreatedAtEntity && entry.State == EntityState.Added)
+                    ((CreatedAtEntity)entry.Entity).CreatedAt = DateTime.Now;
+
+                if (entry.Entity is UpdatedAtEntity && (entry.State == EntityState.Added || entry.State == EntityState.Modified))
+                    ((UpdatedAtEntity)entry.Entity).UpdatedAt = DateTime.Now;
+
+                if (entry.Entity is SoftDeletesEntity && entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    ((SoftDeletesEntity)entry.Entity).DeletedAt = DateTime.Now;
+                }
+            }
+
+            return base.SaveChanges();
         }
     }
 }
