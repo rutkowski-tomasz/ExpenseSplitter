@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpenseSplitter.Api.Data
 {
@@ -8,7 +10,9 @@ namespace ExpenseSplitter.Api.Data
 
         public Expense Expense { get; set; }
 
+        [Column(TypeName = "decimal(12, 2)")]
         public decimal Value { get; set; }
+        
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

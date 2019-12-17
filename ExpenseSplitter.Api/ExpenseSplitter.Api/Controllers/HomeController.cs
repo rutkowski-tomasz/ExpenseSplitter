@@ -11,7 +11,7 @@ namespace ExpenseSplitter.Api.Controllers
 
         public string Index()
         {
-            return 'Hello';
+            return "Hello";
         }
     }
 }

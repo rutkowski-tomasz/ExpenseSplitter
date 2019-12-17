@@ -28,7 +28,7 @@ namespace ExpenseSplitter.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<Context>(options => options.UseSqlServer(_configuration.GetConnectionString("Context")));
+            services.AddDbContext<Context>(options => options.UseMySql(_configuration.GetConnectionString("Context")));
 
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<ITripService, TripService>();
