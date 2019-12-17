@@ -5,15 +5,13 @@ namespace ExpenseSplitter.Api.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ITestService _testService;
-        public HomeController(ITestService testService)
+        public HomeController()
         {
-            _testService = testService;
         }
 
         public string Index()
         {
-            return "This is my default action..." + _testService.GetSomeNumber();
+            return 'Hello';
         }
     }
 }

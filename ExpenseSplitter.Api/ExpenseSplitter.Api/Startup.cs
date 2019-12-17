@@ -28,22 +28,25 @@ namespace ExpenseSplitter.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<ExpenseSplitterContext>(options => options.UseSqlServer(_configuration.GetConnectionString("ExpenseSplitterContext")));
+            services.AddDbContext<Context>(options => options.UseSqlServer(_configuration.GetConnectionString("Context")));
 
-            services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IExpenseService, ExpenseService>();
+            services.AddScoped<ITripService, TripService>();
+            services.AddScoped<IUserService, UserService>();
 
             var config = new ConfigProvider();
             _configuration.Bind("Configuration", config);
             services.AddSingleton<IConfigProvider>(config);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Context context)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            context.Database.Migrate();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

@@ -2,12 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseSplitter.Api.Data
 {
-    public class User
+    public class ExpensePartUser
     {
         [Key] public int Id { get; set; }
 
-        public string Email { get; set; }
-
-        public string Password { get; set; }
+        public Expense Expense { get; set; }
+        public User User { get; set; }
     }
 }
