@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Pomelo.EntityFrameworkCore.MySql.Storage;
 
 namespace ExpenseSplitter.Api
 {
@@ -21,6 +23,7 @@ namespace ExpenseSplitter.Api
 
         public Startup(IConfiguration configuration)
         {
+            var a = Guid.NewGuid().ToString("N");
             _configuration = configuration;
         }
 
@@ -28,7 +31,13 @@ namespace ExpenseSplitter.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<Context>(options => options.UseMySql(_configuration.GetConnectionString("Context")));
+            // services.AddDbContext<Context>(options => options.UseMySql(_configuration.GetConnectionString("Context")));
+
+            services.AddDbContextPool<Context>(options => options
+                // replace with your connection string
+                .UseMySql("Server=51.178.26.101;Database=configuration;User=configuration;Password=configuration2;", mySqlOptions => mySqlOptions
+                    .ServerVersion(new ServerVersion(new Version(10, 1, 43), ServerType.MySql))
+            ));
 
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<ITripService, TripService>();
