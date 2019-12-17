@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ExpenseSplitter.Api.Services
@@ -17,6 +18,8 @@ namespace ExpenseSplitter.Api.Services
         User AuthenticateUser(string email, string password);
         bool RegisterUser(string email, string password);
         string GetAuthorizationToken(User user);
+        int GetCurrentUserId();
+        User GetCurrentUser();
     }
 
     public class UserService : IUserService
@@ -24,15 +27,18 @@ namespace ExpenseSplitter.Api.Services
         private readonly IConfigProvider _configProvider;
         private readonly Context _context;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(
             IConfigProvider configProvider,
             Context context,
-            IPasswordHasher passwordHasher
+            IPasswordHasher passwordHasher,
+            IHttpContextAccessor httpContextAccessor
         ) {
             _configProvider = configProvider;
             _context = context;
             _passwordHasher = passwordHasher;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public User AuthenticateUser(string email, string password)
@@ -78,5 +84,21 @@ namespace ExpenseSplitter.Api.Services
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
+
+        public User GetUser(int userId)
+        {
+            return _context.Users.SingleOrDefault(x => x.Id == userId);
+        }
+
+        public int GetCurrentUserId()
+        {
+            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("UserId").Value);
+        }
+
+        public User GetCurrentUser()
+        {
+            return GetUser(GetCurrentUserId());
+        }
     }
+    
 }

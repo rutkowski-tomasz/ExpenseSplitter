@@ -6,6 +6,7 @@ using ExpenseSplitter.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +41,8 @@ namespace ExpenseSplitter.Api
             services.AddScoped<IUserService, UserService>();
             
             services.AddTransient<IPasswordHasher, PasswordHasher>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             var config = new ConfigProvider();
             _configuration.Bind("Configuration", config);
