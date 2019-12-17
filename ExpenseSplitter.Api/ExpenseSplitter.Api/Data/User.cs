@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpenseSplitter.Api.Data
 {
@@ -6,8 +7,10 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
+        [StringLength(50)]
         public string Email { get; set; }
 
+        [StringLength(100)]
         public string Password { get; set; }
     }
 }

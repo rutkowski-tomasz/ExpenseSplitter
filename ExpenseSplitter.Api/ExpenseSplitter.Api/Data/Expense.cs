@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpenseSplitter.Api.Data
 {
@@ -11,6 +12,7 @@ namespace ExpenseSplitter.Api.Data
         public User Adder { get; set; }
         public User Payer { get; set; }
 
+        [StringLength(50)]
         public string Name { get; set; }
         public ExpenseType Type { get; set; }
 

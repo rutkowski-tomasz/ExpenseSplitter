@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ExpenseSplitter.Api.Migrations
@@ -11,9 +12,9 @@ namespace ExpenseSplitter.Api.Migrations
                 name: "Trips",
                 columns: table => new
                 {
-                    Uid = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
+                    Uid = table.Column<string>(maxLength: 16, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
+                    Description = table.Column<string>(maxLength: 100, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -26,9 +27,9 @@ namespace ExpenseSplitter.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Email = table.Column<string>(maxLength: 50, nullable: true),
+                    Password = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,11 +41,11 @@ namespace ExpenseSplitter.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TripUid = table.Column<string>(nullable: true),
                     AdderId = table.Column<int>(nullable: true),
                     PayerId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
                     Type = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     PaidAt = table.Column<DateTime>(nullable: false)
@@ -77,10 +78,10 @@ namespace ExpenseSplitter.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TripUid = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 60, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,7 +105,7 @@ namespace ExpenseSplitter.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ExpenseId = table.Column<int>(nullable: true),
                     Value = table.Column<decimal>(type: "decimal(12, 2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
@@ -126,7 +127,7 @@ namespace ExpenseSplitter.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ExpenseId = table.Column<int>(nullable: true),
                     UserId = table.Column<int>(nullable: true)
                 },
