@@ -1,0 +1,28 @@
+@import '../../../scss/_colors';
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 20vh;
+    
+    .mat-form-field {
+        width: 100%;
+    }
+
+    mat-card-title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .invalid-email-or-password {
+        height: 16px;
+        line-height: 16px;
+        font-size: 13px;
+    }
+    
+    button {
+        margin-top: 16px;
+        float: right;
+    }
+}
