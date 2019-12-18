@@ -16,6 +16,8 @@ namespace ExpenseSplitter.Api.Data
         public virtual DbSet<ExpensePart> ExpensesParts { get; set; }
         public virtual DbSet<ExpensePartParticipant> ExpensesPartsParticipants { get; set; }
 
+        public Context() { }
+
         public Context(DbContextOptions<Context> options) : base(options)
         {
         }
