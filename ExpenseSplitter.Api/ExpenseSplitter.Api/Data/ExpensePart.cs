@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ExpenseSplitter.Api.Infrastructure;
 
 namespace ExpenseSplitter.Api.Data
 {
@@ -7,9 +9,12 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
+        [Column(TypeName = Constants.ExpenseValueType)]
+        public decimal Value { get; set; }
+
+        public int ExpenseId { get; set; }
         public Expense Expense { get; set; }
 
-        [Column(TypeName = "decimal(12, 2)")]
-        public decimal Value { get; set; }
+        public virtual ICollection<Participant> Participants { get; set; }
     }
 }

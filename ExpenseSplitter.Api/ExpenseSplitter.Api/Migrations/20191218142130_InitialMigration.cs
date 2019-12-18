@@ -13,8 +13,8 @@ namespace ExpenseSplitter.Api.Migrations
                 columns: table => new
                 {
                     Uid = table.Column<string>(maxLength: 16, nullable: false),
-                    Name = table.Column<string>(maxLength: 50, nullable: true),
-                    Description = table.Column<string>(maxLength: 100, nullable: true),
+                    Name = table.Column<string>(maxLength: 40, nullable: true),
+                    Description = table.Column<string>(maxLength: 50, nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     DeletedAt = table.Column<DateTime>(nullable: true)
                 },
@@ -43,14 +43,14 @@ namespace ExpenseSplitter.Api.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TripUid = table.Column<string>(nullable: true),
-                    AdderId = table.Column<int>(nullable: true),
-                    PayerId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(maxLength: 50, nullable: true),
                     Type = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
-                    PaidAt = table.Column<DateTime>(nullable: false)
+                    PaidAt = table.Column<DateTime>(nullable: false),
+                    TripUid = table.Column<string>(nullable: true),
+                    AdderId = table.Column<int>(nullable: false),
+                    PayerId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,13 +60,13 @@ namespace ExpenseSplitter.Api.Migrations
                         column: x => x.AdderId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Expenses_Users_PayerId",
                         column: x => x.PayerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Expenses_Trips_TripUid",
                         column: x => x.TripUid,
@@ -82,8 +82,7 @@ namespace ExpenseSplitter.Api.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TripUid = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(maxLength: 60, nullable: true)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,7 +98,7 @@ namespace ExpenseSplitter.Api.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,8 +107,8 @@ namespace ExpenseSplitter.Api.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ExpenseId = table.Column<int>(nullable: true),
-                    Value = table.Column<decimal>(type: "decimal(12, 2)", nullable: false)
+                    Value = table.Column<decimal>(type: "decimal(12, 2)", nullable: false),
+                    ExpenseId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,33 +118,67 @@ namespace ExpenseSplitter.Api.Migrations
                         column: x => x.ExpenseId,
                         principalTable: "Expenses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExpensesPartsUsers",
+                name: "TripsParticipants",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ExpenseId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
+                    Name = table.Column<string>(maxLength: 20, nullable: true),
+                    TripUid = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false),
+                    ExpensePartId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExpensesPartsUsers", x => x.Id);
+                    table.PrimaryKey("PK_TripsParticipants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExpensesPartsUsers_Expenses_ExpenseId",
-                        column: x => x.ExpenseId,
-                        principalTable: "Expenses",
+                        name: "FK_TripsParticipants_ExpensesParts_ExpensePartId",
+                        column: x => x.ExpensePartId,
+                        principalTable: "ExpensesParts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExpensesPartsUsers_Users_UserId",
+                        name: "FK_TripsParticipants_Trips_TripUid",
+                        column: x => x.TripUid,
+                        principalTable: "Trips",
+                        principalColumn: "Uid",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TripsParticipants_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExpensesPartsParticipants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ExpenseId = table.Column<int>(nullable: false),
+                    ParticipantId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExpensesPartsParticipants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExpensesPartsParticipants_Expenses_ExpenseId",
+                        column: x => x.ExpenseId,
+                        principalTable: "Expenses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ExpensesPartsParticipants_TripsParticipants_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "TripsParticipants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -169,13 +202,28 @@ namespace ExpenseSplitter.Api.Migrations
                 column: "ExpenseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExpensesPartsUsers_ExpenseId",
-                table: "ExpensesPartsUsers",
+                name: "IX_ExpensesPartsParticipants_ExpenseId",
+                table: "ExpensesPartsParticipants",
                 column: "ExpenseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExpensesPartsUsers_UserId",
-                table: "ExpensesPartsUsers",
+                name: "IX_ExpensesPartsParticipants_ParticipantId",
+                table: "ExpensesPartsParticipants",
+                column: "ParticipantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripsParticipants_ExpensePartId",
+                table: "TripsParticipants",
+                column: "ExpensePartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripsParticipants_TripUid",
+                table: "TripsParticipants",
+                column: "TripUid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TripsParticipants_UserId",
+                table: "TripsParticipants",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -198,13 +246,16 @@ namespace ExpenseSplitter.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ExpensesParts");
-
-            migrationBuilder.DropTable(
-                name: "ExpensesPartsUsers");
+                name: "ExpensesPartsParticipants");
 
             migrationBuilder.DropTable(
                 name: "TripsUsers");
+
+            migrationBuilder.DropTable(
+                name: "TripsParticipants");
+
+            migrationBuilder.DropTable(
+                name: "ExpensesParts");
 
             migrationBuilder.DropTable(
                 name: "Expenses");

@@ -1,4 +1,5 @@
 using ExpenseSplitter.Api.Infrastructure;
+using ExpenseSplitter.Api.Models.Trips;
 using ExpenseSplitter.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,12 +37,26 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTrip(string name, string description, string organizerName)
+        public IActionResult CreateTrip(CreateTripModel model)
         {
-            var trip = _tripService.CreateTrip(name, description, organizerName);
+            if (!ModelState.IsValid)
+                return UnprocessableEntity();
+
+            var trip = _tripService.CreateTrip(model);
+
+            return new JsonResult(trip);
+        }
+
+        [HttpPut]
+        public IActionResult UpdateTrip(UpdateTripModel model)
+        {
+            if (!ModelState.IsValid)
+                return UnprocessableEntity();
+
+            var trip = _tripService.UpdateTrip(model);
 
             if (trip == null)
-                return UnprocessableEntity();
+                return NotFound();
             
             return new JsonResult(trip);
         }
@@ -50,6 +65,39 @@ namespace ExpenseSplitter.Api.Controllers
         public IActionResult DeleteTrip(string uid)
         {
             var result = _tripService.TryDeleteTrip(uid);
+
+            if (!result)
+                return NotFound();
+
+            return Ok();
+        }
+
+        [HttpPost("{uid}/join")]
+        public IActionResult JoinTrip(string uid)
+        {
+            var trip = _tripService.JoinTrip(uid);
+
+            if (trip == null)
+                return NotFound();
+
+            return Ok();
+        }
+        
+        [HttpPost("{uid}/leave")]
+        public IActionResult LeaveTrip(string uid)
+        {
+            var result = _tripService.LeaveTrip(uid);
+
+            if (!result)
+                return NotFound();
+
+            return Ok();
+        }
+
+        [HttpPost("{uid}/participation/{id}")]
+        public IActionResult ClaimTripParticipation(string uid, int id)
+        {
+            var result = _tripService.ClaimTripParticipation(uid, id);
 
             if (!result)
                 return NotFound();

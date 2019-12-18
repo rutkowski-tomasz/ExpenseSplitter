@@ -13,15 +13,17 @@ namespace ExpenseSplitter.Api.Data
         [StringLength(Constants.UidLength)]
         public string Uid { get; set; }
 
-        [StringLength(50)]
+        [StringLength(Constants.TripNameLength)]
         public string Name { get; set; }
 
-        [StringLength(100)]
+        [StringLength(Constants.TripDescriptionLength)]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
-        public virtual List<TripUser> TripUsers { get; set; }
+        public virtual ICollection<Participant> Participants { get; set; }
+        public virtual ICollection<TripUser> Users { get; set; }
+        public virtual ICollection<Expense> Expenses { get; set; }
     }
 }

@@ -11,9 +11,10 @@ namespace ExpenseSplitter.Api.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Trip> Trips { get; set; }
         public virtual DbSet<TripUser> TripsUsers { get; set; }
+        public virtual DbSet<Participant> TripsParticipants { get; set; }
         public virtual DbSet<Expense> Expenses { get; set; }
         public virtual DbSet<ExpensePart> ExpensesParts { get; set; }
-        public virtual DbSet<ExpensePartUser> ExpensesPartsUsers { get; set; }
+        public virtual DbSet<ExpensePartParticipant> ExpensesPartsParticipants { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
@@ -43,7 +44,6 @@ namespace ExpenseSplitter.Api.Data
 
             base.OnModelCreating(modelBuilder);
         }
-
 
         public override int SaveChanges()
         {

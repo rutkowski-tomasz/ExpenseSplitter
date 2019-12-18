@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ExpenseSplitter.Api.Data;
+using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
+using ExpenseSplitter.Api.Models.Trips;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseSplitter.Api.Services
@@ -14,8 +16,12 @@ namespace ExpenseSplitter.Api.Services
     {
         List<Trip> GetTrips();
         Trip GetTrip(string uid);
-        Trip CreateTrip(string name, string description, string organizerName);
+        Trip CreateTrip(CreateTripModel model);
+        Trip UpdateTrip(UpdateTripModel model);
         bool TryDeleteTrip(string uid);
+        Trip JoinTrip(string uid);
+        bool LeaveTrip(string uid);
+        bool ClaimTripParticipation(string uid, int id);
     }
 
     public class TripService : ITripService
@@ -36,9 +42,9 @@ namespace ExpenseSplitter.Api.Services
             var userId = _userService.GetCurrentUserId();
             var trips = _context
                 .Trips
-                .Where(x => x.TripUsers.Any(y => y.User.Id == userId))
+                .Where(x => x.Users.Any(y => y.User.Id == userId))
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.TripUsers);
+                .Include(x => x.Participants);
 
             return trips.ToList();
         }
@@ -48,29 +54,34 @@ namespace ExpenseSplitter.Api.Services
             var userId = _userService.GetCurrentUserId();
             var trip = _context.Trips.SingleOrDefault(
                 x => x.Uid == uid &&
-                x.TripUsers.Any(y => y.User.Id == userId)
+                x.Users.Any(y => y.User.Id == userId)
             );
 
             return trip;
         }
 
-        public Trip CreateTrip(string name, string description, string organizerName)
+        public Trip CreateTrip(CreateTripModel model)
         {
-            var trip = new Trip
-            {
-                Uid = generateTripUid(Constants.UidLength),
-                Name = name,
-                Description = description,
-                TripUsers = new List<TripUser>(),
-            };
-
-            trip.TripUsers.Add(new TripUser
-            {
-                User = _userService.GetCurrentUser(),
-                Name = organizerName,
-            });
+            var trip = new Trip().Create(model, _userService.GetCurrentUserId());
 
             _context.Trips.Add(trip);
+            _context.SaveChanges();
+
+            return trip;
+        }
+
+        public Trip UpdateTrip(UpdateTripModel model)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var trip = _context.Trips.SingleOrDefault(
+                x => x.Uid == model.Uid &&
+                x.Users.Any(y => y.User.Id == userId)
+            );
+
+            if (trip == null)
+                return null;
+
+            trip.Update(model);
             _context.SaveChanges();
 
             return trip;
@@ -81,21 +92,77 @@ namespace ExpenseSplitter.Api.Services
             var userId = _userService.GetCurrentUserId();
             var trip = _context.Trips.SingleOrDefault(
                 x => x.Uid == uid &&
-                x.TripUsers.Any(y => y.User.Id == userId)
+                x.Users.Any(y => y.User.Id == userId)
             );
 
             if (trip == null)
                 return false;
-            
+
             _context.Trips.Remove(trip);
             _context.SaveChanges();
 
             return true;
         }
 
-        private string generateTripUid(int length)
+        public Trip JoinTrip(string uid)
         {
-            return Guid.NewGuid().ToString("N").Substring(0, length);
+            var userId = _userService.GetCurrentUserId();
+            var trip = _context.Trips.SingleOrDefault(x => x.Uid == uid);
+
+            if (trip == null)
+                return null;
+
+            if (trip.Users.Any(x => x.User.Id == userId))
+                return trip;
+
+            trip.Users.Add(new TripUser
+            {
+                TripUid = uid,
+                UserId = userId,
+            });
+
+            _context.SaveChanges();
+
+            return trip;
+        }
+
+        public bool LeaveTrip(string uid)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var tripUser = _context.TripsUsers.SingleOrDefault(
+                x => x.TripUid == uid &&
+                x.UserId == userId
+            );
+
+            if (tripUser == null)
+                return false;
+
+            _context.TripsUsers.Remove(tripUser);
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        public bool ClaimTripParticipation(string uid, int id)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var trip = _context.Trips.SingleOrDefault(
+                x => x.Uid == uid &&
+                x.Users.Any(y => y.User.Id == userId)
+            );
+
+            if (trip == null)
+                return false;
+
+            var participant = trip.Participants.SingleOrDefault(x => x.Id == id);
+
+            if (participant == null)
+                return false;
+
+            participant.UserId = userId;
+
+            _context.SaveChanges();
+            return true;
         }
     }
 }

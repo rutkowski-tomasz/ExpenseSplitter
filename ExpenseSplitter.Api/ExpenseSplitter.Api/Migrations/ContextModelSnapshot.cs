@@ -23,7 +23,7 @@ namespace ExpenseSplitter.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AdderId")
+                    b.Property<int>("AdderId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -36,7 +36,7 @@ namespace ExpenseSplitter.Api.Migrations
                     b.Property<DateTime>("PaidAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("PayerId")
+                    b.Property<int>("PayerId")
                         .HasColumnType("int");
 
                     b.Property<string>("TripUid")
@@ -65,7 +65,7 @@ namespace ExpenseSplitter.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ExpenseId")
+                    b.Property<int>("ExpenseId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Value")
@@ -78,25 +78,55 @@ namespace ExpenseSplitter.Api.Migrations
                     b.ToTable("ExpensesParts");
                 });
 
-            modelBuilder.Entity("ExpenseSplitter.Api.Data.ExpensePartUser", b =>
+            modelBuilder.Entity("ExpenseSplitter.Api.Data.ExpensePartParticipant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ExpenseId")
+                    b.Property<int>("ExpenseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("ParticipantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseId");
 
+                    b.HasIndex("ParticipantId");
+
+                    b.ToTable("ExpensesPartsParticipants");
+                });
+
+            modelBuilder.Entity("ExpenseSplitter.Api.Data.Participant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExpensePartId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("TripUid")
+                        .HasColumnType("varchar(16) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpensePartId");
+
+                    b.HasIndex("TripUid");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("ExpensesPartsUsers");
+                    b.ToTable("TripsParticipants");
                 });
 
             modelBuilder.Entity("ExpenseSplitter.Api.Data.Trip", b =>
@@ -112,12 +142,12 @@ namespace ExpenseSplitter.Api.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Name")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(40) CHARACTER SET utf8mb4")
+                        .HasMaxLength(40);
 
                     b.HasKey("Uid");
 
@@ -130,14 +160,10 @@ namespace ExpenseSplitter.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
-                        .HasMaxLength(60);
-
                     b.Property<string>("TripUid")
                         .HasColumnType("varchar(16) CHARACTER SET utf8mb4");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -175,44 +201,73 @@ namespace ExpenseSplitter.Api.Migrations
                 {
                     b.HasOne("ExpenseSplitter.Api.Data.User", "Adder")
                         .WithMany()
-                        .HasForeignKey("AdderId");
+                        .HasForeignKey("AdderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ExpenseSplitter.Api.Data.User", "Payer")
                         .WithMany()
-                        .HasForeignKey("PayerId");
+                        .HasForeignKey("PayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ExpenseSplitter.Api.Data.Trip", "Trip")
-                        .WithMany()
+                        .WithMany("Expenses")
                         .HasForeignKey("TripUid");
                 });
 
             modelBuilder.Entity("ExpenseSplitter.Api.Data.ExpensePart", b =>
                 {
                     b.HasOne("ExpenseSplitter.Api.Data.Expense", "Expense")
-                        .WithMany()
-                        .HasForeignKey("ExpenseId");
+                        .WithMany("Parts")
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("ExpenseSplitter.Api.Data.ExpensePartUser", b =>
+            modelBuilder.Entity("ExpenseSplitter.Api.Data.ExpensePartParticipant", b =>
                 {
                     b.HasOne("ExpenseSplitter.Api.Data.Expense", "Expense")
                         .WithMany()
-                        .HasForeignKey("ExpenseId");
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExpenseSplitter.Api.Data.Participant", "Participant")
+                        .WithMany("ExpenseParticipations")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExpenseSplitter.Api.Data.Participant", b =>
+                {
+                    b.HasOne("ExpenseSplitter.Api.Data.ExpensePart", null)
+                        .WithMany("Participants")
+                        .HasForeignKey("ExpensePartId");
+
+                    b.HasOne("ExpenseSplitter.Api.Data.Trip", "Trip")
+                        .WithMany("Participants")
+                        .HasForeignKey("TripUid");
 
                     b.HasOne("ExpenseSplitter.Api.Data.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("Participations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ExpenseSplitter.Api.Data.TripUser", b =>
                 {
                     b.HasOne("ExpenseSplitter.Api.Data.Trip", "Trip")
-                        .WithMany("TripUsers")
+                        .WithMany("Users")
                         .HasForeignKey("TripUid");
 
                     b.HasOne("ExpenseSplitter.Api.Data.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("UserTrips")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
