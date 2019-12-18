@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Infrastructure;
@@ -84,10 +85,15 @@ namespace ExpenseSplitter.Api
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors(x => x
-                .AllowAnyOrigin()
+
+            app.UseCors(builder => builder
+                .SetIsOriginAllowedToAllowWildcardSubdomains()
+                .WithOrigins(_configuration.GetSection("AllowedHosts").Get<List<string>>().ToArray())
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithExposedHeaders("Content-Disposition")
+            );
 
             app.UseEndpoints(endpoints =>
             {

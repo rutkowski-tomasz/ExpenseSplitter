@@ -7,7 +7,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using ExpenseSplitter.Api.Data;
+using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
+using ExpenseSplitter.Api.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,11 +17,12 @@ namespace ExpenseSplitter.Api.Services
 {
     public interface IUserService
     {
-        User AuthenticateUser(string email, string password);
-        bool RegisterUser(string email, string password);
+        User AuthenticateUser(LoginModel model);
+        User RegisterUser(RegisterModel model);
         string GetAuthorizationToken(User user);
         int GetCurrentUserId();
         User GetCurrentUser();
+        UserExtractModel GetUserExtract(int id);
     }
 
     public class UserService : IUserService
@@ -41,28 +44,28 @@ namespace ExpenseSplitter.Api.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public User AuthenticateUser(string email, string password)
+        public User AuthenticateUser(LoginModel model)
         {
-            var hashedPassword = _passwordHasher.Hash(password);
+            var hashedPassword = _passwordHasher.Hash(model.Password);
             var user = _context
                 .Users
-                .FirstOrDefault(x => x.Email == email.ToLowerInvariant());
+                .FirstOrDefault(x => x.Email == model.Email.ToLowerInvariant());
 
-            return (user != null && _passwordHasher.Check(user.Password, password)) ? user : null;
+            return (user != null && _passwordHasher.Check(user.Password, model.Password)) ? user : null;
         }
 
-        public bool RegisterUser(string email, string password)
+        public User RegisterUser(RegisterModel model)
         {
             var user = new User()
             {
-                Email = email.ToLowerInvariant(),
-                Password = _passwordHasher.Hash(password),
+                Email = model.Email.ToLowerInvariant(),
+                Password = _passwordHasher.Hash(model.Password),
             };
 
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            return true;
+            return user;
         }
 
         public string GetAuthorizationToken(User user)
@@ -98,6 +101,14 @@ namespace ExpenseSplitter.Api.Services
         public User GetCurrentUser()
         {
             return GetUser(GetCurrentUserId());
+        }
+        
+        public UserExtractModel GetUserExtract(int id)
+        {
+            if (id != GetCurrentUserId())
+                return null;
+
+            return GetUser(id)?.ToUserExtract();
         }
     }
     

@@ -15,6 +15,14 @@ namespace ExpenseSplitter.Api.Data
         [StringLength(Constants.UserPasswordLength)]
         public string Password { get; set; }
 
+        [StringLength(Constants.UserNameLength)]
+        public string Name { get; set; }
+
+        [StringLength(Constants.UserNicknameLength)]
+        public string Nickname { get; set; }
+        public bool IsEmailConfirmed { get; set; }
+
+
         public virtual ICollection<Participant> Participations { get; set; }
         public virtual ICollection<TripUser> UserTrips { get; set; }
     }
