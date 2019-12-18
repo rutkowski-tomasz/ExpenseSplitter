@@ -39,7 +39,8 @@ namespace ExpenseSplitter.Api
             services.AddScoped<IExpenseService, ExpenseService>();
             services.AddScoped<ITripService, TripService>();
             services.AddScoped<IUserService, UserService>();
-            
+            services.AddScoped<IBalanceService, BalanceService>();
+
             services.AddTransient<IPasswordHasher, PasswordHasher>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

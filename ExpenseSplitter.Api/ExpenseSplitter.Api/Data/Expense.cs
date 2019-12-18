@@ -23,7 +23,7 @@ namespace ExpenseSplitter.Api.Data
         public int AdderId { get; set; }
         public User Adder { get; set; }
         public int PayerId { get; set; }
-        public User Payer { get; set; }
+        public Participant Payer { get; set; }
 
         public virtual ICollection<ExpensePart> Parts { get; set; }
     }
