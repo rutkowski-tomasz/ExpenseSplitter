@@ -8,12 +8,12 @@ namespace ExpenseSplitter.Api.Extensions
 {
     public static class TripExtensions
     {
-        public static Trip Create(this Trip trip, CreateTripModel model, int adderId)
+        public static Trip Create(this Trip trip, CreateTripModel model, int adderId, string uid)
         {
-            trip.Uid = generateTripUid(Constants.UidLength);
+            trip.Uid = uid;
             trip.Name = model.Name;
             trip.Description = model.Description;
-            
+
             trip.Participants = new List<Participant>()
             {
                 new Participant

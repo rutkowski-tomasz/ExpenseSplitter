@@ -12,5 +12,8 @@ namespace ExpenseSplitter.Api.Infrastructure
         public const int TripDescriptionLength = 50;
         public const int UserEmailLength = 50;
         public const int UserPasswordLength = 100;
+
+        public const int UidGenerateLength = 6;
+        public const bool UidGenerateAllowDuplicates = true;
     }
 }
