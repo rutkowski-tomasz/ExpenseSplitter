@@ -43,6 +43,7 @@ namespace ExpenseSplitter.Api
             services.AddScoped<IBalanceService, BalanceService>();
 
             services.AddTransient<IPasswordHasher, PasswordHasher>();
+            services.AddTransient<IUidGenerator, UidGenerator>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

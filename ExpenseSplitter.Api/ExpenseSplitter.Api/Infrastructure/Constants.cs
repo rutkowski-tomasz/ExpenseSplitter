@@ -14,5 +14,8 @@ namespace ExpenseSplitter.Api.Infrastructure
         public const int UserPasswordLength = 100;
         public const int UserNameLength = 40;
         public const int UserNicknameLength = 40;
+
+        public const int UidGenerateLength = 6;
+        public const bool UidGenerateAllowDuplicates = true;
     }
 }

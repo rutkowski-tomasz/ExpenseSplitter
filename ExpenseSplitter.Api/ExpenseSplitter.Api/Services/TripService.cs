@@ -28,13 +28,16 @@ namespace ExpenseSplitter.Api.Services
     {
         private readonly Context _context;
         private readonly IUserService _userService;
+        private readonly IUidGenerator _uidGenerator;
 
         public TripService(
             Context context,
-            IUserService userService
+            IUserService userService,
+            IUidGenerator uidGenerator
         ) {
             _context = context;
             _userService = userService;
+            _uidGenerator = uidGenerator;
         }
 
         public List<Trip> GetTrips()
@@ -62,7 +65,12 @@ namespace ExpenseSplitter.Api.Services
 
         public Trip CreateTrip(CreateTripModel model)
         {
-            var trip = new Trip().Create(model, _userService.GetCurrentUserId());
+            var uid = _uidGenerator.Generate(
+                Constants.UidGenerateLength,
+                Constants.UidGenerateAllowDuplicates,
+                generatedUid => _context.Trips.FirstOrDefault(y => y.Uid == generatedUid) != null
+            );
+            var trip = new Trip().Create(model, _userService.GetCurrentUserId(), uid);
 
             _context.Trips.Add(trip);
             _context.SaveChanges();
