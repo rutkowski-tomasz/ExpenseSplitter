@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ExpenseSplitter.Api/ExpenseSplitter.Api/bin/Debug/netcoreapp3.1/ExpenseSplitter.Api.dll",
+            "program": "${workspaceFolder}/ExpenseSplitter.Backend/ExpenseSplitter.Api/bin/Debug/netcoreapp3.1/ExpenseSplitter.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/ExpenseSplitter.Api/ExpenseSplitter.Api",
+            "cwd": "${workspaceFolder}/ExpenseSplitter.Backend/ExpenseSplitter.Api",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
