@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -37,14 +37,10 @@ export class CallService {
 
     post(url: string, postBody: any): any {
         return this.http
-            .post(this.toAbsoluteUrl(url), postBody, {
-                withCredentials: true
-            })
-            .pipe(
-                map(res => {
-                    return res;
-                })
-            );
+            .post(this.toAbsoluteUrl(url), JSON.stringify(postBody), {
+                withCredentials: true,
+                headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+            });
     }
 
     delete(url: string, param: any = null) {

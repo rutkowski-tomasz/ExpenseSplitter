@@ -3,13 +3,16 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CallService } from '../call-service/call.service';
 import { map } from 'rxjs/operators';
+import { LoginModel } from 'src/app/models/auth/login.model';
+import { RegisterModel } from 'src/app/models/auth/register.model';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private servicePrefix = 'user';
-    private readonly tokenName = 'frugal_tools_auth_token';
+    private servicePrefix = 'users';
+    private readonly tokenName = 'expensesplitter_auth_token';
     private helper = new JwtHelperService();
 
     constructor(
@@ -32,11 +35,23 @@ export class AuthService {
     }
 
     public logIn(email: string, password: string): any {
+        const model: LoginModel = { Email: email, Password: password };
+
         return this.callService
-            .post(`${this.servicePrefix}/login`, {
-                Email: email,
-                Password: password
-            })
+            .post(`${this.servicePrefix}/login`, model)
+            .pipe(
+                map((data: { token: string }) => {
+                    this.setToken(data.token);
+                    return true;
+                })
+            );
+    }
+
+    public Register(email: string, password: string) {
+        const model: RegisterModel = { Email: email, Password: password };
+
+        return this.callService
+            .post(`${this.servicePrefix}/register`, model)
             .pipe(
                 map((data: { token: string }) => {
                     this.setToken(data.token);

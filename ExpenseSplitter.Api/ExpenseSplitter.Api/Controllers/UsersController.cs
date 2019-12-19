@@ -18,7 +18,7 @@ namespace ExpenseSplitter.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(LoginModel model)
+        public IActionResult Login([FromBody] LoginModel model)
         {
             var authenticatedUser = _userService.AuthenticateUser(model);
 
