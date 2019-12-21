@@ -70,7 +70,7 @@ namespace ExpenseSplitter.Api.Services
                 Constants.UidGenerateAllowDuplicates,
                 generatedUid => _context.Trips.FirstOrDefault(y => y.Uid == generatedUid) != null
             );
-            var trip = new Trip().Create(model, _userService.GetCurrentUserId(), uid);
+            var trip = new Trip().Create(model, _userService.GetCurrentUser(), uid);
 
             _context.Trips.Add(trip);
             _context.SaveChanges();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Trips;
@@ -8,7 +9,7 @@ namespace ExpenseSplitter.Api.Extensions
 {
     public static class TripExtensions
     {
-        public static Trip Create(this Trip trip, CreateTripModel model, int adderId, string uid)
+        public static Trip Create(this Trip trip, CreateTripModel model, User adder, string uid)
         {
             trip.Uid = uid;
             trip.Name = model.Name;
@@ -18,8 +19,17 @@ namespace ExpenseSplitter.Api.Extensions
             {
                 new Participant
                 {
-                    UserId = adderId,
-                    Name = model.OrganizerName,
+                    UserId = adder.Id,
+                    Name = adder.Nickname,
+                }
+            };
+
+            trip.Users = new List<TripUser>()
+            {
+                new TripUser
+                {
+                    UserId = adder.Id,
+                    TripUid = uid,
                 }
             };
 
@@ -30,8 +40,21 @@ namespace ExpenseSplitter.Api.Extensions
         {
             trip.Name = model.Name;
             trip.Description = model.Description;
+    
+            foreach (var participant in model.Participants)
+            {
+                if (!participant.Id.HasValue)
+                    trip.Participants.Add(new Participant { Name = participant.Name });
+                else
+                {
+                    var tripParticipant = trip.Participants.FirstOrDefault(x => x.Id == participant.Id.Value);
 
-            trip.Participants = model.Participants;
+                    if (tripParticipant == null)
+                        continue;
+
+                    tripParticipant.Name = participant.Name;
+                }
+            }
 
             return trip;
         }

@@ -5,7 +5,6 @@ namespace ExpenseSplitter.Api.Models.Auth
     {
         public int Id { get; set; }
         public string Email { get; set; }
-        public string Name { get; set; }
         public string Nickname { get; set; }
         public bool IsEmailConfirmed { get; set; }
     }
