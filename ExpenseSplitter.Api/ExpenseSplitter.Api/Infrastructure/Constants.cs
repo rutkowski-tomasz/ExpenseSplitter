@@ -15,5 +15,7 @@ namespace ExpenseSplitter.Api.Infrastructure
 
         public const int UidGenerateLength = 6;
         public const bool UidGenerateAllowDuplicates = true;
+
+        public const string UserIdClaimKey = "UserId";
     }
 }

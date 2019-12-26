@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using ExpenseSplitter.Api.Data;
-using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Trips;
 
 namespace ExpenseSplitter.Api.Extensions
@@ -34,11 +32,6 @@ namespace ExpenseSplitter.Api.Extensions
             trip.Participants = model.Participants;
 
             return trip;
-        }
-
-        private static string generateTripUid(int length)
-        {
-            return Guid.NewGuid().ToString("N").Substring(0, length);
         }
     }
 }

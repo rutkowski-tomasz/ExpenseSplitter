@@ -1,19 +1,12 @@
-using System;
-using System.Text;
+using AspNetCoreRateLimit;
 using ExpenseSplitter.Api.Data;
-using ExpenseSplitter.Api.Infrastructure;
-using ExpenseSplitter.Api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ExpenseSplitter.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Pomelo.EntityFrameworkCore.MySql.Storage;
 
 namespace ExpenseSplitter.Api
 {
@@ -31,47 +24,11 @@ namespace ExpenseSplitter.Api
             services.AddCors();
             services.AddControllers();
 
-            services.AddDbContextPool<Context>(options => options
-                .UseMySql(_configuration.GetConnectionString("Context"), mySqlOptions => mySqlOptions
-                    .ServerVersion(new ServerVersion(new Version(10, 1, 43), ServerType.MySql))
-            ));
-
-            services.AddScoped<IExpenseService, ExpenseService>();
-            services.AddScoped<ITripService, TripService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IBalanceService, BalanceService>();
-
-            services.AddTransient<IPasswordHasher, PasswordHasher>();
-            services.AddTransient<IUidGenerator, UidGenerator>();
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            var config = new ConfigProvider();
-            _configuration.Bind("Configuration", config);
-            services.AddSingleton<IConfigProvider>(config);
-
-            var key = config.AuthorizationSecretKey;
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-
-                    ValidIssuer = config.SecurityTokenIssuer,
-                    ValidAudience = config.SecurityTokenAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                };
-            });
+            var config = services.ConfigureConfigProvider(_configuration);
+            services.ConfigureDbContext(_configuration);
+            services.ConfigureAppServices();
+            services.ConfigureJwt(config);
+            services.ConfigureThrottling(_configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Context context)
@@ -89,6 +46,8 @@ namespace ExpenseSplitter.Api
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+
+            app.UseIpRateLimiting();
 
             app.UseEndpoints(endpoints =>
             {

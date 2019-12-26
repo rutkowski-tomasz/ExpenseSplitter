@@ -76,7 +76,7 @@ namespace ExpenseSplitter.Api.Services
                 audience: _configProvider.SecurityTokenAudience,
                 claims: new List<Claim>()
                 {
-                    new Claim("UserId", user.Id.ToString()),
+                    new Claim(Constants.UserIdClaimKey, user.Id.ToString()),
                 },
                 expires: DateTime.Now.AddSeconds(_configProvider.SecurityTokenExpirationTimeInSeconds),
                 signingCredentials: signinCredentials
@@ -92,7 +92,7 @@ namespace ExpenseSplitter.Api.Services
 
         public int GetCurrentUserId()
         {
-            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirst("UserId").Value);
+            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(Constants.UserIdClaimKey).Value);
         }
 
         public User GetCurrentUser()

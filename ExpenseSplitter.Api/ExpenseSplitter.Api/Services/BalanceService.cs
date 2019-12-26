@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Models.Balance;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseSplitter.Api.Services
 {
@@ -14,19 +15,24 @@ namespace ExpenseSplitter.Api.Services
     public class BalanceService : IBalanceService
     {
         private readonly Context _context;
+        private readonly ILogger _logger;
         private readonly IUserService _userService;
 
         public BalanceService(
             Context context,
+            ILogger<BalanceService> logger,
             IUserService userService
         ) {
             _context = context;
+            _logger = logger;
             _userService = userService;
         }
 
         public BalanceResponseModel GetTripBalance(string uid)
         {
             var userId = _userService.GetCurrentUserId();
+            _logger.LogDebug($"User {userId} requested trip {uid} balance");
+
             var trip = _context.Trips.SingleOrDefault(x => x.Uid == uid && x.Users.Any(y => y.UserId == userId));
 
             if (trip == null)
