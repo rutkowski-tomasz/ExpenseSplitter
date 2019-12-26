@@ -1,0 +1,24 @@
+
+<form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form">
+    <mat-form-field>
+        <input matInput placeholder="Nazwa wycieczki" formControlName="name" reqiured />
+        <mat-error *ngIf="name.invalid && name.errors.required">
+            Nazwa jest wymagana
+        </mat-error>
+        <mat-error *ngIf="name.invalid && name.errors.minlength">
+            Za krótka nazwa, dopisz jeszcze {{ name.errors.minlength.requiredLength - name.errors.minlength.actualLength }} znaków
+        </mat-error>
+        <mat-error *ngIf="name.invalid && name.errors.maxlength">
+            Za długi nazwa, usuń jeszcze {{ name.errors.maxlength.actualLength - name.errors.maxlength.requiredLength }} znaków
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <textarea matInput placeholder="(Opis)" formControlName="description"></textarea>
+        <mat-error *ngIf="description.invalid && description.errors.maxlength">
+            Za długi opis, usuń jeszcze {{ description.errors.maxlength.actualLength - description.errors.maxlength.requiredLength }} znaków
+        </mat-error>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid">Dodaj</button>
+</form>

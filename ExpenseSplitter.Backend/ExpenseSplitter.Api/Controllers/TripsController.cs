@@ -37,7 +37,7 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTrip(CreateTripModel model)
+        public IActionResult CreateTrip([FromBody] CreateTripModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();

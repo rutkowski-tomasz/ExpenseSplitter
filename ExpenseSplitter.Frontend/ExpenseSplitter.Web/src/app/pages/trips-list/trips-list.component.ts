@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TripService } from 'src/app/services/trip-service/trip.service';
+import { Trip } from 'src/app/data/trip';
 
 @Component({
     templateUrl: './trips-list.component.html',
@@ -6,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TripsListComponent implements OnInit {
 
-    ngOnInit() {
-    }
+    public trips: Trip[];
 
+    constructor(
+        private tripService: TripService
+    ) { }
+
+    ngOnInit() {
+        this.tripService.GetTrips().subscribe(data => {
+            this.trips = data;
+        });
+    }
 }

@@ -30,19 +30,19 @@ export class RegisterComponent implements OnInit {
     submit() {
         if (this.form.valid) {
             this.invalidEmailOrPassword = false;
-            // this.authService.Register(this.form.controls.email.value, this.form.controls.password.value).subscribe(
-            //     _ => {
-            //         this.router.navigate(['/']);
-            //         this.userService.loadUserExtract();
-            //     },
-            //     (httpErrorResponse: HttpErrorResponse) => {
+            this.authService.Register(this.form.controls.email.value, this.form.controls.password.value).subscribe(
+                _ => {
+                    this.router.navigate(['/']);
+                    this.userService.loadUserExtract();
+                },
+                (httpErrorResponse: HttpErrorResponse) => {
 
-            //         if (httpErrorResponse.status === 401) {
-            //             this.invalidEmailOrPassword = true;
-            //             this.changeDetectorRef.detectChanges();
-            //         }
-            //     }
-            // );
+                    if (httpErrorResponse.status === 401) {
+                        this.invalidEmailOrPassword = true;
+                        this.changeDetectorRef.detectChanges();
+                    }
+                }
+            );
         }
     }
 }

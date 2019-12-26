@@ -22,3 +22,10 @@ body {
 * {
     box-sizing: border-box;
 }
+
+
+.vertical-form {
+    mat-form-field {
+        width: 100%;
+    }
+}

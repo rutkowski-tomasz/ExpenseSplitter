@@ -3,9 +3,6 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CallService } from '../call-service/call.service';
 import { map } from 'rxjs/operators';
-import { LoginModel } from 'src/app/models/auth/login.model';
-import { RegisterModel } from 'src/app/models/auth/register.model';
-import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -35,10 +32,8 @@ export class AuthService {
     }
 
     public logIn(email: string, password: string): any {
-        const model: LoginModel = { Email: email, Password: password };
-
         return this.callService
-            .post(`${this.servicePrefix}/login`, model)
+            .postForm(`${this.servicePrefix}/login`, { email, password })
             .pipe(
                 map((data: { token: string }) => {
                     this.setToken(data.token);
@@ -48,10 +43,8 @@ export class AuthService {
     }
 
     public Register(email: string, password: string) {
-        const model: RegisterModel = { Email: email, Password: password };
-
         return this.callService
-            .post(`${this.servicePrefix}/register`, model)
+            .postForm(`${this.servicePrefix}/register`, { email, password })
             .pipe(
                 map((data: { token: string }) => {
                     this.setToken(data.token);

@@ -7,6 +7,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { TripsListComponent } from './pages/trips-list/trips-list.component';
 import { LoggedInGuard } from './guards/logged-in.guard';
+import { TripsCreateComponent } from './pages/trips-create/trips-create.component';
 
 const routes: Routes = [
     {
@@ -16,7 +17,16 @@ const routes: Routes = [
         children: [
             {
                 path: 'trips',
-                component: TripsListComponent
+                children: [
+                    {
+                        path: 'new',
+                        component: TripsCreateComponent
+                    },
+                    {
+                        path: '',
+                        component: TripsListComponent
+                    }
+                ]
             },
             {
                 path: '',

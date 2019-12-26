@@ -11,14 +11,15 @@ using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Auth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ExpenseSplitter.Api.Services
 {
     public interface IUserService
     {
-        User AuthenticateUser(LoginModel model);
-        User RegisterUser(RegisterModel model);
+        User AuthenticateUser(string email, string password);
+        User RegisterUser(string email, string password);
         string GetAuthorizationToken(User user);
         int GetCurrentUserId();
         User GetCurrentUser();
@@ -44,22 +45,22 @@ namespace ExpenseSplitter.Api.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public User AuthenticateUser(LoginModel model)
+        public User AuthenticateUser(string email, string password)
         {
-            var hashedPassword = _passwordHasher.Hash(model.Password);
+            var hashedPassword = _passwordHasher.Hash(password);
             var user = _context
                 .Users
-                .FirstOrDefault(x => x.Email == model.Email.ToLowerInvariant());
+                .FirstOrDefault(x => x.Email == email.ToLowerInvariant());
 
-            return (user != null && _passwordHasher.Check(user.Password, model.Password)) ? user : null;
+            return (user != null && _passwordHasher.Check(user.Password, password)) ? user : null;
         }
 
-        public User RegisterUser(RegisterModel model)
+        public User RegisterUser(string email, string password)
         {
             var user = new User()
             {
-                Email = model.Email.ToLowerInvariant(),
-                Password = _passwordHasher.Hash(model.Password),
+                Email = email.ToLowerInvariant(),
+                Password = _passwordHasher.Hash(password),
             };
 
             _context.Users.Add(user);

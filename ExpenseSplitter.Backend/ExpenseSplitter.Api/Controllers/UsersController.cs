@@ -18,9 +18,9 @@ namespace ExpenseSplitter.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel model)
+        public IActionResult Login(string email, string password)
         {
-            var authenticatedUser = _userService.AuthenticateUser(model);
+            var authenticatedUser = _userService.AuthenticateUser(email, password);
 
             if (authenticatedUser == null)
                 return Unauthorized();
@@ -32,9 +32,9 @@ namespace ExpenseSplitter.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register(RegisterModel model)
+        public IActionResult Register(string email, string password)
         {
-            var registerdUser = _userService.RegisterUser(model);
+            var registerdUser = _userService.RegisterUser(email, password);
 
             if (registerdUser == null)
                 return BadRequest();

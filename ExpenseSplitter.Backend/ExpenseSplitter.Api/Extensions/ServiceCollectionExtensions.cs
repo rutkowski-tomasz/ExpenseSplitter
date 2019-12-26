@@ -78,6 +78,10 @@ namespace ExpenseSplitter.Api.Extensions
         public static void ConfigureThrottling(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
+
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         }
     }
 }
