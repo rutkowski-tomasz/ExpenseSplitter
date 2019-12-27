@@ -1,4 +1,9 @@
 @import "src/scss/_colors";
+@import "src/scss/_mixins";
+
+:host  {
+	@include is-animated-host;
+}
 
 .trips {
     padding-bottom: 88px;

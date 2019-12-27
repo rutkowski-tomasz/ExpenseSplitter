@@ -1,1 +1,3 @@
-<router-outlet></router-outlet>
+<div [@routeAnimations]="getState(outlet)" class="router-wrapper">
+    <router-outlet #outlet="outlet"></router-outlet>
+</div>

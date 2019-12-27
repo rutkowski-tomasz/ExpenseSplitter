@@ -18,29 +18,35 @@ const routes: Routes = [
         path: '',
         component: HomeLayoutComponent,
         canActivate: [LoggedInGuard],
+        data: { state: 'home' },
         children: [
             {
                 path: 'trips',
                 children: [
                     {
                         path: 'new',
-                        component: TripsCreateComponent
+                        component: TripsCreateComponent,
+                        data: { state: 'tripCreate' },
                     },
                     {
                         path: ':uid/new-expense',
                         component: ExpenseCreateComponent,
+                        data: { state: 'expenseCreate' },
                     },
                     {
                         path: ':uid',
                         component: TripComponent,
+                        data: { state: 'trip' },
                         children: [
                             {
                                 path: 'expenses',
                                 component: ExpensesComponent,
+                                data: { state: 'expenses' },
                             },
                             {
                                 path: 'balance',
                                 component: BalanceComponent,
+                                data: { state: 'balance' },
                             },
                             {
                                 path: '',
@@ -51,7 +57,8 @@ const routes: Routes = [
                     },
                     {
                         path: '',
-                        component: TripsListComponent
+                        component: TripsListComponent,
+                        data: { state: 'tripsList' },
                     }
                 ]
             },

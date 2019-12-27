@@ -1,13 +1,22 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Trip } from 'src/app/data/trip';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
+import { trigger, transition, useAnimation } from '@angular/animations';
+import { moveFromLeft, moveFromRight } from "ngx-router-animations";
 
 @Component({
     templateUrl: './trip.component.html',
     styleUrls: ['./trip.component.scss'],
+    animations: [
+        trigger('routeAnimations', [
+            transition('expenses => balance', useAnimation(moveFromRight)),
+            transition('balance => expenses', useAnimation(moveFromLeft)),
+        ])
+    ]
 })
+
 export class TripComponent implements OnInit, AfterViewInit {
 
     public trip: Trip;
@@ -55,5 +64,9 @@ export class TripComponent implements OnInit, AfterViewInit {
 
     tabClicked($event: MatTabChangeEvent) {
         this.router.navigate([$event.tab.textLabel.link], { relativeTo: this.activatedRoute });
+    }
+
+    getState(outlet: RouterOutlet) {
+        return outlet && outlet.activatedRouteData && outlet.activatedRouteData.state;
     }
 }

@@ -29,3 +29,11 @@ body {
         width: 100%;
     }
 }
+.router-wrapper  {
+	position:  relative;
+	overflow:  hidden;
+	width:  100vw;
+	height:  calc(100%);
+	perspective:  1200px;
+	transform-style:  preserve-3d;
+}
