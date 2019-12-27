@@ -51,10 +51,13 @@ namespace ExpenseSplitter.Api.Services
         public Trip GetTrip(string uid)
         {
             var userId = _userService.GetCurrentUserId();
-            var trip = _context.Trips.SingleOrDefault(
-                x => x.Uid == uid &&
-                x.Users.Any(y => y.User.Id == userId)
-            );
+            var trip = _context
+                .Trips
+                .Include(x => x.Participants)
+                .SingleOrDefault(
+                    x => x.Uid == uid &&
+                    x.Users.Any(y => y.User.Id == userId)
+                );
 
             return trip;
         }

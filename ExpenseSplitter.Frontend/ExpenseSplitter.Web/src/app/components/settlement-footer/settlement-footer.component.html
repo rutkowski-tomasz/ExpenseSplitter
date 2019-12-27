@@ -1,0 +1,19 @@
+<footer>
+    <div class="footer-wrapper">
+        <div class="footer-content">
+            <div class="my-cost">
+                <div class="label">Mój koszt</div>
+                <div class="value">{{ myCost | currency:'PLN' }}</div>
+            </div>
+            <div class="total-cost">
+                <div class="label">Całkowity koszt</div>
+                <div class="value">{{ totalCost | currency:'PLN' }}</div>
+            </div>
+        </div>
+        <div class="add-expense">
+            <a mat-fab color="primary" [routerLink]="['/trips', uid, 'new-expense']">
+                <mat-icon>add</mat-icon>
+            </a>
+        </div>
+    </div>
+</footer>

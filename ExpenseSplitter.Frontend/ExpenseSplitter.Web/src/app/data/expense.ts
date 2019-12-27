@@ -1,4 +1,4 @@
-import { ExpenseType } from './expense-type';
+import { ExpenseTypeEnum } from './expense-type';
 import { Trip } from './trip';
 import { UserExtract } from './user-extract';
 import { ExpensePart } from './expense-part';
@@ -9,7 +9,7 @@ export class Expense {
     id: number;
     name: string;
 
-    expenseType: ExpenseType;
+    expenseType: ExpenseTypeEnum;
     createdAt: Date;
     updatedAt: Date;
     paidAt: Date;

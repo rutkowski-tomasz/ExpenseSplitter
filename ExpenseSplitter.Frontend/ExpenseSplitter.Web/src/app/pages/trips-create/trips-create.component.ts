@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { Trip } from 'src/app/data/trip';
 import { CreateTripModel } from 'src/app/models/trip/create-trip-model';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';

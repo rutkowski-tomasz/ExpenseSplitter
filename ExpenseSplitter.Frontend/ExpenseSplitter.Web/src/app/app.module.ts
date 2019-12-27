@@ -12,6 +12,11 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { UnauthoriedInterceptor } from './interceptors/unathorized.interceptor';
 import { AppConfig } from './app.config';
 
+import { registerLocaleData } from '@angular/common';
+import locale from '@angular/common/locales/pl';
+import { PipesModule } from './pipes/pipes.module';
+registerLocaleData(locale);
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -25,6 +30,7 @@ import { AppConfig } from './app.config';
         FormsModule,
         ReactiveFormsModule,
         AppMaterialModule,
+        PipesModule,
     ],
     providers: [
         AppConfig,

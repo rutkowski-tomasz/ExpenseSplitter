@@ -4,6 +4,13 @@ import { RegisterComponent } from './pages/register/register.component';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { TripsListComponent } from './pages/trips-list/trips-list.component';
 import { TripsCreateComponent } from './pages/trips-create/trips-create.component';
+import { TripComponent } from './pages/trip/trip.component';
+import { HeaderComponent } from './components/header/header.component';
+import { ExpensesComponent } from './pages/expenses/expenses.component';
+import { BalanceComponent } from './pages/balance/balance.component';
+import { SettlementFooterComponent } from './components/settlement-footer/settlement-footer.component';
+import { ExpenseCreateComponent } from './pages/expense-create/expense-create.component';
+import { ExpenseTypeComponent } from './components/expense-type/expense-type.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -14,4 +21,12 @@ export const appDeclarations = [
 
     TripsListComponent,
     TripsCreateComponent,
+    TripComponent,
+    ExpensesComponent,
+    BalanceComponent,
+    ExpenseCreateComponent,
+
+    HeaderComponent,
+    SettlementFooterComponent,
+    ExpenseTypeComponent,
 ];

@@ -63,7 +63,7 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteTrip(string uid, int id)
+        public IActionResult DeleteExpense(string uid, int id)
         {
             var result = _expenseService.TryDeleteExpense(uid, id);
 

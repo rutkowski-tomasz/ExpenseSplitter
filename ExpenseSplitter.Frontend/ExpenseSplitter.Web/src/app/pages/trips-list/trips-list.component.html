@@ -1,1 +1,25 @@
-{{ trips | json }}
+
+<div class="trips">
+    <a class="trip" *ngFor="let trip of trips" [routerLink]="['/trips', trip.uid]">
+        <div class="details">
+            <div class="name">
+                {{ trip.name }}
+            </div>
+            <div class="description">
+                <ng-container *ngIf="trip.description; else noDescription">
+                    {{ trip.description }}
+                </ng-container>
+                <ng-template #noDescription>
+                    Brak opisu
+                </ng-template>
+            </div>
+        </div>
+        <div class="actions">
+            <mat-icon>arrow_forward_ios</mat-icon>
+        </div>
+    </a>
+</div>
+
+<div class="add-new">
+    <a mat-fab color="primary" [routerLink]="['/trips', 'new']">+</a>
+</div>

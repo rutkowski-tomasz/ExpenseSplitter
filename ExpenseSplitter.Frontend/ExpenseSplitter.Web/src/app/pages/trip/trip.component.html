@@ -1,0 +1,21 @@
+<es-header [backLink]="['/trips']">
+    <ng-container heading *ngIf="trip">{{ trip.name }}</ng-container>
+    <ng-container sub>{{ participants }}</ng-container>
+</es-header>
+
+<mat-tab-group (selectedTabChange)="tabClicked($event)" [selectedIndex]="selectedIndex" #matTabGroup>
+    <mat-tab [label]="{link: './expenses'}">
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">attach_money</mat-icon>
+            Wydatki
+        </ng-template>
+    </mat-tab>
+    <mat-tab [label]="{link: './balance'}">
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
+            Bilans
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>
+
+<router-outlet></router-outlet>

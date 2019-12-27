@@ -8,6 +8,10 @@ import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component
 import { TripsListComponent } from './pages/trips-list/trips-list.component';
 import { LoggedInGuard } from './guards/logged-in.guard';
 import { TripsCreateComponent } from './pages/trips-create/trips-create.component';
+import { TripComponent } from './pages/trip/trip.component';
+import { ExpensesComponent } from './pages/expenses/expenses.component';
+import { BalanceComponent } from './pages/balance/balance.component';
+import { ExpenseCreateComponent } from './pages/expense-create/expense-create.component';
 
 const routes: Routes = [
     {
@@ -21,6 +25,29 @@ const routes: Routes = [
                     {
                         path: 'new',
                         component: TripsCreateComponent
+                    },
+                    {
+                        path: ':uid/new-expense',
+                        component: ExpenseCreateComponent,
+                    },
+                    {
+                        path: ':uid',
+                        component: TripComponent,
+                        children: [
+                            {
+                                path: 'expenses',
+                                component: ExpensesComponent,
+                            },
+                            {
+                                path: 'balance',
+                                component: BalanceComponent,
+                            },
+                            {
+                                path: '',
+                                pathMatch: 'full',
+                                redirectTo: 'expenses'
+                            }
+                        ]
                     },
                     {
                         path: '',

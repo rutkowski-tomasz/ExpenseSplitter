@@ -1,0 +1,92 @@
+<es-header [backLink]="['/trips', uid]">
+    <ng-container heading>Nowy wydatek</ng-container>
+</es-header>
+
+<form [formGroup]="formGroup" (ngSubmit)="OnSubmit()" class="vertical-form">
+    <mat-form-field>
+        <input
+            matInput
+            placeholder="Nazwa wydatku"
+            formControlName="name"
+            required
+        />
+        <mat-error *ngIf="name.invalid && name.errors.required">
+            Nazwa jest wymagana
+        </mat-error>
+        <mat-error *ngIf="name.invalid && name.errors.minlength">
+            Za krótka nazwa, dopisz jeszcze
+            {{
+                name.errors.minlength.requiredLength -
+                    name.errors.minlength.actualLength
+            }}
+            znaków
+        </mat-error>
+        <mat-error *ngIf="name.invalid && name.errors.maxlength">
+            Za długi nazwa, usuń jeszcze
+            {{
+                name.errors.maxlength.actualLength -
+                    name.errors.maxlength.requiredLength
+            }}
+            znaków
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Typ</mat-label>
+        <select matNativeControl required formControlName="type">
+            <option
+                *ngFor="let enum of ExpenseTypeEnum | enumToArray"
+                [value]="enum"
+                required
+            >
+                <es-expense-type [type]="enum"></es-expense-type>
+            </option>
+        </select>
+        <mat-error *ngIf="type.invalid && type.errors.required">
+            Typ jest wymagany
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+            matInput
+            [matDatepicker]="picker"
+            placeholder="Data"
+            formControlName="paidAt"
+            required
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="paidAt.invalid && paidAt.errors.required">
+            Data jest wymagana
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input
+            type="text"
+            placeholder="Zapłacone przez"
+            matInput
+            formControlName="payer"
+            [matAutocomplete]="auto"
+            required
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="DisplayParticipant">
+            <mat-option
+                *ngFor="let participant of filteredParticipants | async"
+                [value]="participant"
+            >
+                {{ participant.name }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="formGroup.invalid"
+    >
+        Dodaj
+    </button>
+</form>
