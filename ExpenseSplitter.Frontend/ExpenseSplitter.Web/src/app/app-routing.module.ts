@@ -12,6 +12,8 @@ import { TripComponent } from './pages/trip/trip.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { BalanceComponent } from './pages/balance/balance.component';
 import { ExpenseCreateComponent } from './pages/expense-create/expense-create.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { TripEditComponent } from './pages/trip-edit/trip-edit.component';
 
 const routes: Routes = [
     {
@@ -32,6 +34,11 @@ const routes: Routes = [
                         path: ':uid/new-expense',
                         component: ExpenseCreateComponent,
                         data: { state: 'expenseCreate' },
+                    },
+                    {
+                        path: ':uid/edit',
+                        component: TripEditComponent,
+                        data: { state: 'tripEdit' },
                     },
                     {
                         path: ':uid',
@@ -61,6 +68,11 @@ const routes: Routes = [
                         data: { state: 'tripsList' },
                     }
                 ]
+            },
+            {
+                path: 'settings',
+                component: SettingsComponent,
+                data: { state: 'settings' },
             },
             {
                 path: '',

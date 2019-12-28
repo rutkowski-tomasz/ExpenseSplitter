@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CallService } from '../call-service/call.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth-service/auth.service';
 import { UserExtract } from 'src/app/data/user-extract';
+import { UpdateUserModel } from 'src/app/models/user/update-user-model';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class UserService {
         id: null,
         email: null,
         name: null,
-        nickname: null,
+        nick: null,
         isEmailConfirmed: null,
     });
 
@@ -35,5 +36,9 @@ export class UserService {
         this.callService.get<UserExtract>(`${this.servicePrefix}/${userId}`).subscribe(
             data => this.userExtract.next(data)
         );
+    }
+
+    public UpdateUser(model: UpdateUserModel): Observable<UserExtract> {
+        return this.callService.put<UserExtract>(`${this.servicePrefix}`, model);
     }
 }

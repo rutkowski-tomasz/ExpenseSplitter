@@ -1,0 +1,162 @@
+<es-header>
+    <ng-container heading>
+        <div class="header">Edytuj rozliczenie</div>
+    </ng-container>
+
+    <ng-container left>
+        <a [routerLink]="['/trips', uid]">
+            Anuluj
+        </a>
+    </ng-container>
+
+    <ng-container right>
+        <a role="button" type="button" (click)="createForm.ngSubmit.emit()">
+            Zapisz
+        </a>
+    </ng-container>
+</es-header>
+
+<div class="container">
+    <form
+        [formGroup]="formGroup"
+        (ngSubmit)="onSubmit()"
+        class="vertical-form"
+        #createForm="ngForm"
+    >
+        <section>
+            <mat-form-field>
+                <input
+                    matInput
+                    placeholder="Nazwa"
+                    formControlName="name"
+                    required
+                />
+                <mat-error *ngIf="name.invalid && name.errors.required">
+                    Nazwa jest wymagana
+                </mat-error>
+                <mat-error *ngIf="name.invalid && name.errors.minlength">
+                    Za krótka nazwa, dopisz jeszcze
+                    {{
+                        name.errors.minlength.requiredLength -
+                            name.errors.minlength.actualLength
+                    }}
+                    znaków
+                </mat-error>
+                <mat-error *ngIf="name.invalid && name.errors.maxlength">
+                    Za długa nazwa, usuń jeszcze
+                    {{
+                        name.errors.maxlength.actualLength -
+                            name.errors.maxlength.requiredLength
+                    }}
+                    znaków
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <textarea
+                    matInput
+                    placeholder="(Opis)"
+                    formControlName="description"
+                ></textarea>
+                <mat-error
+                    *ngIf="description.invalid && description.errors.maxlength"
+                >
+                    Za długi opis, usuń jeszcze
+                    {{
+                        description.errors.maxlength.actualLength -
+                            description.errors.maxlength.requiredLength
+                    }}
+                    znaków
+                </mat-error>
+            </mat-form-field>
+        </section>
+
+        <caption>
+            Uczestnicy
+        </caption>
+        <section>
+            <div
+                formArrayName="participants"
+                *ngFor="let participant of participants.controls; let i = index"
+            >
+                <div [formGroupName]="i">
+                    <input type="hidden" formControlName="id" />
+                    <mat-form-field>
+                        <input
+                            matInput
+                            placeholder="Uczestnik {{ i + 1 }}"
+                            formControlName="nick"
+                            required
+                        />
+                        <mat-error
+                            *ngIf="
+                                participant.get('nick').invalid &&
+                                participant.get('nick').errors.required
+                            "
+                        >
+                            Nick jest wymagany
+                        </mat-error>
+                        <mat-error
+                            *ngIf="
+                                participant.get('nick').invalid &&
+                                participant.get('nick').errors.minlength
+                            "
+                        >
+                            Za krótki nick, dopisz jeszcze
+                            {{
+                                participant.get("nick").errors.minlength
+                                    .requiredLength -
+                                    participant.get("nick").errors.minlength
+                                        .actualLength
+                            }}
+                            znaków
+                        </mat-error>
+                        <mat-error
+                            *ngIf="
+                                participant.get('nick').invalid &&
+                                participant.get('nick').errors.maxlength
+                            "
+                        >
+                            Za długi nick, usuń jeszcze
+                            {{
+                                participant.get("nick").errors.maxlength
+                                    .actualLength -
+                                    participant.get("nick").errors.maxlength
+                                        .requiredLength
+                            }}
+                            znaków
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-icon>close</mat-icon>
+                </div>
+            </div>
+
+            <input
+                matInput
+                placeholder="Nowy uczestnik"
+                formControlName="newParticipantNick"
+            />
+            <a
+                role="button"
+                type="button"
+                (click)="addParticipant(0, newParticipantNick.value)"
+            >
+                Dodaj uczestnika
+            </a>
+        </section>
+
+        <caption>
+            Zarządzanie
+        </caption>
+        <section>
+            <a
+                role="button"
+                type="button"
+                class="warn full-width-button"
+                (click)="onDelete()"
+            >
+                Usuń te rozliczenie
+            </a>
+        </section>
+    </form>
+</div>

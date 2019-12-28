@@ -1,5 +1,6 @@
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Auth;
+using ExpenseSplitter.Api.Models.User;
 using ExpenseSplitter.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,12 +33,12 @@ namespace ExpenseSplitter.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register(string email, string password)
+        public IActionResult Register(string email, string password, string nick)
         {
-            var registerdUser = _userService.RegisterUser(email, password);
+            var registerdUser = _userService.RegisterUser(email, password, nick);
 
             if (registerdUser == null)
-                return BadRequest();
+                return UnprocessableEntity();
 
             var authorizationToken = _userService.GetAuthorizationToken(registerdUser);
 
@@ -49,11 +50,19 @@ namespace ExpenseSplitter.Api.Controllers
         public IActionResult GetUserExtract(int id)
         {
             var userExtract = _userService.GetUserExtract(id);
-            
+
             if (userExtract == null)
                 return Unauthorized();
 
             return new JsonResult(userExtract);
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IActionResult UpdateUser([FromBody] UpdateUserModel model)
+        {
+            var user = _userService.UpdateUser(model);
+            return new JsonResult(user);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ExpenseSplitter.Api.Extensions
             {
                 Id = user.Id,
                 Email = user.Email,
-                Nickname = user.Nickname,
+                Nick = user.Nick,
                 IsEmailConfirmed = user.IsEmailConfirmed,
             };
         }

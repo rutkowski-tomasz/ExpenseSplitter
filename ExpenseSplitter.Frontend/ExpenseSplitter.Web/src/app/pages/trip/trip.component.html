@@ -1,6 +1,34 @@
-<es-header [backLink]="['/trips']">
-    <ng-container heading *ngIf="trip">{{ trip.name }}</ng-container>
-    <ng-container sub>{{ participants }}</ng-container>
+<es-header>
+    <ng-container heading>
+        <div class="header" *ngIf="trip">{{ trip.name }}</div>
+        <div class="sub">{{ participants }}</div>
+    </ng-container>
+
+    <ng-container left>
+        <a [routerLink]="['/trips']">
+            <mat-icon>arrow_back_ios</mat-icon>
+        </a>
+    </ng-container>
+
+    <ng-container right>
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Application menu"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item [routerLink]="['/trips', trip.uid, 'edit']">
+                <mat-icon>edit</mat-icon>
+                <span>Edytuj</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>share</mat-icon>
+                <span>Udostępnij rozliczenie</span>
+            </button>
+        </mat-menu>
+    </ng-container>
 </es-header>
 
 <mat-tab-group (selectedTabChange)="tabClicked($event)" [selectedIndex]="selectedIndex" #matTabGroup>

@@ -1,0 +1,49 @@
+<es-header>
+    <ng-container heading>
+        <div class="header">Moje ustawienia</div>
+    </ng-container>
+
+    <ng-container left>
+        <a [routerLink]="['/trips']">
+            Anuluj
+        </a>
+    </ng-container>
+
+    <ng-container right>
+        <a role="button" type="button" (click)="settingsForm.ngSubmit.emit()">
+            Zapisz
+        </a>
+    </ng-container>
+</es-header>
+
+<form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form" #settingsForm="ngForm">
+    <caption>Moje ustawienia</caption>
+    <section>
+        <mat-form-field>
+            <input matInput placeholder="Nick" formControlName="nick" required />
+            <mat-error *ngIf="nick.invalid && nick.errors.required">
+                Nick jest wymagany
+            </mat-error>
+            <mat-error *ngIf="nick.invalid && nick.errors.minlength">
+                Za krótki nick, dopisz jeszcze {{ nick.errors.minlength.requiredLength - nick.errors.minlength.actualLength }} znaków
+            </mat-error>
+            <mat-error *ngIf="nick.invalid && nick.errors.maxlength">
+                Za długi nick, usuń jeszcze {{ nick.errors.maxlength.actualLength - nick.errors.maxlength.requiredLength }} znaków
+            </mat-error>
+        </mat-form-field>
+    </section>
+</form>
+
+<caption>
+    Akcje
+</caption>
+<section>
+    <a
+        role="button"
+        type="button"
+        class="primary full-width-button"
+        (click)="logOut()"
+    >
+        Wyloguj się
+    </a>
+</section>

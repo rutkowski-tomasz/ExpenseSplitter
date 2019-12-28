@@ -32,7 +32,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldReturnOnlyMyTrips()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Andrew");
+            var user = _context.Users.First(x => x.Nick == "Andrew");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -47,7 +47,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldGetDetailsForTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Bryan");
+            var user = _context.Users.First(x => x.Nick == "Bryan");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -62,7 +62,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldNotGetDetailsForNotJoinedTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Diana");
+            var user = _context.Users.First(x => x.Nick == "Diana");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -76,7 +76,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldCorrectlyCreateNewTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Carol");
+            var user = _context.Users.First(x => x.Nick == "Carol");
             _userService.Setup(x => x.GetCurrentUser()).Returns(user);
 
             var model = new CreateTripModel()
@@ -101,7 +101,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldCorrectlyUpdateTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Andrew");
+            var user = _context.Users.First(x => x.Nick == "Andrew");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
             
             var participation = _context.TripsParticipants.FirstOrDefault(x => x.UserId == user.Id && x.TripUid == "rome");
@@ -141,7 +141,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldNotUpdateTripOfAnotherUser()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Diana");
+            var user = _context.Users.First(x => x.Nick == "Diana");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             var model = new UpdateTripModel
@@ -161,7 +161,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldJoinTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Diana");
+            var user = _context.Users.First(x => x.Nick == "Diana");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -177,7 +177,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldNotJoinTripTwoTimes()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Diana");
+            var user = _context.Users.First(x => x.Nick == "Diana");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -193,7 +193,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldNotJoinNotExistingTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Carol");
+            var user = _context.Users.First(x => x.Nick == "Carol");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -207,7 +207,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldLeaveJoinedTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Bryan");
+            var user = _context.Users.First(x => x.Nick == "Bryan");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -222,7 +222,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldNotLeaveOtherUsersTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Carol");
+            var user = _context.Users.First(x => x.Nick == "Carol");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
@@ -236,7 +236,7 @@ namespace ExpenseSplitter.Tests.Services
         public void ShouldNotLeaveNotExistingTrip()
         {
             // Arrange
-            var user = _context.Users.First(x => x.Nickname == "Carol");
+            var user = _context.Users.First(x => x.Nick == "Carol");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act

@@ -1,24 +1,57 @@
+<es-header>
+    <ng-container heading>
+        <div class="header">Nowe rozliczenie</div>
+    </ng-container>
 
-<form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form">
-    <mat-form-field>
-        <input matInput placeholder="Nazwa wycieczki" formControlName="name" reqiured />
-        <mat-error *ngIf="name.invalid && name.errors.required">
-            Nazwa jest wymagana
-        </mat-error>
-        <mat-error *ngIf="name.invalid && name.errors.minlength">
-            Za krótka nazwa, dopisz jeszcze {{ name.errors.minlength.requiredLength - name.errors.minlength.actualLength }} znaków
-        </mat-error>
-        <mat-error *ngIf="name.invalid && name.errors.maxlength">
-            Za długi nazwa, usuń jeszcze {{ name.errors.maxlength.actualLength - name.errors.maxlength.requiredLength }} znaków
-        </mat-error>
-    </mat-form-field>
+    <ng-container left>
+        <a [routerLink]="['/trips']">
+            Anuluj
+        </a>
+    </ng-container>
 
-    <mat-form-field>
-        <textarea matInput placeholder="(Opis)" formControlName="description"></textarea>
-        <mat-error *ngIf="description.invalid && description.errors.maxlength">
-            Za długi opis, usuń jeszcze {{ description.errors.maxlength.actualLength - description.errors.maxlength.requiredLength }} znaków
-        </mat-error>
-    </mat-form-field>
+    <ng-container right>
+        <a role="button" type="button" (click)="createForm.ngSubmit.emit()">
+            Dodaj
+        </a>
+    </ng-container>
+</es-header>
 
-    <button mat-flat-button color="primary" type="submit" [disabled]="formGroup.invalid">Dodaj</button>
+<form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form" #createForm="ngForm">
+    <section>
+        <mat-form-field>
+            <input matInput placeholder="Nazwa" formControlName="name" required />
+            <mat-error *ngIf="name.invalid && name.errors.required">
+                Nazwa jest wymagana
+            </mat-error>
+            <mat-error *ngIf="name.invalid && name.errors.minlength">
+                Za krótka nazwa, dopisz jeszcze {{ name.errors.minlength.requiredLength - name.errors.minlength.actualLength }} znaków
+            </mat-error>
+            <mat-error *ngIf="name.invalid && name.errors.maxlength">
+                Za długa nazwa, usuń jeszcze {{ name.errors.maxlength.actualLength - name.errors.maxlength.requiredLength }} znaków
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <textarea matInput placeholder="(Opis)" formControlName="description"></textarea>
+            <mat-error *ngIf="description.invalid && description.errors.maxlength">
+                Za długi opis, usuń jeszcze {{ description.errors.maxlength.actualLength - description.errors.maxlength.requiredLength }} znaków
+            </mat-error>
+        </mat-form-field>
+    </section>
+
+    <caption>Twoje informacje</caption>
+    <section>
+        <mat-form-field>
+            <input matInput placeholder="Twój nick" formControlName="organizerNick" required />
+            <mat-error *ngIf="organizerNick.invalid && organizerNick.errors.required">
+                Nick jest wymagany
+            </mat-error>
+            <mat-error *ngIf="organizerNick.invalid && organizerNick.errors.minlength">
+                Za krótki nick, dopisz jeszcze {{ name.errors.minlength.requiredLength - name.errors.minlength.actualLength }} znaków
+            </mat-error>
+            <mat-error *ngIf="organizerNick.invalid && organizerNick.errors.maxlength">
+                Za długi nick, usuń jeszcze {{ name.errors.maxlength.actualLength - name.errors.maxlength.requiredLength }} znaków
+            </mat-error>
+        </mat-form-field>
+    </section>
 </form>

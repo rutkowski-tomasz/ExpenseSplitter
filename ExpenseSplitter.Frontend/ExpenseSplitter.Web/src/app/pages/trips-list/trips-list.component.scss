@@ -6,7 +6,8 @@
 }
 
 .trips {
-    padding-bottom: 88px;
+    margin-bottom: 88px;
+    padding: 0;
 
     .trip {
         border-bottom: 1px solid mat-color($black-palette, 50);

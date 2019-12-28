@@ -49,28 +49,28 @@ namespace ExpenseSplitter.Tests.Setup
             // Users
             var andrew = new User
             {
-                Nickname = "Andrew",
+                Nick = "Andrew",
                 Email = "andrew@test.pl",
                 Password = "10000.e2qqDAlDe8QkqnY4/nN+gA==.XMtVShNIfCFmOl1rTTZYlLUCABZHDliYNaCoO+oI9mw=",
             };
 
             var bryan = new User
             {
-                Nickname = "Bryan",
+                Nick = "Bryan",
                 Email = "bryan@test.pl",
                 Password = "10000.e2qqDAlDe8QkqnY4/nN+gA==.XMtVShNIfCFmOl1rTTZYlLUCABZHDliYNaCoO+oI9mw=",
             };
 
             var carol = new User
             {
-                Nickname = "Carol",
+                Nick = "Carol",
                 Email = "carol@test.pl",
                 Password = "10000.e2qqDAlDe8QkqnY4/nN+gA==.XMtVShNIfCFmOl1rTTZYlLUCABZHDliYNaCoO+oI9mw=",
             };
 
             var diana = new User
             {
-                Nickname = "Diana",
+                Nick = "Diana",
                 Email = "diana@test.pl",
                 Password = "10000.e2qqDAlDe8QkqnY4/nN+gA==.XMtVShNIfCFmOl1rTTZYlLUCABZHDliYNaCoO+oI9mw=",
             };

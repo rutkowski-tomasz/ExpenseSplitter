@@ -1,22 +1,14 @@
 <header>
-    <div class="left">
-        <a *ngIf="backLink" [routerLink]="backLink">
-            <ng-container *ngIf="backText; else backArrow">
-                {{ backText }}
-            </ng-container>
-            <ng-template #backArrow>
-                <mat-icon>arrow_back_ios</mat-icon>
-            </ng-template>
-        </a>
-    </div>
     <div class="heading">
         <ng-content select="[heading]"></ng-content>
     </div>
-    <div class="sub">
-        <ng-content select="[sub]"></ng-content>
-    </div>
 
-    <div class="right">
-        <ng-content select="[right]"></ng-content>
+    <div class="controls-wrapper">
+        <div class="left">
+            <ng-content select="[left]"></ng-content>
+        </div>
+        <div class="right">
+            <ng-content select="[right]"></ng-content>
+        </div>
     </div>
 </header>

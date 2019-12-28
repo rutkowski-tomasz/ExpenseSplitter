@@ -42,9 +42,9 @@ export class AuthService {
             );
     }
 
-    public Register(email: string, password: string) {
+    public Register(email: string, password: string, nick: string) {
         return this.callService
-            .postForm(`${this.servicePrefix}/register`, { email, password })
+            .postForm(`${this.servicePrefix}/register`, { email, password, nick })
             .pipe(
                 map((data: { token: string }) => {
                     this.setToken(data.token);

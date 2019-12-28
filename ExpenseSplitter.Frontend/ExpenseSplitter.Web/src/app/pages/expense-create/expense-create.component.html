@@ -1,8 +1,20 @@
-<es-header [backLink]="['/trips', uid]">
+<es-header>
     <ng-container heading>Nowy wydatek</ng-container>
+
+    <ng-container left>
+        <a [routerLink]="['/trips', uid]">
+            Anuluj
+        </a>
+    </ng-container>
+
+    <ng-container right>
+        <a role="button" type="button" (click)="createForm.ngSubmit.emit()">
+            Zapisz
+        </a>
+    </ng-container>
 </es-header>
 
-<form [formGroup]="formGroup" (ngSubmit)="OnSubmit()" class="vertical-form">
+<form [formGroup]="formGroup" (ngSubmit)="OnSubmit()" class="vertical-form" #createForm="ngForm">
     <mat-form-field>
         <input
             matInput
@@ -71,7 +83,10 @@
             [matAutocomplete]="auto"
             required
         />
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="DisplayParticipant">
+        <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="DisplayParticipant"
+        >
             <mat-option
                 *ngFor="let participant of filteredParticipants | async"
                 [value]="participant"
@@ -80,6 +95,36 @@
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
+
+    <div
+        formArrayName="parts"
+        *ngFor="let part of parts.controls; let i = index"
+    >
+        <div [formGroupName]="i">
+            <input
+                type="number"
+                placeholder="Wartość"
+                matInput
+                formControlName="value"
+                required
+            />
+
+            <label
+                formArrayName="participants"
+                *ngFor="
+                    let order of GetParticipants(part).controls;
+                    let j = index
+                "
+            >
+                <input type="checkbox" [formControlName]="j" />
+                {{ participants[j].name }}
+            </label>
+        </div>
+    </div>
+
+    <a mat-flat-button color="accent" (click)="AddPart()">
+        Dodaj asd
+    </a>
 
     <button
         mat-flat-button

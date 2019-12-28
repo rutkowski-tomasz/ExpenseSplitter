@@ -4,7 +4,7 @@ import { Trip } from 'src/app/data/trip';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
-import { moveFromLeft, moveFromRight } from "ngx-router-animations";
+import { moveFromLeft, moveFromRight, moveFromTop, moveFromBottom } from "ngx-router-animations";
 
 @Component({
     templateUrl: './trip.component.html',

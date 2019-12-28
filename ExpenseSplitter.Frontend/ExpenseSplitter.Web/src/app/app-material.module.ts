@@ -61,7 +61,7 @@ const materialModules = [
     imports: materialModules,
     exports: materialModules,
     providers: [
-        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }
+        { provide: ErrorStateMatcher, useClass: ErrorStateMatcher }
     ],
 })
 export class AppMaterialModule { }

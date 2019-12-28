@@ -1,5 +1,5 @@
 import { ExpenseTypeEnum } from 'src/app/data/expense-type';
-import { ExpensePart } from 'src/app/data/expense-part';
+import { ExpensePartModel } from './expense-part-model';
 
 export class CreateExpenseModel {
     name: string;
@@ -7,5 +7,5 @@ export class CreateExpenseModel {
     paidAt: Date;
     payerId: number;
 
-    parts: ExpensePart[];
+    parts: ExpensePartModel[];
 }

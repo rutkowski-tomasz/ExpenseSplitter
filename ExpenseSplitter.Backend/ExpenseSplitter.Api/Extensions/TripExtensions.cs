@@ -18,7 +18,7 @@ namespace ExpenseSplitter.Api.Extensions
                 new Participant
                 {
                     UserId = adder.Id,
-                    Name = adder.Nickname,
+                    Name = model.OrganizerNick,
                 }
             };
 

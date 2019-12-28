@@ -1,23 +1,54 @@
+<es-header>
+    <ng-container heading>
+        <div class="header"><i>DZIEL.SE</i></div>
+    </ng-container>
 
-<div class="trips">
-    <a class="trip" *ngFor="let trip of trips" [routerLink]="['/trips', trip.uid]">
-        <div class="details">
-            <div class="name">
-                {{ trip.name }}
+    <ng-container right>
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Application menu"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item [routerLink]="['/settings']">
+                <mat-icon>person</mat-icon>
+                <span>Moje ustawienia</span>
+            </button>
+            <button mat-menu-item esShare esShareTitle="DZIEL.SE" esShareText="Hej! Wypróbuj DZIEL.SE - apkę do rozliczania grupowych wydatków (np. do wyjazdów, wydatków domowych)." [esShareUrl]="shareUrl">
+                <mat-icon>share</mat-icon>
+                <span>Udostępnij aplikacje</span>
+            </button>
+        </mat-menu>
+    </ng-container>
+</es-header>
+
+<div class="container">
+    <section class="trips">
+        <a
+            class="trip"
+            *ngFor="let trip of trips"
+            [routerLink]="['/trips', trip.uid]"
+        >
+            <div class="details">
+                <div class="name">
+                    {{ trip.name }}
+                </div>
+                <div class="description">
+                    <ng-container *ngIf="trip.description; else noDescription">
+                        {{ trip.description }}
+                    </ng-container>
+                    <ng-template #noDescription>
+                        Brak opisu
+                    </ng-template>
+                </div>
             </div>
-            <div class="description">
-                <ng-container *ngIf="trip.description; else noDescription">
-                    {{ trip.description }}
-                </ng-container>
-                <ng-template #noDescription>
-                    Brak opisu
-                </ng-template>
+            <div class="actions">
+                <mat-icon>arrow_forward_ios</mat-icon>
             </div>
-        </div>
-        <div class="actions">
-            <mat-icon>arrow_forward_ios</mat-icon>
-        </div>
-    </a>
+        </a>
+    </section>
 </div>
 
 <div class="add-new">

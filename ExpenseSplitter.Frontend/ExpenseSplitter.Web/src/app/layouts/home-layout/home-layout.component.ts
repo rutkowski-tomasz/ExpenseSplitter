@@ -15,6 +15,10 @@ import { moveFromLeft, moveFromRight, moveFromBottom, moveFromTop } from 'ngx-ro
             transition('trip => tripsList', useAnimation(moveFromLeft)),
             transition('trip => expenseCreate', useAnimation(moveFromBottom)),
             transition('expenseCreate => trip', useAnimation(moveFromTop)),
+            transition('tripsList => settings', useAnimation(moveFromTop)),
+            transition('settings => tripsList', useAnimation(moveFromBottom)),
+            transition('* => tripEdit', useAnimation(moveFromTop)),
+            transition('tripEdit => *', useAnimation(moveFromBottom)),
         ])
     ]
 })
@@ -23,6 +27,7 @@ export class HomeLayoutComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
+        console.log(window);
     }
 
     getState(outlet: RouterOutlet) {

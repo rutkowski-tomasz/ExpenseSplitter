@@ -1,31 +1,41 @@
 @import "src/scss/_colors";
+@import "src/scss/_variables";
 
 header {
     background: $primary;
     color: $white;
     position: relative;
     min-height: 32px;
-    text-align: center;
 
-    .left {
+    height: $headerHeight;
+
+    .controls-wrapper {
         position: absolute;
-        top: 8px;
-        left: 8px;
+        top: 0;
+        width: 100%;
+        height: 100%;
 
-        .back-arrow {
-            display: inline-block;
-            height: 16px;
-            width: 16px;
-        }
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
+    .left, .right {
+        padding: 0 8px;
+        font-size: 14px;
+        line-height: 32px;
 
-    .right {
-        position: absolute;
-        top: 8px;
-        right: 8px;
+        ::ng-deep a {
+            text-decoration: none;
+            color: $white;
+        }
     }
 
     .heading {
         font-weight: 500;
+        height: $headerHeight;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 }

@@ -1,4 +1,5 @@
 @import "scss/_colors";
+@import "scss/_variables";
 
 @include mat-core();
 $my-app-theme: mat-light-theme(
@@ -36,4 +37,32 @@ body {
 	height:  calc(100%);
 	perspective:  1200px;
 	transform-style:  preserve-3d;
+}
+
+caption {
+    display: block;
+    text-align: left;
+    font-weight: 500;
+    color: mat-color($black-palette, 400);
+    text-transform: uppercase;
+    font-size: 13px;
+    margin: 24px 8px 8px;
+}
+section {
+    background: $white;
+    padding: 16px 8px;
+}
+.container {
+    overflow-y: scroll;
+    height: calc(100vh - #{$headerHeight});
+}
+.warn {
+    color: $warn;
+}
+.primary {
+    color: $primary;
+}
+.full-width-button {
+    display: block;
+    text-align: center;
 }

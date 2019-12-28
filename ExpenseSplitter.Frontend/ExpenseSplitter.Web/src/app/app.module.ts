@@ -15,6 +15,7 @@ import { AppConfig } from './app.config';
 import { registerLocaleData } from '@angular/common';
 import locale from '@angular/common/locales/pl';
 import { PipesModule } from './pipes/pipes.module';
+import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/link-copied-snack-bar.component';
 registerLocaleData(locale);
 
 @NgModule({
@@ -48,5 +49,8 @@ registerLocaleData(locale);
         },
     ],
     bootstrap: [AppComponent],
+    entryComponents: [
+        LinkCopiedSnackBarComponent,
+    ],
 })
 export class AppModule { }

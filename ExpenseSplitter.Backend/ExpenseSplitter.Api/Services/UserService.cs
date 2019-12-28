@@ -10,6 +10,7 @@ using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Auth;
+using ExpenseSplitter.Api.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -19,11 +20,12 @@ namespace ExpenseSplitter.Api.Services
     public interface IUserService
     {
         User AuthenticateUser(string email, string password);
-        User RegisterUser(string email, string password);
+        User RegisterUser(string email, string password, string nick);
         string GetAuthorizationToken(User user);
         int GetCurrentUserId();
         User GetCurrentUser();
         UserExtractModel GetUserExtract(int id);
+        UserExtractModel UpdateUser(UpdateUserModel model);
     }
 
     public class UserService : IUserService
@@ -55,12 +57,19 @@ namespace ExpenseSplitter.Api.Services
             return (user != null && _passwordHasher.Check(user.Password, password)) ? user : null;
         }
 
-        public User RegisterUser(string email, string password)
+        public User RegisterUser(string email, string password, string nick)
         {
+            email = email.ToLowerInvariant();
+
+            var isEmailExisting = _context.Users.FirstOrDefault(x => x.Email == email) != null;
+            if (isEmailExisting)
+                return null;
+
             var user = new User()
             {
-                Email = email.ToLowerInvariant(),
+                Email = email,
                 Password = _passwordHasher.Hash(password),
+                Nick = nick
             };
 
             _context.Users.Add(user);
@@ -110,6 +119,16 @@ namespace ExpenseSplitter.Api.Services
                 return null;
 
             return GetUser(id)?.ToUserExtract();
+        }
+        
+        public UserExtractModel UpdateUser(UpdateUserModel model)
+        {
+            var user = GetCurrentUser();
+
+            user.Nick = model.Nick;
+
+            _context.SaveChanges();
+            return user.ToUserExtract();
         }
     }
     

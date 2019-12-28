@@ -53,14 +53,10 @@ export class CallService {
         );
     }
 
-    put(url: any, putData: any) {
+    put<T>(url: any, putData: any) {
         return this.http
             .put(this.toAbsoluteUrl(url), putData, { withCredentials: true })
-            .pipe(
-                map(res => {
-                    return res;
-                })
-            );
+            .pipe(map(res => res as T));
     }
 
     patch(url: any, putData: any) {
