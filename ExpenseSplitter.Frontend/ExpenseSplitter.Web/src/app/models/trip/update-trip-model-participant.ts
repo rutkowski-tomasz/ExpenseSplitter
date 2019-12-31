@@ -1,4 +1,4 @@
 export class UpdateTripModelParticipant {
-    id?: number;
-    name: string;
+    id: number;
+    nick: string;
 }

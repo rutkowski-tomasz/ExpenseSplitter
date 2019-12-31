@@ -35,7 +35,7 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateExpense(string uid, CreateExpenseModel model)
+        public IActionResult CreateExpense(string uid, [FromBody] CreateExpenseModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();

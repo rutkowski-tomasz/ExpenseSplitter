@@ -27,7 +27,6 @@ export class HomeLayoutComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-        console.log(window);
     }
 
     getState(outlet: RouterOutlet) {

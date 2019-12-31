@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Models.Expenses;
 
@@ -7,14 +8,7 @@ namespace ExpenseSplitter.Api.Extensions
     {
         public static Expense Create(this Expense expense, CreateExpenseModel model, string uid, int adderId)
         {
-            expense.Name = model.Name;
-            expense.Type = model.Type;
-            expense.PaidAt = model.PaidAt;
 
-            expense.TripUid = uid;
-            expense.AdderId = adderId;
-            expense.PayerId = model.PayerId;
-            expense.Parts = model.Parts;
 
             return expense;
         }

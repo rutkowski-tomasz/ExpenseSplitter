@@ -78,59 +78,59 @@ namespace ExpenseSplitter.Tests.Setup
             context.Users.AddRange(andrew, bryan, carol, diana);
 
             // UserTrips
-            var andrewInRome = new TripUser {
-                Trip = romeTrip,
-                User = andrew,
-            };
             var andrewInRomeParticipant = new Participant
             {
                 Name = "Andrew Rome",
                 Trip = romeTrip,
+            };
+            var andrewInRome = new TripUser {
+                Trip = romeTrip,
                 User = andrew,
+                Participant = andrewInRomeParticipant,
             };
 
-            var bryanInRome = new TripUser {
-                Trip = romeTrip,
-                User = bryan,
-            };
             var bryanInRomeParticipant = new Participant
             {
                 Name = "Bryan Rome",
                 Trip = romeTrip,
+            };
+            var bryanInRome = new TripUser {
+                Trip = romeTrip,
                 User = bryan,
+                Participant = bryanInRomeParticipant,
             };
 
-            var bryanInBerlin = new TripUser {
-                Trip = berlinTrip,
-                User = bryan,
-            };
             var bryanInBerlinParticipant = new Participant
             {
                 Name = "Bryan Berlin",
                 Trip = berlinTrip,
+            };
+            var bryanInBerlin = new TripUser {
+                Trip = berlinTrip,
                 User = bryan,
+                Participant = bryanInBerlinParticipant,
             };
 
-            var dianaInBerlin = new TripUser {
-                Trip = berlinTrip,
-                User = diana,
-            };
             var dianaInBerlinParticipant = new Participant
             {
                 Name = "Diana Berlin",
                 Trip = berlinTrip,
+            };
+            var dianaInBerlin = new TripUser {
+                Trip = berlinTrip,
                 User = diana,
+                Participant = dianaInBerlinParticipant,
             };
 
-            var carolInBerlin = new TripUser {
-                Trip = berlinTrip,
-                User = carol,
-            };
             var carolInBerlinParticipant = new Participant
             {
                 Name = "Carol Berlin",
                 Trip = berlinTrip,
+            };
+            var carolInBerlin = new TripUser {
+                Trip = berlinTrip,
                 User = carol,
+                Participant = carolInBerlinParticipant,
             };
 
             context.TripsUsers.AddRange(andrewInRome, bryanInRome, bryanInBerlin, dianaInBerlin, carolInBerlin);

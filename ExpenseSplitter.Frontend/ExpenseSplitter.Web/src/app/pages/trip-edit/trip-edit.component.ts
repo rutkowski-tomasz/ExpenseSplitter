@@ -3,6 +3,8 @@ import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray } from '@angular/forms';
 import { Trip } from 'src/app/data/trip';
+import { UpdateTripModel } from 'src/app/models/trip/update-trip-model';
+import { UpdateTripModelParticipant } from 'src/app/models/trip/update-trip-model-participant';
 
 @Component({
     templateUrl: './trip-edit.component.html',
@@ -11,7 +13,6 @@ import { Trip } from 'src/app/data/trip';
 export class TripEditComponent implements OnInit {
 
     public uid: string;
-    public trip: Trip;
 
     @ViewChild('form', {static: false}) form: NgForm;
 
@@ -25,7 +26,6 @@ export class TripEditComponent implements OnInit {
             Validators.maxLength(50),
         ]),
         participants: new FormArray([]),
-        newParticipantNick: new FormControl(''),
     });
 
     public get name(): AbstractControl {
@@ -38,10 +38,6 @@ export class TripEditComponent implements OnInit {
 
     public get participants(): FormArray {
         return this.formGroup.get('participants') as FormArray;
-    }
-
-    public get newParticipantNick(): AbstractControl {
-        return this.formGroup.get('newParticipantNick');
     }
 
     constructor(
@@ -66,8 +62,6 @@ export class TripEditComponent implements OnInit {
 
     public addParticipant(id?: number, nick?: string)
     {
-        console.log(id);
-        console.log(nick);
         if (!id) {
             id = 0;
         }
@@ -86,6 +80,10 @@ export class TripEditComponent implements OnInit {
         }));
     }
 
+    public removeParticipant(index: number) {
+        this.participants.removeAt(index);
+    }
+
     public onDelete() {
 
         this.tripService.DeleteTrip(this.uid).subscribe(_ => {
@@ -96,19 +94,21 @@ export class TripEditComponent implements OnInit {
     public onSubmit() {
 
         this.formGroup.markAllAsTouched();
-        console.log(this.participants);
 
         if (this.formGroup.valid) {
 
+            const uid = this.uid;
             const name = this.name.value;
             const description = this.description.value;
+            const participants = new Array<UpdateTripModelParticipant>();
+            this.participants.value.forEach(p =>
+                participants.push({ id: p.id, nick: p.nick })
+            );
 
-            console.log(this.participants);
-
-            // const model: CreateTripModel = { name, description, organizerNick };
-            // this.tripService.CreateTrip(model).subscribe(_ => {
-            //     this.router.navigate(['/trips']);
-            // });
+            const model: UpdateTripModel = { uid, name, description, participants };
+            this.tripService.UpdateTrip(model).subscribe(_ => {
+                this.router.navigate(['/trips', uid]);
+            });
         }
     }
 }

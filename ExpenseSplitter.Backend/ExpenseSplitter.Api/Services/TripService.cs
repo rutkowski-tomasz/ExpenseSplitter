@@ -80,13 +80,22 @@ namespace ExpenseSplitter.Api.Services
         public Trip UpdateTrip(UpdateTripModel model)
         {
             var userId = _userService.GetCurrentUserId();
-            var trip = _context.Trips.SingleOrDefault(
-                x => x.Uid == model.Uid &&
-                x.Users.Any(y => y.User.Id == userId)
-            );
+            var trip = _context
+                .Trips
+                .Include(x => x.Participants)
+                .SingleOrDefault(
+                    x => x.Uid == model.Uid &&
+                    x.Users.Any(y => y.User.Id == userId)
+                );
 
             if (trip == null)
                 return null;
+
+            foreach (var participant in trip.Participants.ToList())
+            {
+                if (model.Participants.All(p => p.Id != participant.Id))
+                    _context.TripsParticipants.Remove(participant);
+            }
 
             trip.Update(model);
             _context.SaveChanges();
@@ -153,20 +162,24 @@ namespace ExpenseSplitter.Api.Services
         public bool ClaimTripParticipation(string uid, int id)
         {
             var userId = _userService.GetCurrentUserId();
-            var trip = _context.Trips.SingleOrDefault(
-                x => x.Uid == uid &&
-                x.Users.Any(y => y.User.Id == userId)
-            );
+            var tripUser = _context
+                .TripsUsers
+                .SingleOrDefault(x =>
+                    x.TripUid == uid &&
+                    x.UserId == userId
+                );
 
-            if (trip == null)
+            if (tripUser == null)
                 return false;
 
-            var participant = trip.Participants.SingleOrDefault(x => x.Id == id);
+            var participant = _context
+                .TripsParticipants
+                .SingleOrDefault(x => x.Id == id && x.TripUid == uid);
 
             if (participant == null)
                 return false;
 
-            participant.UserId = userId;
+            tripUser.ParticipantId = participant.Id;
 
             _context.SaveChanges();
             return true;

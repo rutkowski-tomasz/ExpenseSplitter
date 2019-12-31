@@ -14,7 +14,7 @@ namespace ExpenseSplitter.Api.Models.Trips
 
     public class UpdateTripModelParticipant
     {
-        public int? Id { get; set; }
-        public string Name { get; set; }
+        public int Id { get; set; }
+        public string Nick { get; set; }
     }
 }

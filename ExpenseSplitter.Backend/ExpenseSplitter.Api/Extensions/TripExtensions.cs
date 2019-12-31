@@ -13,14 +13,12 @@ namespace ExpenseSplitter.Api.Extensions
             trip.Name = model.Name;
             trip.Description = model.Description;
 
-            trip.Participants = new List<Participant>()
+            var participant = new Participant
             {
-                new Participant
-                {
-                    UserId = adder.Id,
-                    Name = model.OrganizerNick,
-                }
+                Name = model.OrganizerNick,
             };
+
+            trip.Participants = new List<Participant>() { participant };
 
             trip.Users = new List<TripUser>()
             {
@@ -28,6 +26,7 @@ namespace ExpenseSplitter.Api.Extensions
                 {
                     UserId = adder.Id,
                     TripUid = uid,
+                    Participant = participant,
                 }
             };
 
@@ -38,19 +37,19 @@ namespace ExpenseSplitter.Api.Extensions
         {
             trip.Name = model.Name;
             trip.Description = model.Description;
-    
+
             foreach (var participant in model.Participants)
             {
-                if (!participant.Id.HasValue)
-                    trip.Participants.Add(new Participant { Name = participant.Name });
+                if (participant.Id == 0)
+                    trip.Participants.Add(new Participant { Name = participant.Nick });
                 else
                 {
-                    var tripParticipant = trip.Participants.FirstOrDefault(x => x.Id == participant.Id.Value);
+                    var tripParticipant = trip.Participants.FirstOrDefault(x => x.Id == participant.Id);
 
                     if (tripParticipant == null)
                         continue;
 
-                    tripParticipant.Name = participant.Name;
+                    tripParticipant.Name = participant.Nick;
                 }
             }
 

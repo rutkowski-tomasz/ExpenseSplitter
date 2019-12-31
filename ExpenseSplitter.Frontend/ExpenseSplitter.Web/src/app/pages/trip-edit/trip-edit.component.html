@@ -79,7 +79,7 @@
                 formArrayName="participants"
                 *ngFor="let participant of participants.controls; let i = index"
             >
-                <div [formGroupName]="i">
+                <div [formGroupName]="i" class="participant-field">
                     <input type="hidden" formControlName="id" />
                     <mat-form-field>
                         <input
@@ -127,22 +127,22 @@
                             znaków
                         </mat-error>
                     </mat-form-field>
-                    <mat-icon>close</mat-icon>
+                    <div class="actions">
+                        <mat-icon (click)="removeParticipant(i)"
+                            >close</mat-icon
+                        >
+                    </div>
                 </div>
             </div>
 
-            <input
-                matInput
-                placeholder="Nowy uczestnik"
-                formControlName="newParticipantNick"
-            />
-            <a
-                role="button"
+            <button
+                mat-button
+                color="primary"
+                (click)="addParticipant()"
                 type="button"
-                (click)="addParticipant(0, newParticipantNick.value)"
             >
-                Dodaj uczestnika
-            </a>
+                Dodaj kolejnego uczestnika
+            </button>
         </section>
 
         <caption>

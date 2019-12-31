@@ -83,6 +83,7 @@ namespace ExpenseSplitter.Tests.Services
             {
                 Name = "New trip",
                 Description = "Description of the new awesome trip",
+                OrganizerNick = "Crazy Carol",
             };
 
             // Act
@@ -92,9 +93,9 @@ namespace ExpenseSplitter.Tests.Services
             Assert.IsNotNull(trip);
             Assert.AreEqual(1, trip.Users.Count);
             Assert.AreEqual(user.Id, trip.Users.First().UserId);
+            Assert.AreEqual(trip.Participants.First().Id, trip.Users.First().ParticipantId);
             Assert.AreEqual(1, trip.Participants.Count);
-            Assert.AreEqual("Carol", trip.Participants.First().Name);
-            Assert.AreEqual(user.Id, trip.Participants.First().UserId);
+            Assert.AreEqual("Crazy Carol", trip.Participants.First().Name);
         }
 
         [Test]
@@ -104,7 +105,12 @@ namespace ExpenseSplitter.Tests.Services
             var user = _context.Users.First(x => x.Nick == "Andrew");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
             
-            var participation = _context.TripsParticipants.FirstOrDefault(x => x.UserId == user.Id && x.TripUid == "rome");
+            var participation = _context
+                .TripsParticipants
+                .FirstOrDefault(
+                    x => x.UsersClaimed.Any(y => y.UserId == user.Id) &&
+                    x.TripUid == "rome"
+                );
 
             var model = new UpdateTripModel
             {
@@ -116,11 +122,11 @@ namespace ExpenseSplitter.Tests.Services
                     new UpdateTripModelParticipant
                     {
                         Id = participation.Id,
-                        Name = "Custom nickname",
+                        Nick = "Custom nickname",
                     },
                     new UpdateTripModelParticipant
                     {
-                        Name = "Ethan"
+                        Nick = "Ethan"
                     }
                 },
             };
@@ -129,11 +135,12 @@ namespace ExpenseSplitter.Tests.Services
             var trip = _tripService.UpdateTrip(model);
 
             // Assert
+            var newParticipant = trip.Participants.First(x => x.Name == "Ethan");
             Assert.NotNull(trip);
             Assert.AreEqual("It was not trip to Rome", trip.Name);
-            Assert.AreEqual(3, trip.Participants.Count);
-            Assert.AreEqual("Custom nickname", trip.Participants.First(x => x.UserId == user.Id).Name);
-            Assert.IsNull(trip.Participants.First(x => x.Name == "Ethan").User);
+            Assert.AreEqual(2, trip.Participants.Count);
+            Assert.AreEqual("Custom nickname", trip.Participants.First(x => x.Id == participation.Id).Name);
+            Assert.True(_context.TripsUsers.All(x => x.ParticipantId != newParticipant.Id));
             Assert.AreEqual(2, trip.Users.Count);
         }
 

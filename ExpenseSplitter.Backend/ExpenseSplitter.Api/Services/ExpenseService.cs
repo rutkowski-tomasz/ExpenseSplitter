@@ -24,7 +24,8 @@ namespace ExpenseSplitter.Api.Services
         public ExpenseService(
             Context context,
             IUserService userService
-        ) {
+        )
+        {
             _context = context;
             _userService = userService;
         }
@@ -66,7 +67,31 @@ namespace ExpenseSplitter.Api.Services
             if (trip == null)
                 return null;
 
-            var expense = new Expense().Create(model, uid, userId);
+            var expense = new Expense();
+
+            expense.Name = model.Name;
+            expense.Type = model.Type;
+            expense.PaidAt = model.PaidAt;
+
+            expense.TripUid = uid;
+            expense.AdderId = userId;
+            expense.PayerId = model.PayerId;
+
+            expense.Parts = new List<ExpensePart>();
+            foreach (var part in model.Parts)
+            {
+                expense.Parts.Add(new ExpensePart
+                {
+                    Value = part.Value,
+                    Participants = _context
+                        .TripsParticipants
+                        .Where(x =>
+                            x.TripUid == uid &&
+                            part.ParticipantIds.Any(y => y == x.Id)
+                        )
+                        .ToList(),
+                });
+            }
 
             _context.Expenses.Add(expense);
             _context.SaveChanges();

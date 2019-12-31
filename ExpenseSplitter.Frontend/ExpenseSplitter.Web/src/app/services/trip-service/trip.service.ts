@@ -29,9 +29,9 @@ export class TripService {
         return this.callService.post(`${this.servicePrefix}`, model);
     }
 
-    // public UpdateTrip(model: UpdateTripModel): Observable<Trip> {
-    //     return this.callService.put(`${this.servicePrefix}`, model);
-    // }
+    public UpdateTrip(model: UpdateTripModel): Observable<Trip> {
+        return this.callService.put(`${this.servicePrefix}`, model);
+    }
 
     public DeleteTrip(uid: string) {
         return this.callService.delete(`${this.servicePrefix}/${uid}`);

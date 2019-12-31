@@ -48,7 +48,7 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateTrip(UpdateTripModel model)
+        public IActionResult UpdateTrip([FromBody] UpdateTripModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();

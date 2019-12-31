@@ -12,6 +12,6 @@ namespace ExpenseSplitter.Api.Models.Expenses
         public DateTime PaidAt { get; set; }
         public int PayerId { get; set; }
 
-        public List<ExpensePart> Parts { get; set; }
+        public List<ExpensePartModel> Parts { get; set; }
     }
 }

@@ -15,9 +15,8 @@ namespace ExpenseSplitter.Api.Data
         public string TripUid { get; set; }
         [JsonIgnore]
         public Trip Trip { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
 
+        public virtual ICollection<TripUser> UsersClaimed { get; set; }
         public virtual ICollection<ExpensePartParticipant> ExpenseParticipations { get; set; }
     }
 }

@@ -3,3 +3,7 @@
 :host  {
 	@include is-animated-host;
 }
+.part-field {
+	display: flex;
+	align-items: center;
+}

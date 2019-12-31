@@ -111,12 +111,14 @@ export class ExpenseCreateComponent implements OnInit {
                 model.parts.push({ value, participantIds });
             }
 
-            console.log(model);
-
-            // this.expenseService.CreateExpense(this.uid, model).subscribe(_ => {
-            //     this.router.navigate(['/trips', this.uid]);
-            // });
+            this.expenseService.CreateExpense(this.uid, model).subscribe(_ => {
+                this.router.navigate(['/trips', this.uid]);
+            });
         }
+    }
+
+    public removePart(index: number) {
+        this.parts.removeAt(index);
     }
 
     public SetDefaultPayer()
