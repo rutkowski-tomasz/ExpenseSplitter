@@ -19,7 +19,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item [routerLink]="['/trips', trip.uid, 'edit']">
+            <button mat-menu-item *ngIf="trip" [routerLink]="['/trips', trip.uid, 'edit']">
                 <mat-icon>edit</mat-icon>
                 <span>Edytuj</span>
             </button>

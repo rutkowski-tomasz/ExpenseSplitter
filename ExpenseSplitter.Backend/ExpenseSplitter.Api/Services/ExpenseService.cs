@@ -4,12 +4,13 @@ using System.Linq;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Models.Expenses;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseSplitter.Api.Services
 {
     public interface IExpenseService
     {
-        List<Expense> GetExpenses(string uid);
+        List<ExpenseExtractModel> GetExpenses(string uid);
         Expense GetExpense(string uid, int id);
         Expense CreateExpense(string uid, CreateExpenseModel model);
         Expense UpdateExpense(string uid, UpdateExpenseModel model);
@@ -30,13 +31,24 @@ namespace ExpenseSplitter.Api.Services
             _userService = userService;
         }
 
-        public List<Expense> GetExpenses(string uid)
+        public List<ExpenseExtractModel> GetExpenses(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var expenses = _context
                 .Expenses
+                .Include(x => x.Payer)
+                .ThenInclude(x => x.UsersClaimed)
                 .Where(x => x.TripUid == uid && x.Trip.Users.Any(y => y.UserId == userId))
                 .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new ExpenseExtractModel {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Type = x.Type,
+                    PaidAt = x.PaidAt,
+                    PayerName = x.Payer.Name,
+                    IsPaidByMe = x.Payer.UsersClaimed.Any(y => y.Id == userId),
+                    Value = x.Parts.Sum(x => x.Value),
+                })
                 .ToList();
 
             return expenses;

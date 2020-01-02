@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { ActivatedRoute } from '@angular/router';
 import { Expense } from 'src/app/data/expense';
+import { ExpenseExtractModel } from 'src/app/models/expense/expense-extract-model';
 
 @Component({
     templateUrl: './expenses.component.html',
@@ -9,7 +10,7 @@ import { Expense } from 'src/app/data/expense';
 })
 export class ExpensesComponent implements OnInit {
 
-    public expenses: Expense[];
+    public expenses: ExpenseExtractModel[];
     public uid: string;
 
     constructor(

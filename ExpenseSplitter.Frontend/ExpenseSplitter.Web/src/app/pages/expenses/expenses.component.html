@@ -1,3 +1,38 @@
-{{ expenses |json }}
+<div class="container">
+    <section class="expenses">
+        <a
+            class="expense"
+            *ngFor="let expense of expenses"
+            [routerLink]="['/trips', uid, 'expenses', expense.id]"
+        >
+            <div class="details">
+                <div class="name">
+                    {{ expense.name }}
+                </div>
+                <div class="paid-by">
+                    Zapłacone przez
+                    <strong>
+                        <span *ngIf="expense.isPaidByMe">mnie</span>
+                        <span *ngIf="!expense.isPaidByMe">{{
+                            expense.payerName
+                        }}</span>
+                    </strong>
+                </div>
+            </div>
+            <div class="summary">
+                <div class="value">
+                    {{ expense.value | currency:'PLN' }}
+                </div>
+                <div class="date">
+                    {{ expense.paidAt | date }}
+                </div>
+            </div>
+        </a>
+    </section>
+</div>
 
-<es-settlement-footer [uid]="uid" [myCost]="100" [totalCost]="1852.06"></es-settlement-footer>
+<es-settlement-footer
+    [uid]="uid"
+    [myCost]="100"
+    [totalCost]="1852.06"
+></es-settlement-footer>

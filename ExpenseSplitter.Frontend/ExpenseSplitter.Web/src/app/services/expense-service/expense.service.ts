@@ -3,6 +3,7 @@ import { CallService } from '../call-service/call.service';
 import { Observable } from 'rxjs';
 import { Expense } from 'src/app/data/expense';
 import { CreateExpenseModel } from 'src/app/models/expense/create-expense-model';
+import { ExpenseExtractModel } from 'src/app/models/expense/expense-extract-model';
 
 @Injectable({
     providedIn: 'root'
@@ -14,8 +15,8 @@ export class ExpenseService {
         private callService: CallService,
     ) { }
 
-    public GetExpenses(uid: string): Observable<Expense[]> {
-        return this.callService.get<Expense[]>(`${this.servicePrefix}/${uid}/expenses`);
+    public GetExpenses(uid: string): Observable<ExpenseExtractModel[]> {
+        return this.callService.get<ExpenseExtractModel[]>(`${this.servicePrefix}/${uid}/expenses`);
     }
 
     public GetExpense(uid: string, id: number): Observable<Expense> {
