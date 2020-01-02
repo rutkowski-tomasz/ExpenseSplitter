@@ -9,15 +9,13 @@ import { Trip } from 'src/app/data/trip';
 export class TripsListComponent implements OnInit {
 
     public trips: Trip[];
-    public shareUrl: string;
+    public shareUrl = window.location.origin;
 
     constructor(
-        private tripService: TripService
+        private tripService: TripService,
     ) { }
 
     ngOnInit() {
-        this.shareUrl = window.location.origin;
-
         this.tripService.GetTrips().subscribe(data => {
             this.trips = data;
         });

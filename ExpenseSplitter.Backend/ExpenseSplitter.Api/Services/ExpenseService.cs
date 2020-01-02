@@ -59,6 +59,8 @@ namespace ExpenseSplitter.Api.Services
             var userId = _userService.GetCurrentUserId();
             var expense = _context
                 .Expenses
+                .Include(x => x.Payer)
+                .Include(x => x.Parts)
                 .SingleOrDefault(x =>
                     x.TripUid == uid
                     && x.Id == id

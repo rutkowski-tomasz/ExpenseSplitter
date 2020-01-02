@@ -19,6 +19,10 @@ import { moveFromLeft, moveFromRight, moveFromBottom, moveFromTop } from 'ngx-ro
             transition('settings => tripsList', useAnimation(moveFromBottom)),
             transition('* => tripEdit', useAnimation(moveFromTop)),
             transition('tripEdit => *', useAnimation(moveFromBottom)),
+            transition('trip => expenseDetails', useAnimation(moveFromRight)),
+            transition('expenseDetails => trip', useAnimation(moveFromLeft)),
+            transition('expenseDetails => expenseEdit', useAnimation(moveFromRight)),
+            transition('expenseEdit => expenseDetails', useAnimation(moveFromLeft)),
         ])
     ]
 })

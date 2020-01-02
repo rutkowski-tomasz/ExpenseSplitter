@@ -1,1 +1,27 @@
-balance
+<div class="container">
+    <section class="balance">
+        <div
+            *ngFor="let participantBalance of balance.participantsBalance"
+            class="participant-balance"
+            [class.negative]="participantBalance.value < 0"
+        >
+            <div class="nick" [class.my-balance]="participantBalance.participantId === userId">
+                {{ participantBalance.participantNick }}
+                <span *ngIf="participantBalance.participantId === userId">
+                    (Ja)
+                </span>
+            </div>
+            <div class="value">
+                <div class="text">
+                    {{ participantBalance.value | currency:'PLN' }}
+                </div>
+                <div class="bar" [style.width.%]="calculateBarLength(participantBalance.value)"></div>
+            </div>
+        </div>
+    </section>
+
+    <caption>Jak rozliczyć wydatki?</caption>
+    <section class="settlements">
+        {{ balance.settlesBalance | json }}
+    </section>
+</div>

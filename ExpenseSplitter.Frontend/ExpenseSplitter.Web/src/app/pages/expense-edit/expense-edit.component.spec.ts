@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExpenseCreateComponent } from './expense-create.component';
+import { ExpenseEditComponent } from './expense-edit.component';
 import { appTesting } from 'src/app/app-testing';
 
-describe('ExpenseCreateComponent', () => {
-    let component: ExpenseCreateComponent;
-    let fixture: ComponentFixture<ExpenseCreateComponent>;
+describe('ExpenseEditComponent', () => {
+    let component: ExpenseEditComponent;
+    let fixture: ComponentFixture<ExpenseEditComponent>;
 
     beforeEach(async(() => {
         TestBed
@@ -14,7 +14,7 @@ describe('ExpenseCreateComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ExpenseCreateComponent);
+        fixture = TestBed.createComponent(ExpenseEditComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

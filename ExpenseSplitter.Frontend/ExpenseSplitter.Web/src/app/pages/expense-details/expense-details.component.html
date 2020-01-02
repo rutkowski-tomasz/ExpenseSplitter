@@ -1,0 +1,48 @@
+<es-header>
+    <ng-container left>
+        <button mat-icon-button [routerLink]="['/trips', uid]">
+            <mat-icon>arrow_back_ios</mat-icon>
+        </button>
+    </ng-container>
+
+    <ng-container right>
+        <a role="button" type="button" [routerLink]="['/trips', uid, 'expenses', id, 'edit']">
+            Edytuj
+        </a>
+    </ng-container>
+</es-header>
+
+<div class="container">
+    <section class="details">
+        <div class="details-container" *ngIf="expense">
+            <div class="name">{{ expense.name }}</div>
+            <div class="value">{{ value | currency:'PLN' }}</div>
+            <div class="info">
+                <div class="paid-by">Zapłacił(a) {{ expense.payer.name }} <span *ngIf="expense.payer.id === userId">(Ja)</span></div>
+                <div class="paid-at">{{ expense.paidAt | date }}</div>
+            </div>
+        </div>
+    </section>
+
+    <caption>
+        W sumie
+    </caption>
+    <section class="summary" *ngIf="summary">
+        <div *ngFor="let sum of summary">
+            {{ sum.nick }} {{ sum.value | currency:'PLN' }}
+        </div>
+    </section>
+
+    <caption>
+        Pozycje na rachunku
+    </caption>
+    <section class="parts" *ngIf="expense && expense.parts">
+        <div *ngFor="let part of expense.parts">
+            {{ part.value | currency:'PLN' }}
+
+            <div *ngFor="let participant of part.participants">
+                {{ participant.name }}
+            </div>
+        </div>
+    </section>
+</div>

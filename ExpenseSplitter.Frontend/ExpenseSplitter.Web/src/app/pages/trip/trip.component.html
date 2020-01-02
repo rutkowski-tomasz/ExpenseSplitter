@@ -1,13 +1,13 @@
 <es-header>
     <ng-container heading>
         <div class="header" *ngIf="trip">{{ trip.name }}</div>
-        <div class="sub">{{ participants }}</div>
+        <div class="sub">{{ participants }} <span *ngIf="otherParticipantsCount">i {{ otherParticipantsCount }} innych uczestników</span></div>
     </ng-container>
 
     <ng-container left>
-        <a [routerLink]="['/trips']">
+        <button mat-icon-button [routerLink]="['/trips']">
             <mat-icon>arrow_back_ios</mat-icon>
-        </a>
+        </button>
     </ng-container>
 
     <ng-container right>
@@ -23,7 +23,7 @@
                 <mat-icon>edit</mat-icon>
                 <span>Edytuj</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item *ngIf="trip" esShare [esShareTitle]="trip.name" esShareText="Hej! Właśnie założyłem rozliczenie {{ trip.name }}." [esShareUrl]="shareUrl">
                 <mat-icon>share</mat-icon>
                 <span>Udostępnij rozliczenie</span>
             </button>
@@ -46,6 +46,6 @@
     </mat-tab>
 </mat-tab-group>
 
-<div [@routeAnimations]="getState(outlet)" class="router-wrapper" style="height: calc(100% - 81px);">
+<div [@routeAnimations]="getState(outlet)" class="router-wrapper" style="height: calc(100% - 95px);">
     <router-outlet #outlet="outlet"></router-outlet>
 </div>

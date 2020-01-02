@@ -9,12 +9,13 @@ import { HeaderComponent } from './components/header/header.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { BalanceComponent } from './pages/balance/balance.component';
 import { SettlementFooterComponent } from './components/settlement-footer/settlement-footer.component';
-import { ExpenseCreateComponent } from './pages/expense-create/expense-create.component';
 import { ExpenseTypeComponent } from './components/expense-type/expense-type.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { TripEditComponent } from './pages/trip-edit/trip-edit.component';
 import { ShareDirective } from './directives/share.directive';
 import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/link-copied-snack-bar.component';
+import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
+import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -29,8 +30,9 @@ export const appDeclarations = [
     TripComponent,
     ExpensesComponent,
     BalanceComponent,
-    ExpenseCreateComponent,
     SettingsComponent,
+    ExpenseEditComponent,
+    ExpenseDetailsComponent,
 
     HeaderComponent,
     SettlementFooterComponent,

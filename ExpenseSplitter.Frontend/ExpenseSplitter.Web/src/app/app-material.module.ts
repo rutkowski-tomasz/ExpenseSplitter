@@ -27,6 +27,7 @@ import {
     MatSliderModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MAT_SNACK_BAR_DEFAULT_OPTIONS,
 } from '@angular/material';
 
 const materialModules = [
@@ -61,7 +62,8 @@ const materialModules = [
     imports: materialModules,
     exports: materialModules,
     providers: [
-        { provide: ErrorStateMatcher, useClass: ErrorStateMatcher }
+        { provide: ErrorStateMatcher, useClass: ErrorStateMatcher },
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 }}
     ],
 })
 export class AppMaterialModule { }

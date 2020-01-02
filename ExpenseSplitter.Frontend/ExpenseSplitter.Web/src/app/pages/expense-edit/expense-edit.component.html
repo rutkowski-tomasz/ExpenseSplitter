@@ -1,8 +1,14 @@
 <es-header>
-    <ng-container heading>Nowy wydatek</ng-container>
+    <ng-container heading>
+        <span *ngIf="id">Edycja wydatku</span>
+        <span *ngIf="!id">Nowy wydatek</span>
+    </ng-container>
 
     <ng-container left>
-        <a [routerLink]="['/trips', uid]">
+        <a *ngIf="uid && id" [routerLink]="['/trips', uid, 'expenses', id]">
+            Anuluj
+        </a>
+        <a *ngIf="uid && !id" [routerLink]="['/trips', uid]">
             Anuluj
         </a>
     </ng-container>
@@ -120,6 +126,8 @@
                         <mat-form-field>
                             <input
                                 type="number"
+                                step="0.01"
+                                min="0.01"
                                 placeholder="Pozycja {{ i + 1 }}"
                                 matInput
                                 formControlName="value"

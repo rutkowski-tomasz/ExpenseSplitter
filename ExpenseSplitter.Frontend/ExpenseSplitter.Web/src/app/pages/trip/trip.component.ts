@@ -20,7 +20,9 @@ import { moveFromLeft, moveFromRight, moveFromTop, moveFromBottom } from "ngx-ro
 export class TripComponent implements OnInit, AfterViewInit {
 
     public trip: Trip;
-    public participants: string;
+    public participants = '';
+    public otherParticipantsCount = 0;
+    public shareUrl = '';
 
     @ViewChild('matTabGroup', { static: false }) matTabGroup: MatTabGroup;
     public selectedIndex = 0;
@@ -33,14 +35,31 @@ export class TripComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit() {
-
         this.activatedRoute.params.subscribe(params => {
             const uid = params.uid;
             this.tripService.GetTrip(uid).subscribe(data => {
                 this.trip = data;
-                this.participants = data.participants.map(x => x.name).join(', ');
+                this.buildParticipantsHeader(data);
+
+                this.shareUrl = `${window.location.origin}/join/${this.trip.uid}`;
             });
         });
+    }
+
+    private buildParticipantsHeader(trip: Trip) {
+
+        for (let i = 0; i < trip.participants.length; i++) {
+
+            const left = trip.participants.length - 1 - i;
+            if (this.participants.length + trip.participants[i].name.length > 36 && left > 1) {
+                this.otherParticipantsCount = left;
+                break;
+            }
+
+            this.participants += trip.participants[i].name + ', ';  
+        }
+
+        this.participants = this.participants.substr(0, this.participants.length - 2);
     }
 
     ngAfterViewInit(): void {

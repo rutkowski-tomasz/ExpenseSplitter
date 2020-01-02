@@ -9,8 +9,6 @@ export class Participant {
     tripUid: string;
     trip: Trip;
 
-    userId: number;
-    user: UserExtract;
-
-    ExpenseParticipations: ExpensePartParticipant[];
+    usersClaimed: UserExtract[];
+    expenseParticipations: ExpensePartParticipant[];
 }

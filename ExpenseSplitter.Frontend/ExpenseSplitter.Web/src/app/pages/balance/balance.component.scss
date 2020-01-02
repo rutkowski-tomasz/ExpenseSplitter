@@ -4,3 +4,61 @@
 :host  {
 	@include is-animated-host;
 }
+
+.balance {
+	padding: 0;
+
+	.participant-balance {
+		border-bottom: 1px solid mat-color($black-palette, 50);
+		padding: 8px 8px;
+		display: flex;
+		line-height: 24px;
+
+		&.negative {
+			flex-direction: row-reverse;
+
+			.value {
+				text-align: right;
+			}
+		}
+
+		&:not(.negative) {
+			.nick {
+				text-align: right;
+			}
+		}
+
+		.nick, .value {
+			flex-basis: 50%;
+			padding: 0 8px;
+		}
+
+		.value {
+			position: relative;
+
+			.text {
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 3;
+				width: 100%;
+				padding: 0 8px;
+			}
+
+			.bar {
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 2;
+				height: 100%;
+				border-radius: 4px;
+
+				background: mat-color($md-green, 200);
+			} 
+		}
+
+		&.negative .value .bar {
+			background-color: mat-color($md-red, 200);
+		}
+	}
+}

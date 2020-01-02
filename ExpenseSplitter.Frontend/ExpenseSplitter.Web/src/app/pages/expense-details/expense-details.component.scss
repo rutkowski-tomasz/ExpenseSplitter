@@ -1,0 +1,33 @@
+@import "src/scss/_colors";
+@import "src/scss/_mixins";
+
+:host  {
+	@include is-animated-host;
+}
+
+.details {
+	padding: 0;
+
+	.details-container {
+		background-color: $primary;
+		color: $white;
+
+		.name, .value {
+			text-align: center;
+			font-size: 17px;
+			line-height: 24px;
+		}
+
+		.value {
+			font-weight: 600;
+		}
+
+		.info {
+			padding: 24px 8px 8px;
+			display: flex;
+			justify-content: space-between;
+			font-size: 14px;
+			line-height: 16px;
+		}
+	}
+}

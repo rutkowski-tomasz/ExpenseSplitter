@@ -37,5 +37,11 @@ header {
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
+        ::ng-deep .sub {
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 16px;
+        }
     }
 }

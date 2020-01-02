@@ -54,6 +54,7 @@ namespace ExpenseSplitter.Api.Services
             var trip = _context
                 .Trips
                 .Include(x => x.Participants)
+                .ThenInclude(x => x.UsersClaimed)
                 .SingleOrDefault(
                     x => x.Uid == uid &&
                     x.Users.Any(y => y.User.Id == userId)

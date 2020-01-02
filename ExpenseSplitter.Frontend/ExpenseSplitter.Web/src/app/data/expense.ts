@@ -9,7 +9,7 @@ export class Expense {
     id: number;
     name: string;
 
-    expenseType: ExpenseTypeEnum;
+    type: ExpenseTypeEnum;
     createdAt: Date;
     updatedAt: Date;
     paidAt: Date;

@@ -14,12 +14,13 @@ import { ExpensePart } from 'src/app/data/expense-part';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part-model';
 
 @Component({
-    templateUrl: './expense-create.component.html',
-    styleUrls: ['./expense-create.component.scss']
+    templateUrl: './expense-edit.component.html',
+    styleUrls: ['./expense-edit.component.scss']
 })
-export class ExpenseCreateComponent implements OnInit {
+export class ExpenseEditComponent implements OnInit {
 
     public uid: string;
+    public id: number;
     public ExpenseTypeEnum = ExpenseTypeEnum;
     public participants: Participant[];
     public filteredParticipants: Observable<Participant[]>;
@@ -73,6 +74,7 @@ export class ExpenseCreateComponent implements OnInit {
     public ngOnInit() {
         this.activatedRoute.params.subscribe(params => {
             this.uid = params.uid;
+            this.id = params.id;
 
             this.tripService.GetTrip(this.uid).subscribe(data => {
                 this.participants = data.participants;
@@ -80,6 +82,25 @@ export class ExpenseCreateComponent implements OnInit {
                 this.SetDefaultPayer();
                 this.InitAutocomplete();
                 this.AddPart();
+            });
+
+            if (!this.id) {
+                return;
+            }
+
+            this.expenseService.GetExpense(this.uid, this.id).subscribe(data => {
+                this.name.setValue(data.name);
+                this.type.setValue(data.type);
+                this.paidAt.setValue(data.paidAt);
+                this.payer.setValue(data.payer);
+
+                while (this.parts.length !== 0) {
+                    this.parts.removeAt(0);
+                }
+
+                for (const part of data.parts) {
+                    this.parts.push(this.CreatePart(part.value, part.participants));
+                }
             });
         });
     }
@@ -121,10 +142,11 @@ export class ExpenseCreateComponent implements OnInit {
         this.parts.removeAt(index);
     }
 
-    public SetDefaultPayer()
-    {
+    public SetDefaultPayer() {
+
         const userId = +this.authService.GetDecodedToken().UserId;
-        const payer = this.participants.find(x => x.userId === userId);
+        const payer = this.participants.find(x => x.usersClaimed.some(y => y.id === userId));
+
         this.payer.setValue(payer);
     }
 
@@ -146,10 +168,12 @@ export class ExpenseCreateComponent implements OnInit {
         this.parts.push(this.CreatePart());
     }
 
-    public CreatePart(): FormGroup {
+    public CreatePart(value?: number, participants?: Participant[]): FormGroup {
+        const val = value ? value.toString() : '';
+
         const group = new FormGroup({
-            value: new FormControl(12.23, Validators.pattern(/^\d+(\.\d{0,2})?$/)),
-            participants: this.createParticipantsCheckboxes()
+            value: new FormControl(val, Validators.pattern(/^\d+(\.\d{0,2})?$/)),
+            participants: this.createParticipantsCheckboxes(participants)
         });
 
         return group;
@@ -159,11 +183,20 @@ export class ExpenseCreateComponent implements OnInit {
         return part.get('participants') as FormArray;
     }
 
-    private createParticipantsCheckboxes(): FormArray {
+    private createParticipantsCheckboxes(participants?: Participant[]): FormArray {
 
         const array = new FormArray([]);
-        for (let participant of this.participants) {
-            array.push(new FormControl(true));
+        for (let [i, participant] of this.participants.entries()) {
+
+            let checked = false;
+            if (participants) {
+                checked = participants.some(x => x.id == participant.id);
+            }
+            else if (this.parts.controls.length) {
+                checked = this.parts.controls[this.parts.controls.length - 1].value.participants[i];
+            }
+
+            array.push(new FormControl(checked));
         }
 
         return array;
