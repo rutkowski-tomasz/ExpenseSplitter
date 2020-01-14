@@ -43,6 +43,8 @@
 
     <caption>Twoje informacje</caption>
     <section>
+        <es-loading *ngIf="isLoading"></es-loading>
+
         <mat-form-field>
             <input matInput placeholder="Twój nick" formControlName="organizerNick" required />
             <mat-hint align="end" *ngIf="participantNameMaxLength">{{ organizerNick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>

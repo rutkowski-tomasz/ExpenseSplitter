@@ -32,16 +32,19 @@ const routes: Routes = [
                         path: 'new',
                         component: TripsCreateComponent,
                         data: { state: 'tripCreate' },
+                        canDeactivate: [ DiscardCanDeactivateGuard ],
                     },
                     {
                         path: ':uid/new-expense',
                         component: ExpenseEditComponent,
                         data: { state: 'expenseCreate' },
+                        canDeactivate: [ DiscardCanDeactivateGuard ],
                     },
                     {
                         path: ':uid/edit',
                         component: TripEditComponent,
                         data: { state: 'tripEdit' },
+                        canDeactivate: [ DiscardCanDeactivateGuard ],
                     },
                     {
                         path: ':uid/expenses/:id/edit',

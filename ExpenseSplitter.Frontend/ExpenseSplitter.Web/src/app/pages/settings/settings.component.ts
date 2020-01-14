@@ -12,8 +12,6 @@ import { ConfigService } from 'src/app/services/config-service/config.service';
 })
 export class SettingsComponent implements OnInit {
 
-    @ViewChild('form', {static: false}) form: NgForm;
-
     public formGroup = new FormGroup({
         nick: new FormControl('', [
             Validators.required,
@@ -21,6 +19,7 @@ export class SettingsComponent implements OnInit {
             Validators.maxLength(40),
         ]),
     });
+    public isLoading = false;
 
     public participantNameMaxLength = 0;
     public get nick(): AbstractControl {
@@ -36,7 +35,13 @@ export class SettingsComponent implements OnInit {
 
     public ngOnInit() {
 
+        this.isLoading = true;
         this.userService.userExtract.subscribe(userExtract => {
+
+            if (userExtract.nick !== null) {
+                this.isLoading = false;
+            }
+
             this.nick.setValue(userExtract.nick);
         });
 

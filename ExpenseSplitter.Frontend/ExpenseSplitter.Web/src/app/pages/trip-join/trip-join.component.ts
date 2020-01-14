@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class TripJoinComponent implements OnInit, AfterViewInit {
 
-    @ViewChild('joinFrom', { static: false }) form: NgForm;
+    @ViewChild('joinFrom', { static: false }) joinForm: NgForm;
 
     public formGroup = new FormGroup({
         uid: new FormControl('', [ Validators.required ]),
@@ -40,7 +40,7 @@ export class TripJoinComponent implements OnInit, AfterViewInit {
     public ngAfterViewInit() {
 
         if (this.uid.value) {
-            this.form.ngSubmit.emit();
+            this.joinForm.ngSubmit.emit();
         }
     }
 

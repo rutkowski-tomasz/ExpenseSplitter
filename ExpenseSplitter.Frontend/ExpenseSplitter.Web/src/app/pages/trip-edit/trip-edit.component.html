@@ -10,18 +10,20 @@
     </ng-container>
 
     <ng-container right>
-        <a role="button" type="button" (click)="createForm.ngSubmit.emit()">
+        <a role="button" type="button" (click)="editForm.ngSubmit.emit()">
             Zapisz
         </a>
     </ng-container>
 </es-header>
 
 <div class="container">
+    <es-loading *ngIf="isLoading"></es-loading>
+
     <form
         [formGroup]="formGroup"
         (ngSubmit)="onSubmit()"
         class="vertical-form"
-        #createForm="ngForm"
+        #editForm="ngForm"
     >
         <section>
             <mat-form-field>

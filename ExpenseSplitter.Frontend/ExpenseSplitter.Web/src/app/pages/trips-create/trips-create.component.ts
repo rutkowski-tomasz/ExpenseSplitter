@@ -1,18 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { CreateTripModel } from 'src/app/models/trip/create-trip-model';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { ConfigService } from 'src/app/services/config-service/config.service';
+import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 
 @Component({
     templateUrl: './trips-create.component.html',
     styleUrls: ['./trips-create.component.scss']
 })
-export class TripsCreateComponent implements OnInit {
-
-    @ViewChild('form', {static: false}) form: NgForm;
+export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -29,6 +28,7 @@ export class TripsCreateComponent implements OnInit {
             Validators.maxLength(40),
         ]),
     });
+    public isLoading = false;
 
     public tripNameMaxLength = 0;
     public get name(): AbstractControl {
@@ -52,13 +52,38 @@ export class TripsCreateComponent implements OnInit {
         private configService: ConfigService,
     ) { }
 
-    ngOnInit() {
+    public ngOnInit() {
         
+        this.isLoading = true;
         this.userService.userExtract.subscribe(userExtract => {
+
+            if (userExtract.nick !== null) {
+                this.isLoading = false;
+            }
+
             this.organizerNick.setValue(userExtract.nick);
         });
 
         this.loadConfiguration();
+    }
+
+    public isDirty = () => this.formGroup.dirty;
+
+    public submit() {
+
+        this.formGroup.markAllAsTouched();
+
+        if (this.formGroup.valid) {
+
+            const name = this.name.value;
+            const description = this.description.value;
+            const organizerNick = this.organizerNick.value;
+
+            const model: CreateTripModel = { name, description, organizerNick };
+            this.tripService.CreateTrip(model).subscribe(_ => {
+                this.router.navigate(['/trips']);
+            })
+        }
     }
 
     private loadConfiguration() {
@@ -86,22 +111,5 @@ export class TripsCreateComponent implements OnInit {
             this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
             this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
         });
-    }
-
-    submit() {
-
-        this.formGroup.markAllAsTouched();
-
-        if (this.formGroup.valid) {
-
-            const name = this.name.value;
-            const description = this.description.value;
-            const organizerNick = this.organizerNick.value;
-
-            const model: CreateTripModel = { name, description, organizerNick };
-            this.tripService.CreateTrip(model).subscribe(_ => {
-                this.router.navigate(['/trips']);
-            })
-        }
     }
 }

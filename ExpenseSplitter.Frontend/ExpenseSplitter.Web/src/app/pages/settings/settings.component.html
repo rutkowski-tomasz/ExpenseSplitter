@@ -16,35 +16,40 @@
     </ng-container>
 </es-header>
 
-<form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form" #settingsForm="ngForm">
-    <caption>Moje ustawienia</caption>
-    <section>
-        <mat-form-field>
-            <input matInput placeholder="Nick" formControlName="nick" required />
-            <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
-            <mat-error *ngIf="nick.invalid && nick.errors.required">
-                Nick jest wymagany
-            </mat-error>
-            <mat-error *ngIf="nick.invalid && nick.errors.minlength">
-                Za krótki nick, dopisz jeszcze {{ nick.errors.minlength.requiredLength - nick.errors.minlength.actualLength }} znaków
-            </mat-error>
-            <mat-error *ngIf="nick.invalid && nick.errors.maxlength">
-                Za długi nick, usuń jeszcze {{ nick.errors.maxlength.actualLength - nick.errors.maxlength.requiredLength }} znaków
-            </mat-error>
-        </mat-form-field>
-    </section>
-</form>
+<div class="container">
 
-<caption>
-    Akcje
-</caption>
-<section>
-    <a
-        role="button"
-        type="button"
-        class="primary full-width-button"
-        (click)="logOut()"
-    >
-        Wyloguj się
-    </a>
-</section>
+    <form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form" #settingsForm="ngForm">
+        <caption>Moje ustawienia</caption>
+        <section>
+            <es-loading *ngIf="isLoading"></es-loading>
+
+            <mat-form-field>
+                <input matInput placeholder="Nick" formControlName="nick" required />
+                <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
+                <mat-error *ngIf="nick.invalid && nick.errors.required">
+                    Nick jest wymagany
+                </mat-error>
+                <mat-error *ngIf="nick.invalid && nick.errors.minlength">
+                    Za krótki nick, dopisz jeszcze {{ nick.errors.minlength.requiredLength - nick.errors.minlength.actualLength }} znaków
+                </mat-error>
+                <mat-error *ngIf="nick.invalid && nick.errors.maxlength">
+                    Za długi nick, usuń jeszcze {{ nick.errors.maxlength.actualLength - nick.errors.maxlength.requiredLength }} znaków
+                </mat-error>
+            </mat-form-field>
+        </section>
+    </form>
+
+    <caption>
+        Akcje
+    </caption>
+    <section>
+        <a
+            role="button"
+            type="button"
+            class="primary full-width-button"
+            (click)="logOut()"
+        >
+            Wyloguj się
+        </a>
+    </section>
+</div>

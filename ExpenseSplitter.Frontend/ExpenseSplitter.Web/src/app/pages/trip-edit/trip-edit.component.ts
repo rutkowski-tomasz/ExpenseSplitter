@@ -1,21 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray, ValidatorFn } from '@angular/forms';
-import { Trip } from 'src/app/data/trip';
+import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray } from '@angular/forms';
 import { UpdateTripModel } from 'src/app/models/trip/update-trip-model';
 import { UpdateTripModelParticipant } from 'src/app/models/trip/update-trip-model-participant';
 import { ConfigService } from 'src/app/services/config-service/config.service';
+import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 
 @Component({
     templateUrl: './trip-edit.component.html',
     styleUrls: ['./trip-edit.component.scss']
 })
-export class TripEditComponent implements OnInit {
+export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public uid: string;
-
-    @ViewChild('form', {static: false}) form: NgForm;
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -28,6 +26,7 @@ export class TripEditComponent implements OnInit {
         ]),
         participants: new FormArray([]),
     });
+    public isLoading = false;
 
     public tripNameMaxLength = 0;
     public get name(): AbstractControl {
@@ -56,8 +55,10 @@ export class TripEditComponent implements OnInit {
 
         this.activatedRoute.params.subscribe(params => {
             this.uid = params.uid;
+            this.isLoading = true;
             this.tripService.GetTrip(this.uid).subscribe(data => {
 
+                this.isLoading = false;
                 this.name.setValue(data.name);
                 this.description.setValue(data.description);
 
@@ -118,7 +119,9 @@ export class TripEditComponent implements OnInit {
             });
         }
     }
-    
+
+    public isDirty = () => this.formGroup.dirty;
+
     private loadConfiguration() {
 
         this.configService.GetConstants().subscribe(constants => {

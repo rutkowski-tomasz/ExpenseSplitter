@@ -23,6 +23,7 @@ export class TripComponent implements OnInit, AfterViewInit {
     public participants = '';
     public otherParticipantsCount = 0;
     public shareUrl = '';
+    public uid: string;
 
     @ViewChild('matTabGroup', { static: false }) matTabGroup: MatTabGroup;
     public selectedIndex = 0;
@@ -36,8 +37,8 @@ export class TripComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.activatedRoute.params.subscribe(params => {
-            const uid = params.uid;
-            this.tripService.GetTrip(uid).subscribe(data => {
+            this.uid = params.uid;
+            this.tripService.GetTrip(this.uid).subscribe(data => {
                 this.trip = data;
                 this.buildParticipantsHeader(data);
 

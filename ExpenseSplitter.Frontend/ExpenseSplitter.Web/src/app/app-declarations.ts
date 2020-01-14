@@ -19,6 +19,7 @@ import { ExpenseDetailsComponent } from './pages/expense-details/expense-details
 import { DiscardDialog } from './shared/discard/discard-dialog.component';
 import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
 import { TripJoinComponent } from './pages/trip-join/trip-join.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -44,6 +45,7 @@ export const appDeclarations = [
     LinkCopiedSnackBarComponent,
     DiscardDialog,
     AddTripSheetComponent,
+    LoadingComponent,
 
     ShareDirective,
 ];
