@@ -10,11 +10,15 @@
                         placeholder="Email"
                         formControlName="email"
                     />
+                    <mat-hint align="end" *ngIf="userEmailMaxLength">{{ email.value?.length || 0 }}/{{ userEmailMaxLength }}</mat-hint>
                     <mat-error *ngIf="email.invalid && email.errors.required">
                         Wprowadź email
                     </mat-error>
                     <mat-error *ngIf="email.invalid && email.errors.email">
                         Niepoprawny adres email
+                    </mat-error>
+                    <mat-error *ngIf="email.invalid && email.errors.maxlength">
+                        Za długi email, usuń jeszcze {{ email.errors.maxlength.actualLength - email.errors.maxlength.requiredLength }} znaków
                     </mat-error>
                     <mat-error *ngIf="email.invalid && email.errors.taken">
                         Podany adres email jest już zajęty
@@ -55,8 +59,15 @@
                         placeholder="Nick"
                         formControlName="nick"
                     />
+                    <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
                     <mat-error *ngIf="nick.invalid && nick.errors.required">
                         Wprowadź nick
+                    </mat-error>
+                    <mat-error *ngIf="nick.invalid && nick.errors.minlength">
+                        Za krótki nick, dopisz jeszcze {{ nick.errors.minlength.requiredLength - nick.errors.minlength.actualLength }} znaków
+                    </mat-error>
+                    <mat-error *ngIf="nick.invalid && nick.errors.maxlength">
+                        Za długi nick, usuń jeszcze {{ nick.errors.maxlength.actualLength - nick.errors.maxlength.requiredLength }} znaków
                     </mat-error>
                 </mat-form-field>
 

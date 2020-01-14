@@ -9,7 +9,7 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
-        [StringLength(Constants.UserEmailLength)]
+        [StringLength(Constants.UserEmailMaxLength)]
         public string Email { get; set; }
 
         [StringLength(Constants.UserPasswordLength)]

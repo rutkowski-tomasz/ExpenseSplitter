@@ -26,6 +26,17 @@
 
 <div class="container">
     <section class="trips">
+        <div class="fetching-results list" *ngIf="!trips">
+            <div class="item-placeholder">
+                <div class="primary name"></div>
+                <div class="secondary description"></div>
+            </div>
+            <div class="item-placeholder">
+                <div class="primary name"></div>
+                <div class="secondary description"></div>
+            </div>
+        </div>
+
         <a
             class="trip"
             *ngFor="let trip of trips"
@@ -49,6 +60,11 @@
             </div>
         </a>
     </section>
+    <div class="no-results" *ngIf="trips && trips.length === 0">
+        <div class="call-to-action-text">
+            Na razie nie masz dodanych żadnych rozliczeń. Kliknij na <b>+</b> aby je stworzyć nowe lub dołączyć do istniejącego
+        </div>
+    </div>
 </div>
 
 <div class="add-new">

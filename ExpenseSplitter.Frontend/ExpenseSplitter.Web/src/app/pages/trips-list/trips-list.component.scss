@@ -20,13 +20,43 @@
 
         .details {
             .name {
+                line-height: 24px;
                 font-weight: 600;
                 color: $primary;
+                margin-bottom: 4px;
+            }
+
+            .description {
+                line-height: 16px;
             }
         }
 
         .actions {
             margin-left: auto;
+            mat-icon {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .fetching-results.list .item-placeholder {
+
+        &:nth-of-type(1) {
+            .name {
+                width: 130px;
+            }
+            .description {
+                width: 200px;
+            }
+        }
+
+        &:nth-of-type(2) {
+            .name {
+                width: 120px;
+            }
+            .description {
+                width: 150px;
+            }
         }
     }
 }

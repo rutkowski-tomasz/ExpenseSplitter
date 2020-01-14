@@ -50,10 +50,10 @@
                 Nick jest wymagany
             </mat-error>
             <mat-error *ngIf="organizerNick.invalid && organizerNick.errors.minlength">
-                Za krótki nick, dopisz jeszcze {{ name.errors.minlength.requiredLength - name.errors.minlength.actualLength }} znaków
+                Za krótki nick, dopisz jeszcze {{ organizerNick.errors.minlength.requiredLength - organizerNick.errors.minlength.actualLength }} znaków
             </mat-error>
             <mat-error *ngIf="organizerNick.invalid && organizerNick.errors.maxlength">
-                Za długi nick, usuń jeszcze {{ name.errors.maxlength.actualLength - name.errors.maxlength.requiredLength }} znaków
+                Za długi nick, usuń jeszcze {{ organizerNick.errors.maxlength.actualLength - organizerNick.errors.maxlength.requiredLength }} znaków
             </mat-error>
         </mat-form-field>
     </section>

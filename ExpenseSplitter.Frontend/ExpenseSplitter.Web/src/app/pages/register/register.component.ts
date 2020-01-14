@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from 'src/app/services/user-service/user.service';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 
 @Component({
     templateUrl: './register.component.html',
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit {
         nick: new FormControl('', [Validators.required]),
     });
 
+    public userEmailMaxLength = 0;
     public get email(): AbstractControl {
         return this.formGroup.get('email');
     }
@@ -27,6 +29,7 @@ export class RegisterComponent implements OnInit {
     public get repassword(): AbstractControl {
         return this.formGroup.get('repassword');
     }
+    public participantNameMaxLength = 0;
     public get nick(): AbstractControl {
         return this.formGroup.get('nick');
     }
@@ -35,10 +38,11 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private authService: AuthService,
         private userService: UserService,
-        private changeDetectorRef: ChangeDetectorRef,
+        private configService: ConfigService,
     ) { }
 
     public ngOnInit() {
+        this.loadConfiguration();
     }
 
     public onSubmit() {
@@ -55,7 +59,7 @@ export class RegisterComponent implements OnInit {
                 },
                 (httpErrorResponse: HttpErrorResponse) => {
 
-                    if (httpErrorResponse.status === 422) {
+                    if (httpErrorResponse.status === 409) {
                         this.email.setErrors({ taken: true });
                     }
                 }
@@ -69,5 +73,26 @@ export class RegisterComponent implements OnInit {
                 ? null
                 : { mismatch: true };
         };
+    }
+
+    private loadConfiguration() {
+
+        this.configService.GetConstants().subscribe(constants => {
+
+            this.email.setValidators([
+                Validators.required,
+                Validators.maxLength(constants['UserEmailMaxLength']),
+                Validators.email,
+            ]);
+
+            this.nick.setValidators([
+                Validators.required,
+                Validators.minLength(constants['ParticipantNameMinLength']),
+                Validators.maxLength(constants['ParticipantNameMaxLength']),
+            ]);
+
+            this.userEmailMaxLength = constants['UserEmailMaxLength'];
+            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+        });
     }
 }

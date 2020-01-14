@@ -14,7 +14,7 @@ namespace ExpenseSplitter.Api.Infrastructure
         public const int TripNameMinLength = 3;
         public const int TripDescriptionMinLength = 0;
         public const int TripDescriptionMaxLength = 50;
-        public const int UserEmailLength = 50;
+        public const int UserEmailMaxLength = 50;
         public const int UserPasswordLength = 100;
 
         public const int UidGenerateLength = 6;

@@ -38,7 +38,7 @@ namespace ExpenseSplitter.Api.Controllers
             var registerdUser = _userService.RegisterUser(email, password, nick);
 
             if (registerdUser == null)
-                return UnprocessableEntity();
+                return Conflict();
 
             var authorizationToken = _userService.GetAuthorizationToken(registerdUser);
 

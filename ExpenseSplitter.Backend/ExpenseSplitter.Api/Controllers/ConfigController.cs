@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseSplitter.Api.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route(Constants.PublicRouteName + "/config")]
     public class ConfigController : Controller
     {

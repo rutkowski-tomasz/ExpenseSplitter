@@ -22,12 +22,75 @@
             .name {
                 font-weight: 600;
                 color: $primary;
+                line-height: 24px;
+                margin-bottom: 4px;
+            }
+
+            .paid-by {
+                line-height: 16px;
+                font-size: 14px;
             }
         }
 
         .summary {
 			margin-left: auto;
-			text-align: right;
+            text-align: right;
+            font-size: 14px;
+            line-height: 16px;
+
+            > div {
+                margin: 4px 0;
+            }
         }
     }
+    
+    .fetching-results.list .item-placeholder {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .summary {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            & > div {
+                margin: 4px 0 0;                
+            }
+        }
+
+        &:nth-of-type(1) {
+            .name {
+                width: 130px;
+            }
+            .description {
+                width: 200px;
+            }
+            .value {
+                width: 80px;
+            }
+            .date {
+                width: 70px;
+            }
+        }
+
+        &:nth-of-type(2) {
+            .name {
+                width: 120px;
+            }
+            .description {
+                width: 150px;
+            }
+            .value {
+                width: 50px;
+            }
+            .date {
+                width: 74px;
+            }
+        }
+    }
+}
+
+.container .no-results {
+    height: calc(100% - 56px);
 }
