@@ -16,6 +16,7 @@ import { ShareDirective } from './directives/share.directive';
 import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/link-copied-snack-bar.component';
 import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
+import { DiscardDialog } from './shared/discard/discard-dialog.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -38,6 +39,7 @@ export const appDeclarations = [
     SettlementFooterComponent,
     ExpenseTypeComponent,
     LinkCopiedSnackBarComponent,
+    DiscardDialog,
 
     ShareDirective,
 ];

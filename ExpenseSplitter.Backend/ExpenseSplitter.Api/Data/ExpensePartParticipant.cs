@@ -6,8 +6,8 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
-        public int ExpenseId { get; set; }
-        public Expense Expense { get; set; }
+        public int ExpensePartId { get; set; }
+        public ExpensePart ExpensePart { get; set; }
         public int ParticipantId { get; set; }
         public Participant Participant { get; set; }
     }

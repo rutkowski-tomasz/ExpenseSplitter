@@ -3,6 +3,7 @@ using System.Linq;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
+using ExpenseSplitter.Api.Models.Participant;
 using ExpenseSplitter.Api.Models.Trips;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace ExpenseSplitter.Api.Services
     {
         List<Trip> GetTrips();
         Trip GetTrip(string uid);
+        List<ParticipantExtractModel> GetTripParticipants(string uid);
         Trip CreateTrip(CreateTripModel model);
         Trip UpdateTrip(UpdateTripModel model);
         bool TryDeleteTrip(string uid);
@@ -61,6 +63,22 @@ namespace ExpenseSplitter.Api.Services
                 );
 
             return trip;
+        }
+
+        public List<ParticipantExtractModel> GetTripParticipants(string uid)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var participants = _context
+                .TripsParticipants
+                .Include(x => x.UsersClaimed)
+                .Where(x => 
+                    x.TripUid == uid &&
+                    x.Trip.Users.Any(y => y.Id == userId)
+                )
+                .Select(x => x.ToParticipantExtract())
+                .ToList();
+
+            return participants;
         }
 
         public Trip CreateTrip(CreateTripModel model)

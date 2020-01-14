@@ -12,7 +12,7 @@ namespace ExpenseSplitter.Api.Services
     {
         List<ExpenseExtractModel> GetExpenses(string uid);
         Expense GetExpense(string uid, int id);
-        Expense CreateExpense(string uid, CreateExpenseModel model);
+        Expense CreateExpense(string uid, UpdateExpenseModel model);
         Expense UpdateExpense(string uid, UpdateExpenseModel model);
         bool TryDeleteExpense(string uid, int id);
     }
@@ -21,14 +21,17 @@ namespace ExpenseSplitter.Api.Services
     {
         private readonly Context _context;
         private readonly IUserService _userService;
+        private readonly IExpenseExtensions _expenseExtensions;
 
         public ExpenseService(
             Context context,
-            IUserService userService
+            IUserService userService,
+            IExpenseExtensions expenseExtensions
         )
         {
             _context = context;
             _userService = userService;
+            _expenseExtensions = expenseExtensions;
         }
 
         public List<ExpenseExtractModel> GetExpenses(string uid)
@@ -61,6 +64,8 @@ namespace ExpenseSplitter.Api.Services
                 .Expenses
                 .Include(x => x.Payer)
                 .Include(x => x.Parts)
+                .ThenInclude(x => x.PartParticipants)
+                .ThenInclude(x => x.Participant)
                 .SingleOrDefault(x =>
                     x.TripUid == uid
                     && x.Id == id
@@ -69,7 +74,7 @@ namespace ExpenseSplitter.Api.Services
             return expense;
         }
 
-        public Expense CreateExpense(string uid, CreateExpenseModel model)
+        public Expense CreateExpense(string uid, UpdateExpenseModel model)
         {
             var userId = _userService.GetCurrentUserId();
             var trip = _context
@@ -82,30 +87,9 @@ namespace ExpenseSplitter.Api.Services
                 return null;
 
             var expense = new Expense();
-
-            expense.Name = model.Name;
-            expense.Type = model.Type;
-            expense.PaidAt = model.PaidAt;
-
             expense.TripUid = uid;
             expense.AdderId = userId;
-            expense.PayerId = model.PayerId;
-
-            expense.Parts = new List<ExpensePart>();
-            foreach (var part in model.Parts)
-            {
-                expense.Parts.Add(new ExpensePart
-                {
-                    Value = part.Value,
-                    Participants = _context
-                        .TripsParticipants
-                        .Where(x =>
-                            x.TripUid == uid &&
-                            part.ParticipantIds.Any(y => y == x.Id)
-                        )
-                        .ToList(),
-                });
-            }
+            expense = _expenseExtensions.Update(expense, model);
 
             _context.Expenses.Add(expense);
             _context.SaveChanges();
@@ -120,13 +104,16 @@ namespace ExpenseSplitter.Api.Services
                 .Expenses
                 .SingleOrDefault(x =>
                     x.Trip.Uid == uid
-                    && x.Id == model.Id
+                    && x.Id == model.Id.Value
                     && x.Trip.Users.Any(y => y.UserId == userId));
 
             if (expense == null)
                 return null;
 
-            expense.Update(model);
+            foreach (var part in expense.Parts.ToList())
+                _context.ExpensesParts.Remove(part);
+
+            expense = _expenseExtensions.Update(expense, model);
             _context.SaveChanges();
 
             return expense;

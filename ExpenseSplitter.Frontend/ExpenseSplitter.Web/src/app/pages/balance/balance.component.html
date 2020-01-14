@@ -1,11 +1,14 @@
-<div class="container">
+<div class="container page-with-tabs" *ngIf="balance">
     <section class="balance">
         <div
             *ngFor="let participantBalance of balance.participantsBalance"
             class="participant-balance"
             [class.negative]="participantBalance.value < 0"
         >
-            <div class="nick" [class.my-balance]="participantBalance.participantId === userId">
+            <div
+                class="nick"
+                [class.my-balance]="participantBalance.participantId === userId"
+            >
                 {{ participantBalance.participantNick }}
                 <span *ngIf="participantBalance.participantId === userId">
                     (Ja)
@@ -13,15 +16,60 @@
             </div>
             <div class="value">
                 <div class="text">
-                    {{ participantBalance.value | currency:'PLN' }}
+                    {{ participantBalance.value | currency: "PLN" }}
                 </div>
-                <div class="bar" [style.width.%]="calculateBarLength(participantBalance.value)"></div>
+                <div
+                    class="bar"
+                    [style.width.%]="
+                        calculateBarLength(participantBalance.value)
+                    "
+                ></div>
             </div>
         </div>
     </section>
 
-    <caption>Jak rozliczyć wydatki?</caption>
+    <caption>
+        Jak rozliczyć wydatki?
+    </caption>
     <section class="settlements">
-        {{ balance.settlesBalance | json }}
+        <div
+            *ngFor="let settlement of balance.settlesBalance"
+            class="settlement"
+        >
+            <div class="details-wrapper">
+                <div class="who">
+                    <div class="from">
+                        {{ settlement.fromParticipantNick }}
+                    </div>
+                    <div class="desc">
+                        powinien zwrócić dla
+                    </div>
+                    <div class="to">
+                        {{ settlement.toParticipantNick }}
+                    </div>
+                </div>
+                <div class="value">
+                    <strong>
+                        {{ settlement.value | currency: "PLN" }}
+                    </strong>
+                </div>
+            </div>
+            <div class="more">
+                <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Settlement actions"
+                    color="primary"
+                >
+                    <mat-icon>more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="markAsPaid(settlement)">
+                        <mat-icon>check</mat-icon>
+                        <span>Oznacz jako zapłacone</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
     </section>
 </div>

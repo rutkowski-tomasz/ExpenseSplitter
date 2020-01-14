@@ -1,29 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { CreateTripModel } from 'src/app/models/trip/create-trip-model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { ExpenseTypeEnum } from 'src/app/data/expense-type';
-import { CreateExpenseModel } from 'src/app/models/expense/create-expense-model';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Participant } from 'src/app/data/participant';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
-import { ExpensePart } from 'src/app/data/expense-part';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part-model';
+import { ExpensePartParticipant } from 'src/app/data/expense-part-participant';
+import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
+import { UpdateExpenseModel } from 'src/app/models/expense/update-expense-model';
+import { MatDialog } from '@angular/material';
+import { DiscardDialog } from 'src/app/shared/discard/discard-dialog.component';
+import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 
 @Component({
     templateUrl: './expense-edit.component.html',
     styleUrls: ['./expense-edit.component.scss']
 })
-export class ExpenseEditComponent implements OnInit {
+export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public uid: string;
     public id: number;
     public ExpenseTypeEnum = ExpenseTypeEnum;
-    public participants: Participant[];
-    public filteredParticipants: Observable<Participant[]>;
+    public participants: ParticipantExtractModel[];
+    public filteredParticipants: Observable<ParticipantExtractModel[]>;
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -69,6 +71,7 @@ export class ExpenseEditComponent implements OnInit {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private authService: AuthService,
+        private matDialog: MatDialog,
     ) { }
 
     public ngOnInit() {
@@ -76,8 +79,8 @@ export class ExpenseEditComponent implements OnInit {
             this.uid = params.uid;
             this.id = params.id;
 
-            this.tripService.GetTrip(this.uid).subscribe(data => {
-                this.participants = data.participants;
+            this.tripService.GetParticipants(this.uid).subscribe(data => {
+                this.participants = data;
 
                 this.SetDefaultPayer();
                 this.InitAutocomplete();
@@ -99,7 +102,7 @@ export class ExpenseEditComponent implements OnInit {
                 }
 
                 for (const part of data.parts) {
-                    this.parts.push(this.CreatePart(part.value, part.participants));
+                    this.parts.push(this.CreatePart(part.value, part.partParticipants));
                 }
             });
         });
@@ -109,7 +112,7 @@ export class ExpenseEditComponent implements OnInit {
 
         if (this.formGroup.valid) {
 
-            const model = new CreateExpenseModel();
+            const model = new UpdateExpenseModel();
             model.name = this.name.value;
             model.type = this.type.value;
             model.paidAt = this.paidAt.value;
@@ -132,9 +135,19 @@ export class ExpenseEditComponent implements OnInit {
                 model.parts.push({ value, participantIds });
             }
 
-            this.expenseService.CreateExpense(this.uid, model).subscribe(_ => {
-                this.router.navigate(['/trips', this.uid]);
-            });
+            if (this.id) {
+
+                model.id = this.id;
+                this.expenseService.UpdateExpense(this.uid, model).subscribe(_ => {
+                    this.router.navigate(['/trips', this.uid, 'expenses', this.id]);
+                });
+
+            } else {
+
+                this.expenseService.CreateExpense(this.uid, model).subscribe(_ => {
+                    this.router.navigate(['/trips', this.uid]);
+                });
+            }
         }
     }
 
@@ -145,7 +158,7 @@ export class ExpenseEditComponent implements OnInit {
     public SetDefaultPayer() {
 
         const userId = +this.authService.GetDecodedToken().UserId;
-        const payer = this.participants.find(x => x.usersClaimed.some(y => y.id === userId));
+        const payer = this.participants.find(x => x.claimedUserIds.some(y => y === userId));
 
         this.payer.setValue(payer);
     }
@@ -159,16 +172,15 @@ export class ExpenseEditComponent implements OnInit {
             );
     }
 
-    public DisplayParticipant(participant?: Participant): string | undefined {
-        return participant ? participant.name : undefined;
+    public DisplayParticipant(participant?: ParticipantExtractModel): string | undefined {
+        return participant ? participant.nick : undefined;
     }
 
-    public AddPart()
-    {
+    public AddPart() {
         this.parts.push(this.CreatePart());
     }
 
-    public CreatePart(value?: number, participants?: Participant[]): FormGroup {
+    public CreatePart(value?: number, participants?: ExpensePartParticipant[]): FormGroup {
         const val = value ? value.toString() : '';
 
         const group = new FormGroup({
@@ -183,14 +195,14 @@ export class ExpenseEditComponent implements OnInit {
         return part.get('participants') as FormArray;
     }
 
-    private createParticipantsCheckboxes(participants?: Participant[]): FormArray {
+    private createParticipantsCheckboxes(participants?: ExpensePartParticipant[]): FormArray {
 
         const array = new FormArray([]);
         for (let [i, participant] of this.participants.entries()) {
 
             let checked = false;
             if (participants) {
-                checked = participants.some(x => x.id == participant.id);
+                checked = participants.some(x => x.participantId == participant.id);
             }
             else if (this.parts.controls.length) {
                 checked = this.parts.controls[this.parts.controls.length - 1].value.participants[i];
@@ -202,9 +214,17 @@ export class ExpenseEditComponent implements OnInit {
         return array;
     }
 
-    private filterParticipants(value: string): Participant[] {
+    private filterParticipants(value: string): ParticipantExtractModel[] {
         const filterValue = value.toLowerCase();
-        return this.participants.filter(option => option.name.toLowerCase().includes(filterValue));
+        return this.participants.filter(option => option.nick.toLowerCase().includes(filterValue));
     }
+
+    public onDelete() {
+        this.expenseService.DeleteExpense(this.uid, this.id).subscribe(_ => {
+            this.router.navigate(['/trips', this.uid]);
+        });
+    }
+
+    public isDirty = () => this.formGroup.dirty;
 }
 

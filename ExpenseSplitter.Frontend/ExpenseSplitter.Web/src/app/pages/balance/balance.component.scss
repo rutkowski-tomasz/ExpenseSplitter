@@ -59,6 +59,42 @@
 
 		&.negative .value .bar {
 			background-color: mat-color($md-red, 200);
+			right: 0;
+			left: auto;
+		}
+	}
+}
+
+.settlements {
+	margin-bottom: 32px;
+	padding: 24px 16px;
+
+	.settlement {
+		border: 1px solid mat-color($black-palette, 50);
+		border-radius: 4px;
+		margin-bottom: 16px;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+
+		.details-wrapper {
+			padding: 8px 16px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			.who {
+				.desc {
+					font-size: 12px;
+					line-height: 24px;
+				}
+			}
+		}
+
+		.more {
+			background: mat-color($black-palette, 50);
+			text-align: right;
 		}
 	}
 }

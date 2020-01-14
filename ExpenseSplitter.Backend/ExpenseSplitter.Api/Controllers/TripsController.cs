@@ -36,6 +36,17 @@ namespace ExpenseSplitter.Api.Controllers
             return new JsonResult(trip);
         }
 
+        [HttpGet("{uid}/participants")]
+        public IActionResult GetTripParticipants(string uid)
+        {
+            var participants = _tripService.GetTripParticipants(uid);
+
+            if (participants == null)
+                return NotFound();
+
+            return new JsonResult(participants);
+        }
+
         [HttpPost]
         public IActionResult CreateTrip([FromBody] CreateTripModel model)
         {

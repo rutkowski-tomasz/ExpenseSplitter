@@ -6,6 +6,7 @@ import { UserExtract } from 'src/app/data/user-extract';
 import { Trip } from 'src/app/data/trip';
 import { CreateTripModel } from 'src/app/models/trip/create-trip-model';
 import { UpdateTripModel } from 'src/app/models/trip/update-trip-model';
+import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +24,10 @@ export class TripService {
 
     public GetTrip(uid: string): Observable<Trip> {
         return this.callService.get<Trip>(`${this.servicePrefix}/${uid}`);
+    }
+
+    public GetParticipants(uid: string): Observable<ParticipantExtractModel[]> {
+        return this.callService.get<ParticipantExtractModel[]>(`${this.servicePrefix}/${uid}/participants`);
     }
 
     public CreateTrip(model: CreateTripModel): Observable<Trip> {

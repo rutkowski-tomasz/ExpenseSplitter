@@ -51,7 +51,7 @@ export class TripComponent implements OnInit, AfterViewInit {
         for (let i = 0; i < trip.participants.length; i++) {
 
             const left = trip.participants.length - 1 - i;
-            if (this.participants.length + trip.participants[i].name.length > 36 && left > 1) {
+            if (this.participants.length + trip.participants[i].name.length > 26 && left > 1) {
                 this.otherParticipantsCount = left;
                 break;
             }

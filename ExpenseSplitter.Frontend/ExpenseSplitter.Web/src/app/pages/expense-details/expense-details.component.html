@@ -6,19 +6,26 @@
     </ng-container>
 
     <ng-container right>
-        <a role="button" type="button" [routerLink]="['/trips', uid, 'expenses', id, 'edit']">
+        <a
+            role="button"
+            type="button"
+            [routerLink]="['/trips', uid, 'expenses', id, 'edit']"
+        >
             Edytuj
         </a>
     </ng-container>
 </es-header>
 
 <div class="container">
-    <section class="details">
+    <section class="details" [class.sticky]="stickyHeader">
         <div class="details-container" *ngIf="expense">
             <div class="name">{{ expense.name }}</div>
-            <div class="value">{{ value | currency:'PLN' }}</div>
+            <div class="value">{{ value | currency: "PLN" }}</div>
             <div class="info">
-                <div class="paid-by">Zapłacił(a) {{ expense.payer.name }} <span *ngIf="expense.payer.id === userId">(Ja)</span></div>
+                <div class="paid-by">
+                    Zapłacił(a) {{ expense.payer.name }}
+                    <span *ngIf="expense.payer.id === userId">(Ja)</span>
+                </div>
                 <div class="paid-at">{{ expense.paidAt | date }}</div>
             </div>
         </div>
@@ -28,8 +35,14 @@
         W sumie
     </caption>
     <section class="summary" *ngIf="summary">
-        <div *ngFor="let sum of summary">
-            {{ sum.nick }} {{ sum.value | currency:'PLN' }}
+        <div *ngFor="let sum of summary" class="summary-row">
+            <div class="nick">{{ sum.nick }}</div>
+            <div class="value">
+                <ng-container *ngIf="sum.value !== 0; else noValue">
+                    {{ sum.value | currency:'PLN' }}
+                </ng-container>
+                <ng-template #noValue>&mdash;</ng-template>
+            </div>
         </div>
     </section>
 
@@ -37,12 +50,33 @@
         Pozycje na rachunku
     </caption>
     <section class="parts" *ngIf="expense && expense.parts">
-        <div *ngFor="let part of expense.parts">
-            {{ part.value | currency:'PLN' }}
 
-            <div *ngFor="let participant of part.participants">
-                {{ participant.name }}
-            </div>
+        <div class="hscrollable">
+            <table class="table table-header-rotated">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="rotate" *ngFor="let participant of participants">
+                            <div>
+                                <span>{{ participant.nick }}</span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let part of expense.parts">
+                        <th class="row-header">
+                            {{ part.value | currency: "PLN" }}
+                        </th>
+                        <td *ngFor="let participant of participants">
+                            <div class="content">
+                                <mat-icon *ngIf="isParticipantInvolvedInPart(participant, part)">check</mat-icon>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
     </section>
 </div>

@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { Expense } from 'src/app/data/expense';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { Participant } from 'src/app/data/participant';
+import { TripService } from 'src/app/services/trip-service/trip.service';
+import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
+import { ExpensePart } from 'src/app/data/expense-part';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
     templateUrl: './expense-details.component.html',
@@ -16,13 +20,16 @@ export class ExpenseDetailsComponent implements OnInit {
     public expense: Expense;
     public userId: number;
     public value: number;
+    public stickyHeader: boolean = false;
+    public participants = new Array<ParticipantExtractModel>();
 
-    public summary: Array<{ id: number, nick: string, value: number }>;
+    public summary: Array<{ nick: string, value: number }>;
 
     constructor(
         private expenseService: ExpenseService,
         private activatedRoute: ActivatedRoute,
         private userService: UserService,
+        private tripService: TripService,
     ) { }
 
     public ngOnInit() {
@@ -34,35 +41,42 @@ export class ExpenseDetailsComponent implements OnInit {
             this.uid = params.uid;
             this.id = +params.id;
 
+            this.tripService.GetParticipants(this.uid).subscribe(data => {
+                this.participants = data;
+                this.calculateSummary();
+            });
+
             this.expenseService.GetExpense(this.uid, this.id).subscribe(data => {
                 this.expense = data;
-                console.log(data.parts);
                 this.calculateSummary();
             });
         });
     }
 
+    public isParticipantInvolvedInPart(participant: ParticipantExtractModel, part: ExpensePart) {
+        return part.partParticipants.some(x => x.participantId === participant.id);
+    }
+
     private calculateSummary() {
+        if (!this.participants || !this.expense) {
+            return;
+        }
+
         this.value = this.expense.parts.reduce((p, c) => p + c.value, 0);
 
         this.summary = new Array();
-        for (const part of this.expense.parts) {
-            const perParticipant = part.value / part.participants.length;
+        for (const participant of this.participants) {
 
-            for (const participant of part.participants) {
-                let participantSummary = this.summary.find(x => x.id == participant.id);
-                if (!participantSummary) {
-                    participantSummary = {
-                        id: participant.id,
-                        nick: participant.name,
-                        value: 0.0,
-                    }
-                }
-
-                participantSummary.value += perParticipant;
-                this.summary.push(participantSummary);
-            }
+            this.summary.push({
+                nick: participant.nick,
+                value: this
+                    .expense
+                    .parts
+                    .filter(x =>
+                        x.partParticipants.some(y => y.participantId === participant.id)
+                    )
+                    .reduce((p, c) => p + c.value / c.partParticipants.length, 0),
+            });
         }
     }
 }
-

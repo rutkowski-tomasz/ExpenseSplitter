@@ -55,6 +55,9 @@ section {
 .container {
     overflow-y: scroll;
     height: calc(100vh - #{$headerHeight});
+    &.page-with-tabs {
+        height: calc(100vh - #{$headerHeight} - #{$tabsHeight});
+    }
 }
 .warn {
     color: $warn;
@@ -65,4 +68,9 @@ section {
 .full-width-button {
     display: block;
     text-align: center;
+}
+.hscrollable {
+    width: 100%;
+    overflow-x: scroll;
+    padding-bottom: 8px;
 }

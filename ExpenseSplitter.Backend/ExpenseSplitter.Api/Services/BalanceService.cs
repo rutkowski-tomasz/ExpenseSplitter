@@ -11,6 +11,7 @@ namespace ExpenseSplitter.Api.Services
     public interface IBalanceService
     {
         BalanceResponseModel GetTripBalance(string uid);
+        Expense MarkSettlementAsPaid(string uid, decimal value, int fromParticipantId, int toParticipantId);
     }
 
     public class BalanceService : IBalanceService
@@ -54,6 +55,43 @@ namespace ExpenseSplitter.Api.Services
             return response;
         }
 
+        public Expense MarkSettlementAsPaid(string uid, decimal value, int fromParticipantId, int toParticipantId)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var trip = _context
+                .Trips
+                .Include(x => x.Expenses)
+                .SingleOrDefault(x => 
+                    x.Uid == uid &&
+                    x.Users.Any(y => y.UserId == userId)
+                );
+
+            if (trip == null)
+                return null;
+
+            var expense = new Expense();
+            expense.PaidAt = DateTime.Now;
+            expense.Type = ExpenseType.Transfer;
+            expense.AdderId = userId;
+            expense.PayerId = fromParticipantId;
+
+            expense.Parts = new List<ExpensePart>() {
+                new ExpensePart {
+                    Value = value,
+                    PartParticipants = new List<ExpensePartParticipant> {
+                        new ExpensePartParticipant {
+                            ParticipantId = toParticipantId
+                        }
+                    }
+                }
+            };
+
+            trip.Expenses.Add(expense);
+            _context.SaveChanges();
+
+            return expense;
+        }
+
         private List<ParticipantBalance> calculateParticipantsBalance(ICollection<Participant> participants, string tripUid)
         {
             var participantsBalance = new List<ParticipantBalance>();
@@ -62,31 +100,24 @@ namespace ExpenseSplitter.Api.Services
             {
                 var balance = _context
                     .ExpensesParts
-                    .Include(x => x.Participants)
+                    .Include(x => x.PartParticipants)
                     .Include(x => x.Expense)
                     .Where(x => x.Expense.TripUid == tripUid)
-                    .ToList();
-
-                var c = balance.Select(x => new {
-                    IPaid = (x.Expense.PayerId == participant.Id ? 1.0M : 0.0M) * x.Value,
-                    ISpent = (x.Participants.Any(y => y.Id == participant.Id) ? 1.0M : 0.0M) * (x.Value / x.Participants.Count),
-                });
-
-                var b = balance.Select(x =>
-                        (
-                            (x.Expense.PayerId == participant.Id ? 1.0M : 0.0M) * x.Value
-                        )
-                        - (
-                            (x.Participants.Any(y => y.Id == participant.Id) ? 1.0M : 0.0M) * (x.Value / x.Participants.Count)
-                        )
-                    );
-
-                var a = b.Sum();
+                    .Select(x => new {
+                        IsPaidByMe = x.Expense.PayerId == participant.Id,
+                        Value = x.Value,
+                        IsPaidForMe = x.PartParticipants.Any(y => y.ParticipantId == participant.Id),
+                        SplitCount = x.PartParticipants.Count,
+                    })
+                    .Select(x => 
+                        ((x.IsPaidByMe ? 1.0M : 0.0M) * x.Value) - ((x.IsPaidForMe ? 1.0M : 0.0M) * x.Value / x.SplitCount)
+                    )
+                    .Sum();
 
                 participantsBalance.Add(new ParticipantBalance {
                     ParticipantId = participant.Id,
                     ParticipantNick = participant.Name,
-                    Value = a
+                    Value = balance
                 });
             }
 
@@ -118,14 +149,14 @@ namespace ExpenseSplitter.Api.Services
             for (var i = 0; i < balanceDiffs.Count; i++)
             {
                 var balanceDiff = balanceDiffs[i];
-                if (balanceDiff.Diff <= 0)
-                    break;
 
-                for(var j = i + 1; balanceDiff.Diff > 0 && j < balanceDiffs.Count; j++)
-                {
+                while (balanceDiff.Diff > 0) {
+                    var j = GetReturnerIndex(balanceDiffs);
+
+                    if (j == -1)
+                        break;
+
                     var otherBalanceDiff = balanceDiffs[j];
-                    if (balanceDiff.Diff > 0)
-                        continue;
 
                     var settleBalance = new SettleBalance
                     {
@@ -143,6 +174,24 @@ namespace ExpenseSplitter.Api.Services
             }
 
             return settlesBalance;
+        }
+
+        private int GetReturnerIndex(List<BalanceDiff> balanceDiffs)
+        {
+            var min = balanceDiffs
+                .Select((value, index) => new {
+                    Diff = value.Diff,
+                    ParticipantId = value.ParticipantId,
+                    Index = index
+                })
+                .Where(x => x.Diff < 0)
+                .OrderBy(x => x.ParticipantId)
+                .FirstOrDefault();
+
+            if (min == null)
+                return -1;
+
+            return min.Index;
         }
     }
 }

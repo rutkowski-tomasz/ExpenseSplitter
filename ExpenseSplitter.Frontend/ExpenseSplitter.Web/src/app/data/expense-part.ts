@@ -1,5 +1,5 @@
 import { Expense } from './expense';
-import { Participant } from './participant';
+import { ExpensePartParticipant } from './expense-part-participant';
 
 export class ExpensePart
 {
@@ -8,6 +8,6 @@ export class ExpensePart
 
     expenseId: number;
     expense: Expense;
-    
-    participants: Participant[];
+
+    partParticipants: ExpensePartParticipant[];
 }

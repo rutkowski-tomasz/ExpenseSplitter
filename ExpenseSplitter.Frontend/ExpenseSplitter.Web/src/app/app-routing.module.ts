@@ -15,6 +15,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { TripEditComponent } from './pages/trip-edit/trip-edit.component';
 import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
+import { DiscardCanDeactivateGuard } from './shared/discard/discard.deactivate.guard';
 
 const routes: Routes = [
     {
@@ -45,6 +46,7 @@ const routes: Routes = [
                         path: ':uid/expenses/:id/edit',
                         component: ExpenseEditComponent,
                         data: { state: 'expenseEdit' },
+                        canDeactivate: [ DiscardCanDeactivateGuard ],
                     },
                     {
                         path: ':uid/expenses/:id',

@@ -1,12 +1,12 @@
 import { ExpenseTypeEnum } from 'src/app/data/expense-type';
-import { ExpensePart } from 'src/app/data/expense-part';
+import { ExpensePartModel } from './expense-part-model';
 
 export class UpdateExpenseModel {
-    id: number;
+    id?: number;
     name: string;
     type: ExpenseTypeEnum;
     paidAt: Date;
     payerId: number;
 
-    parts: ExpensePart[];
+    parts: ExpensePartModel[];
 }

@@ -1,26 +1,45 @@
 using System.Collections.Generic;
+using System.Linq;
 using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Models.Expenses;
 
 namespace ExpenseSplitter.Api.Extensions
 {
-    public static class ExpenseExtensions
+    public interface IExpenseExtensions
     {
-        public static Expense Create(this Expense expense, CreateExpenseModel model, string uid, int adderId)
+        Expense Update(Expense expense, UpdateExpenseModel model);
+    }
+
+    public class ExpenseExtensions : IExpenseExtensions
+    {
+        private readonly Context _context;
+
+        public ExpenseExtensions(Context context)
         {
-
-
-            return expense;
+            _context = context;
         }
 
-        public static Expense Update(this Expense expense, UpdateExpenseModel model)
+        public Expense Update(Expense expense, UpdateExpenseModel model)
         {
             expense.Name = model.Name;
             expense.Type = model.Type;
             expense.PaidAt = model.PaidAt;
 
             expense.PayerId = model.PayerId;
-            expense.Parts = model.Parts;
+            expense.Parts = new List<ExpensePart>();
+
+            foreach (var part in model.Parts)
+            {
+                var expensePart = new ExpensePart
+                {
+                    Value = part.Value,
+                    PartParticipants = part. ParticipantIds.Select(id => new ExpensePartParticipant {
+                        ParticipantId = id
+                    }).ToList(),
+                };
+
+                expense.Parts.Add(expensePart);
+            }
 
             return expense;
         }

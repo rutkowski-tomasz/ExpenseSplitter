@@ -1,33 +1,97 @@
 @import "src/scss/_colors";
 @import "src/scss/_mixins";
 
-:host  {
-	@include is-animated-host;
+:host {
+    @include is-animated-host;
 }
 
 .details {
 	padding: 0;
 
-	.details-container {
-		background-color: $primary;
+    .details-container {
+        background-color: $primary;
 		color: $white;
+		transition: 0.3s height ease-in-out;
 
-		.name, .value {
-			text-align: center;
-			font-size: 17px;
-			line-height: 24px;
-		}
+        .name,
+        .value {
+            text-align: center;
+            font-size: 17px;
+            line-height: 24px;
+        }
 
-		.value {
-			font-weight: 600;
-		}
+        .value {
+            font-weight: 600;
+        }
 
-		.info {
-			padding: 24px 8px 8px;
-			display: flex;
-			justify-content: space-between;
-			font-size: 14px;
-			line-height: 16px;
+        .info {
+            padding: 24px 8px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            line-height: 16px;
+        }
+	}
+}
+
+.summary {
+    padding: 16px 0;
+
+    .summary-row {
+        margin: 8px 16px;
+        border-bottom: 1px solid mat-color($black-palette, 50);
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.table-header-rotated {
+	margin: 0 8px;
+	border-collapse: collapse;
+	$size: 32px;
+	$borderColor: mat-color($black-palette, 100);
+
+    td {
+		border: 1px solid $borderColor;
+		.content {
+			width: $size;
+			height: $size;
+			display: grid;
+			place-items: center center;
+			mat-icon {
+				color: $primary;
+			}
 		}
 	}
+
+	th {
+		font-weight: 500;
+	}
+
+    th.rotate {
+        height: 80px;
+		white-space: nowrap;
+		position: relative;
+        > div {
+            transform: rotate(315deg);
+			width: $size;
+			position: absolute;
+			bottom: 9px;
+			left: 23px;
+        }
+        > div > span {
+            border-bottom: 1px solid $borderColor;
+			padding: 0 16px 0 4px;
+			margin-right: 8px;
+        }
+	}
+
+    th.row-header {
+		border-bottom: 1px solid $borderColor;
+		padding: 0 8px;
+    }
+}
+
+.parts {
+	padding: 16px 0;
 }

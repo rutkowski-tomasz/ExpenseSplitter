@@ -16,6 +16,7 @@ import { registerLocaleData } from '@angular/common';
 import locale from '@angular/common/locales/pl';
 import { PipesModule } from './pipes/pipes.module';
 import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/link-copied-snack-bar.component';
+import { DiscardDialog } from './shared/discard/discard-dialog.component';
 registerLocaleData(locale);
 
 @NgModule({
@@ -51,6 +52,7 @@ registerLocaleData(locale);
     bootstrap: [AppComponent],
     entryComponents: [
         LinkCopiedSnackBarComponent,
+        DiscardDialog,
     ],
 })
 export class AppModule { }

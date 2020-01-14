@@ -37,6 +37,8 @@ namespace ExpenseSplitter.Api.Extensions
             services.AddTransient<IUidGenerator, UidGenerator>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddTransient<IExpenseExtensions, ExpenseExtensions>();
         }
 
         public static void ConfigureJwt(this IServiceCollection services, IConfigProvider config)
@@ -69,10 +71,12 @@ namespace ExpenseSplitter.Api.Extensions
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContextPool<Context>(options =>
-                options
-                    .UseMySql(configuration.GetConnectionString("Context"), mySqlOptions => mySqlOptions
-                    .ServerVersion(new ServerVersion(new Version(10, 1, 43), ServerType.MySql))
-            ));
+                options.UseMySql(
+                    configuration.GetConnectionString("Context"),
+                    mySqlOptions => mySqlOptions
+                        .ServerVersion(new ServerVersion(new Version(10, 1, 43), ServerType.MySql))
+                )
+            );
         }
 
         public static void ConfigureThrottling(this IServiceCollection services, IConfiguration configuration)

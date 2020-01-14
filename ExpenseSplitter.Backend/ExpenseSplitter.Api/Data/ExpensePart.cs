@@ -15,6 +15,6 @@ namespace ExpenseSplitter.Api.Data
         public int ExpenseId { get; set; }
         public Expense Expense { get; set; }
 
-        public virtual ICollection<Participant> Participants { get; set; }
+        public virtual ICollection<ExpensePartParticipant> PartParticipants { get; set; }
     }
 }

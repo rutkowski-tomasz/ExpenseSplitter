@@ -107,7 +107,7 @@
                         *ngFor="let participant of filteredParticipants | async"
                         [value]="participant"
                     >
-                        {{ participant.name }}
+                        {{ participant.nick }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
@@ -150,7 +150,7 @@
                                 color="primary"
                                 [formControlName]="j"
                             ></mat-checkbox>
-                            {{ participants[j].name }}
+                            {{ participants[j].nick }}
                         </label>
                     </div>
                 </div>
@@ -161,4 +161,20 @@
             </a>
         </section>
     </form>
+    
+    <ng-container *ngIf="id && uid">
+        <caption>
+            Zarządzanie
+        </caption>
+        <section>
+            <a
+                role="button"
+                type="button"
+                class="warn full-width-button"
+                (click)="onDelete()"
+            >
+                Usuń ten wydatek
+            </a>
+        </section>
+    </ng-container>
 </div>
