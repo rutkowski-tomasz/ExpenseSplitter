@@ -15,7 +15,7 @@ namespace ExpenseSplitter.Api.Data
         [StringLength(Constants.UserPasswordLength)]
         public string Password { get; set; }
 
-        [StringLength(Constants.UserNickLength)]
+        [StringLength(Constants.ParticipantNameMaxLength)]
         public string Nick { get; set; }
         public bool IsEmailConfirmed { get; set; }
 

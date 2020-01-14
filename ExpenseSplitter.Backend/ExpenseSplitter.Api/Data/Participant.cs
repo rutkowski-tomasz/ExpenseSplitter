@@ -9,7 +9,7 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
-        [StringLength(Constants.ParticipantNameLength)]
+        [StringLength(Constants.ParticipantNameMaxLength)]
         public string Name { get; set; }
 
         public string TripUid { get; set; }

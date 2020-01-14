@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@an
 import { UpdateUserModel } from 'src/app/models/user/update-user-model';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 
 @Component({
     templateUrl: './settings.component.html',
@@ -21,6 +22,7 @@ export class SettingsComponent implements OnInit {
         ]),
     });
 
+    public participantNameMaxLength = 0;
     public get nick(): AbstractControl {
         return this.formGroup.get('nick');
     }
@@ -29,16 +31,19 @@ export class SettingsComponent implements OnInit {
         private userService: UserService,
         private authService: AuthService,
         private router: Router,
+        private configService: ConfigService,
     ) { }
 
-    ngOnInit() {
+    public ngOnInit() {
 
         this.userService.userExtract.subscribe(userExtract => {
             this.nick.setValue(userExtract.nick);
         });
+
+        this.loadConfiguration();
     }
 
-    submit() {
+    public submit() {
 
         this.formGroup.markAllAsTouched();
 
@@ -54,7 +59,21 @@ export class SettingsComponent implements OnInit {
         }
     }
 
-    logOut() {
+    public logOut() {
         this.authService.logOut();
+    }
+
+    private loadConfiguration() {
+
+        this.configService.GetConstants().subscribe(constants => {
+
+            this.nick.setValidators([
+                Validators.required,
+                Validators.minLength(constants['ParticipantNameMinLength']),
+                Validators.maxLength(constants['ParticipantNameMaxLength']),
+            ])
+
+            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+        });
     }
 }

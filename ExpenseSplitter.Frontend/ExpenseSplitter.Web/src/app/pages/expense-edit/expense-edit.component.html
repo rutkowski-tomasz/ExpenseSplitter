@@ -35,6 +35,7 @@
                     formControlName="name"
                     required
                 />
+                <mat-hint align="end" *ngIf="expenseNameMaxLength">{{ name.value?.length || 0 }}/{{ expenseNameMaxLength }}</mat-hint>
                 <mat-error *ngIf="name.invalid && name.errors.required">
                     Nazwa jest wymagana
                 </mat-error>

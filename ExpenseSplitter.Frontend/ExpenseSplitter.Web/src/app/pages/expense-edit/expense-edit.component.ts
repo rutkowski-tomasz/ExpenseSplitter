@@ -14,6 +14,7 @@ import { UpdateExpenseModel } from 'src/app/models/expense/update-expense-model'
 import { MatDialog } from '@angular/material';
 import { DiscardDialog } from 'src/app/shared/discard/discard-dialog.component';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 
 @Component({
     templateUrl: './expense-edit.component.html',
@@ -45,6 +46,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         parts: new FormArray([ ])
     });
 
+    public expenseNameMaxLength = 0;
     public get name(): AbstractControl {
         return this.formGroup.get('name');
     }
@@ -71,7 +73,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private authService: AuthService,
-        private matDialog: MatDialog,
+        private configService: ConfigService,
     ) { }
 
     public ngOnInit() {
@@ -106,6 +108,8 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
                 }
             });
         });
+
+        this.loadConfiguration();
     }
 
     public OnSubmit() {
@@ -195,6 +199,14 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         return part.get('participants') as FormArray;
     }
 
+    public onDelete() {
+        this.expenseService.DeleteExpense(this.uid, this.id).subscribe(_ => {
+            this.router.navigate(['/trips', this.uid]);
+        });
+    }
+
+    public isDirty = () => this.formGroup.dirty;
+
     private createParticipantsCheckboxes(participants?: ExpensePartParticipant[]): FormArray {
 
         const array = new FormArray([]);
@@ -218,13 +230,19 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         const filterValue = value.toLowerCase();
         return this.participants.filter(option => option.nick.toLowerCase().includes(filterValue));
     }
+    
+    private loadConfiguration() {
 
-    public onDelete() {
-        this.expenseService.DeleteExpense(this.uid, this.id).subscribe(_ => {
-            this.router.navigate(['/trips', this.uid]);
+        this.configService.GetConstants().subscribe(constants => {
+
+            this.name.setValidators([
+                Validators.required,
+                Validators.minLength(constants['ExpenseNameMinLength']),
+                Validators.maxLength(constants['ExpenseNameMaxLength']),
+            ])
+
+            this.expenseNameMaxLength = constants['ExpenseNameMaxLength'];
         });
     }
-
-    public isDirty = () => this.formGroup.dirty;
 }
 

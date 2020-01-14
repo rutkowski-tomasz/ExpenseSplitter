@@ -13,10 +13,10 @@ namespace ExpenseSplitter.Api.Data
         [StringLength(Constants.UidLength)]
         public string Uid { get; set; }
 
-        [StringLength(Constants.TripNameLength)]
+        [StringLength(Constants.TripNameMaxLength)]
         public string Name { get; set; }
 
-        [StringLength(Constants.TripDescriptionLength)]
+        [StringLength(Constants.TripDescriptionMaxLength)]
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; }

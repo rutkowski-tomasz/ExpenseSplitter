@@ -10,7 +10,7 @@ namespace ExpenseSplitter.Api.Data
     {
         [Key] public int Id { get; set; }
 
-        [StringLength(Constants.ExpenseNameLength)]
+        [StringLength(Constants.ExpenseNameMaxLength)]
         public string Name { get; set; }
         public ExpenseType Type { get; set; }
 

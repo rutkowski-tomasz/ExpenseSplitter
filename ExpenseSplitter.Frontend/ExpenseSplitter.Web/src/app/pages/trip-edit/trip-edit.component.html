@@ -31,6 +31,7 @@
                     formControlName="name"
                     required
                 />
+                <mat-hint align="end" *ngIf="tripNameMaxLength">{{ name.value?.length || 0 }}/{{ tripNameMaxLength }}</mat-hint>
                 <mat-error *ngIf="name.invalid && name.errors.required">
                     Nazwa jest wymagana
                 </mat-error>
@@ -58,6 +59,7 @@
                     placeholder="(Opis)"
                     formControlName="description"
                 ></textarea>
+                <mat-hint align="end" *ngIf="tripDescriptionMaxLength">{{ description.value?.length || 0 }}/{{ tripDescriptionMaxLength }}</mat-hint>
                 <mat-error
                     *ngIf="description.invalid && description.errors.maxlength"
                 >

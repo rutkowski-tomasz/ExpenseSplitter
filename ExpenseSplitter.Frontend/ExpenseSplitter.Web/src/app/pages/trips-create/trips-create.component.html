@@ -20,6 +20,7 @@
     <section>
         <mat-form-field>
             <input matInput placeholder="Nazwa" formControlName="name" required />
+            <mat-hint align="end" *ngIf="tripNameMaxLength">{{ name.value?.length || 0 }}/{{ tripNameMaxLength }}</mat-hint>
             <mat-error *ngIf="name.invalid && name.errors.required">
                 Nazwa jest wymagana
             </mat-error>
@@ -33,6 +34,7 @@
 
         <mat-form-field>
             <textarea matInput placeholder="(Opis)" formControlName="description"></textarea>
+            <mat-hint align="end" *ngIf="tripDescriptionMaxLength">{{ description.value?.length || 0 }}/{{ tripDescriptionMaxLength }}</mat-hint>
             <mat-error *ngIf="description.invalid && description.errors.maxlength">
                 Za długi opis, usuń jeszcze {{ description.errors.maxlength.actualLength - description.errors.maxlength.requiredLength }} znaków
             </mat-error>
@@ -43,6 +45,7 @@
     <section>
         <mat-form-field>
             <input matInput placeholder="Twój nick" formControlName="organizerNick" required />
+            <mat-hint align="end" *ngIf="participantNameMaxLength">{{ organizerNick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
             <mat-error *ngIf="organizerNick.invalid && organizerNick.errors.required">
                 Nick jest wymagany
             </mat-error>

@@ -7,6 +7,7 @@ import { SettleBalance } from 'src/app/models/balance/settle-balance-model';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { UpdateExpenseModel } from 'src/app/models/expense/update-expense-model';
 import { ExpenseTypeEnum } from 'src/app/data/expense-type';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 
 @Component({
     templateUrl: './balance.component.html',
@@ -20,12 +21,13 @@ export class BalanceComponent implements OnInit {
     public shareUrl: string;
 
     private uid: string;
+    a;
 
     constructor(
         private balanceService: BalanceService,
         private activatedRoute: ActivatedRoute,
         private userService: UserService,
-        private expenseService: ExpenseService,
+        private configService: ConfigService,
     ) { }
 
     public ngOnInit() {

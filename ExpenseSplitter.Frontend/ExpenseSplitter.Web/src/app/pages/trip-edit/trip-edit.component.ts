@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray, ValidatorFn } from '@angular/forms';
 import { Trip } from 'src/app/data/trip';
 import { UpdateTripModel } from 'src/app/models/trip/update-trip-model';
 import { UpdateTripModelParticipant } from 'src/app/models/trip/update-trip-model-participant';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 
 @Component({
     templateUrl: './trip-edit.component.html',
@@ -28,14 +29,18 @@ export class TripEditComponent implements OnInit {
         participants: new FormArray([]),
     });
 
+    public tripNameMaxLength = 0;
     public get name(): AbstractControl {
         return this.formGroup.get('name');
     }
 
+    public tripDescriptionMaxLength = 0;
     public get description(): AbstractControl {
         return this.formGroup.get('description');
     }
 
+    public participantNameMaxLength = 0;
+    public participantNameMinLength = 0;
     public get participants(): FormArray {
         return this.formGroup.get('participants') as FormArray;
     }
@@ -44,6 +49,7 @@ export class TripEditComponent implements OnInit {
         private tripService: TripService,
         private router: Router,
         private activatedRoute: ActivatedRoute,
+        private configService: ConfigService,
     ) { }
 
     public ngOnInit() {
@@ -58,25 +64,26 @@ export class TripEditComponent implements OnInit {
                 data.participants.forEach(x => this.addParticipant(x.id, x.name));
             });
         });
+
+        this.loadConfiguration();
     }
 
     public addParticipant(id?: number, nick?: string)
     {
-        if (!id) {
-            id = 0;
-        }
+        id = id ? id : 0;
+        nick = nick ? nick : '';
 
-        if (!nick) {
-            nick = '';
+        const validators = [ Validators.required ];
+        if (this.participantNameMinLength) {
+            validators.push( Validators.minLength(this.participantNameMinLength) );
+        }
+        if (this.participantNameMaxLength) {
+            validators.push( Validators.maxLength(this.participantNameMaxLength) );
         }
 
         this.participants.push(new FormGroup({
             id: new FormControl(id),
-            nick: new FormControl(nick, [
-                Validators.required,
-                Validators.minLength(3),
-                Validators.maxLength(40),
-            ]),
+            nick: new FormControl(nick, validators),
         }));
     }
 
@@ -110,5 +117,33 @@ export class TripEditComponent implements OnInit {
                 this.router.navigate(['/trips', uid]);
             });
         }
+    }
+    
+    private loadConfiguration() {
+
+        this.configService.GetConstants().subscribe(constants => {
+
+            this.name.setValidators([
+                Validators.required,
+                Validators.minLength(constants['TripNameMinLength']),
+                Validators.maxLength(constants['TripNameMaxLength']),
+            ]);
+
+            this.description.setValidators([
+                Validators.minLength(constants['TripDescriptionMinLength']),
+                Validators.maxLength(constants['TripDescriptionMaxLength']),
+            ]);
+
+            this.participants.setValidators([
+                Validators.required,
+                Validators.minLength(constants['ParticipantNameMinLength']),
+                Validators.maxLength(constants['ParticipantNameMaxLength']),
+            ]);
+
+            this.tripNameMaxLength = constants['TripNameMaxLength'];
+            this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
+            this.participantNameMinLength = constants['ParticipantNameMinLength'];
+            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+        });
     }
 }

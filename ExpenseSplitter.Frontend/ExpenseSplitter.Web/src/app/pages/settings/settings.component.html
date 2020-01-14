@@ -21,6 +21,7 @@
     <section>
         <mat-form-field>
             <input matInput placeholder="Nick" formControlName="nick" required />
+            <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
             <mat-error *ngIf="nick.invalid && nick.errors.required">
                 Nick jest wymagany
             </mat-error>
