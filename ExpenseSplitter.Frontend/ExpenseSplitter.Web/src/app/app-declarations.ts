@@ -17,6 +17,8 @@ import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/
 import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
 import { DiscardDialog } from './shared/discard/discard-dialog.component';
+import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
+import { TripJoinComponent } from './pages/trip-join/trip-join.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -29,6 +31,7 @@ export const appDeclarations = [
     TripsCreateComponent,
     TripEditComponent,
     TripComponent,
+    TripJoinComponent,
     ExpensesComponent,
     BalanceComponent,
     SettingsComponent,
@@ -40,6 +43,7 @@ export const appDeclarations = [
     ExpenseTypeComponent,
     LinkCopiedSnackBarComponent,
     DiscardDialog,
+    AddTripSheetComponent,
 
     ShareDirective,
 ];

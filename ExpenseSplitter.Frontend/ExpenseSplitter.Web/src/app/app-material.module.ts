@@ -14,7 +14,6 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     ErrorStateMatcher,
-    ShowOnDirtyErrorStateMatcher,
     MatDialogModule,
     MatFormFieldModule,
     MatSidenavModule,
@@ -28,6 +27,7 @@ import {
     MatExpansionModule,
     MatAutocompleteModule,
     MAT_SNACK_BAR_DEFAULT_OPTIONS,
+    MatBottomSheetModule,
 } from '@angular/material';
 
 const materialModules = [
@@ -56,6 +56,7 @@ const materialModules = [
     MatSliderModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatBottomSheetModule,
 ];
 
 @NgModule({

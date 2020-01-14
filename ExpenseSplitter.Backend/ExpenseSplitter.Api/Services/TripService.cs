@@ -142,7 +142,11 @@ namespace ExpenseSplitter.Api.Services
         public Trip JoinTrip(string uid)
         {
             var userId = _userService.GetCurrentUserId();
-            var trip = _context.Trips.SingleOrDefault(x => x.Uid == uid);
+            var trip = _context
+                .Trips
+                .Include(x => x.Users)
+                .ThenInclude(x => x.User)
+                .SingleOrDefault(x => x.Uid == uid);
 
             if (trip == null)
                 return null;

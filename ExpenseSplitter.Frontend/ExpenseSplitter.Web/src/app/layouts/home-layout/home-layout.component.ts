@@ -11,6 +11,8 @@ import { moveFromLeft, moveFromRight, moveFromBottom, moveFromTop } from 'ngx-ro
         trigger('routeAnimations', [
             transition('tripsList => tripCreate', useAnimation(moveFromBottom)),
             transition('tripCreate => tripsList', useAnimation(moveFromTop)),
+            transition('tripsList => tripJoin', useAnimation(moveFromBottom)),
+            transition('tripJoin => tripsList', useAnimation(moveFromTop)),
             transition('tripsList => trip', useAnimation(moveFromRight)),
             transition('trip => tripsList', useAnimation(moveFromLeft)),
             transition('trip => expenseCreate', useAnimation(moveFromBottom)),

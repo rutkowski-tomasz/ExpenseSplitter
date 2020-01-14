@@ -1,0 +1,38 @@
+<es-header>
+    <ng-container heading>
+        <div class="header">Dołącz do rozliczenia</div>
+    </ng-container>
+
+    <ng-container left>
+        <a [routerLink]="['/trips']">
+            Anuluj
+        </a>
+    </ng-container>
+
+    <ng-container right>
+        <a role="button" type="button" (click)="joinFrom.ngSubmit.emit()">
+            Dołącz
+        </a>
+    </ng-container>
+</es-header>
+
+<form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form" #joinFrom="ngForm">
+    <section>
+        <div class="description">
+            Zapytaj przyjacieli o link do rozliczenia do którego chcesz wstąpić. <b>Kliknij w link</b> lub skopiuj i wklej tutaj kod zaproszenia.
+        </div>
+
+        <mat-form-field>
+            <input matInput placeholder="Kod zaproszenia" formControlName="uid" required />
+            <mat-error *ngIf="uid.invalid && uid.errors.required">
+                Kod jest wymagany
+            </mat-error>
+            <mat-error *ngIf="uid.invalid && uid.errors.uidInvalid">
+                Podany kod jest niepoprawny
+            </mat-error>
+            <mat-error *ngIf="uid.invalid && uid.errors.tooManyRequests">
+                Zbyt wiele nieudanych prób, spróbuj ponownie później
+            </mat-error>
+        </mat-form-field>
+    </section>
+</form>

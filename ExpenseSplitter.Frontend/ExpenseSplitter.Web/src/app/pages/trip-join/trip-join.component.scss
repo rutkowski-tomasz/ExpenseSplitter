@@ -1,0 +1,10 @@
+@import "src/scss/_mixins";
+
+:host  {
+	@include is-animated-host;
+}
+
+.description {
+	text-align: justify;
+	margin-bottom: 16px;
+}

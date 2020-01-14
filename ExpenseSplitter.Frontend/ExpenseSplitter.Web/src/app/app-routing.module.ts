@@ -16,6 +16,7 @@ import { TripEditComponent } from './pages/trip-edit/trip-edit.component';
 import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
 import { DiscardCanDeactivateGuard } from './shared/discard/discard.deactivate.guard';
+import { TripJoinComponent } from './pages/trip-join/trip-join.component';
 
 const routes: Routes = [
     {
@@ -81,6 +82,16 @@ const routes: Routes = [
                         data: { state: 'tripsList' },
                     }
                 ]
+            },
+            {
+                path: 'join/:uid',
+                component: TripJoinComponent,
+                data: { state: 'tripJoin' },
+            },
+            {
+                path: 'join',
+                component: TripJoinComponent,
+                data: { state: 'tripJoin' },
             },
             {
                 path: 'settings',
