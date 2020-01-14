@@ -26,16 +26,19 @@ namespace ExpenseSplitter.Api.Services
     {
         private readonly Context _context;
         private readonly IUserService _userService;
-        private readonly IUidGenerator _uidGenerator;
+        private readonly IParticipantExtensions _participantExtensions;
+        private readonly ITripExtensions _tripExtensions;
 
         public TripService(
             Context context,
             IUserService userService,
-            IUidGenerator uidGenerator
+            IParticipantExtensions participantExtensions,
+            ITripExtensions tripExtensions
         ) {
             _context = context;
             _userService = userService;
-            _uidGenerator = uidGenerator;
+            _participantExtensions = participantExtensions;
+            _tripExtensions = tripExtensions;
         }
 
         public List<Trip> GetTrips()
@@ -72,10 +75,10 @@ namespace ExpenseSplitter.Api.Services
                 .TripsParticipants
                 .Include(x => x.UsersClaimed)
                 .Where(x => 
-                    x.TripUid == uid &&
-                    x.Trip.Users.Any(y => y.Id == userId)
+                    x.TripUid == uid 
+                    && x.Trip.Users.Any(y => y.UserId == userId)
                 )
-                .Select(x => x.ToParticipantExtract())
+                .Select(x => _participantExtensions.ToParticipantExtract(x))
                 .ToList();
 
             return participants;
@@ -83,12 +86,7 @@ namespace ExpenseSplitter.Api.Services
 
         public Trip CreateTrip(CreateTripModel model)
         {
-            var uid = _uidGenerator.Generate(
-                Constants.UidGenerateLength,
-                Constants.UidGenerateAllowDuplicates,
-                generatedUid => _context.Trips.FirstOrDefault(y => y.Uid == generatedUid) != null
-            );
-            var trip = new Trip().Create(model, _userService.GetCurrentUser(), uid);
+            var trip = _tripExtensions.Create(model, _userService.GetCurrentUserId());
 
             _context.Trips.Add(trip);
             _context.SaveChanges();
@@ -110,13 +108,7 @@ namespace ExpenseSplitter.Api.Services
             if (trip == null)
                 return null;
 
-            foreach (var participant in trip.Participants.ToList())
-            {
-                if (model.Participants.All(p => p.Id != participant.Id))
-                    _context.TripsParticipants.Remove(participant);
-            }
-
-            trip.Update(model);
+            _tripExtensions.Update(trip, model);
             _context.SaveChanges();
 
             return trip;

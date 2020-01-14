@@ -3,11 +3,11 @@
         <div class="footer-content">
             <div class="my-cost">
                 <div class="label">Mój koszt</div>
-                <div class="value">{{ myCost | currency:'PLN' }}</div>
+                <div class="value">{{ shortBalance?.myCost | currency:'PLN' }}</div>
             </div>
             <div class="total-cost">
                 <div class="label">Całkowity koszt</div>
-                <div class="value">{{ totalCost | currency:'PLN' }}</div>
+                <div class="value">{{ shortBalance?.totalCost | currency:'PLN' }}</div>
             </div>
         </div>
         <div class="add-expense">

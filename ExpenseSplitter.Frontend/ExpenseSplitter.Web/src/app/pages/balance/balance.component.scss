@@ -5,6 +5,13 @@
 	@include is-animated-host;
 }
 
+.settlement-done {
+	text-align: center;
+	margin: 24px 32px;
+	font-weight: 600;
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.05);
+}
+
 .balance {
 	padding: 0;
 

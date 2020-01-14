@@ -3,6 +3,7 @@ import { CallService } from '../call-service/call.service';
 import { Observable } from 'rxjs';
 import { BalanceResponseModel } from 'src/app/models/balance/balance-response-model';
 import { Expense } from 'src/app/data/expense';
+import { ShortBalanceResponse } from 'src/app/models/balance/short-balance-response-model';
 
 @Injectable({
     providedIn: 'root'
@@ -24,5 +25,9 @@ export class BalanceService {
             fromParticipantId,
             toParticipantId,
         });
+    }
+
+    public GetShortBalance(uid: string): Observable<ShortBalanceResponse> {
+        return this.callService.get<ShortBalanceResponse>(`${this.servicePrefix(uid)}/short`);
     }
 }

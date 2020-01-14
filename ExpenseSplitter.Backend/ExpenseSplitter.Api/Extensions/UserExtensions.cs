@@ -3,10 +3,18 @@ using ExpenseSplitter.Api.Models.Auth;
 
 namespace ExpenseSplitter.Api.Extensions
 {
-    public static class UserExtensions
+    public interface IUserExtensions
     {
-        public static UserExtractModel ToUserExtract(this User user)
+        UserExtractModel ToUserExtract(User user);
+    }
+
+    public class UserExtensions : IUserExtensions
+    {
+        public UserExtractModel ToUserExtract(User user)
         {
+            if (user == null)
+                return null;
+
             return new UserExtractModel
             {
                 Id = user.Id,

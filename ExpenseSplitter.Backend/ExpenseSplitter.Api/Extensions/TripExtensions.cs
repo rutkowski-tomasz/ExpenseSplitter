@@ -1,14 +1,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExpenseSplitter.Api.Data;
+using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Trips;
 
 namespace ExpenseSplitter.Api.Extensions
 {
-    public static class TripExtensions
+    public interface ITripExtensions
     {
-        public static Trip Create(this Trip trip, CreateTripModel model, User adder, string uid)
+        Trip Create(CreateTripModel model, int adderId);
+        Trip Update(Trip trip, UpdateTripModel model);
+    }
+
+    public class TripExtensions : ITripExtensions
+    {
+        private readonly Context _context;
+        private readonly IUidGenerator _uidGenerator;
+
+        public TripExtensions(
+            Context context,
+            IUidGenerator uidGenerator
+        ) {
+            _context = context;
+            _uidGenerator = uidGenerator;
+        }
+
+        public Trip Create(CreateTripModel model, int adderId)
         {
+            var uid = _uidGenerator.Generate(
+                Constants.UidGenerateLength,
+                Constants.UidGenerateAllowDuplicates,
+                generatedUid => _context.Trips.FirstOrDefault(y => y.Uid == generatedUid) != null
+            );
+
+            var trip = new Trip();
             trip.Uid = uid;
             trip.Name = model.Name;
             trip.Description = model.Description;
@@ -24,7 +49,7 @@ namespace ExpenseSplitter.Api.Extensions
             {
                 new TripUser
                 {
-                    UserId = adder.Id,
+                    UserId = adderId,
                     TripUid = uid,
                     Participant = participant,
                 }
@@ -33,8 +58,14 @@ namespace ExpenseSplitter.Api.Extensions
             return trip;
         }
 
-        public static Trip Update(this Trip trip, UpdateTripModel model)
+        public Trip Update(Trip trip, UpdateTripModel model)
         {
+            foreach (var participant in trip.Participants.ToList())
+            {
+                if (model.Participants.All(p => p.Id != participant.Id))
+                    _context.TripsParticipants.Remove(participant);
+            }
+
             trip.Name = model.Name;
             trip.Description = model.Description;
 

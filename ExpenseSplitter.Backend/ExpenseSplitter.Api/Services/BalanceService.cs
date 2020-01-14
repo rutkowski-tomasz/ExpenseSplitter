@@ -12,6 +12,7 @@ namespace ExpenseSplitter.Api.Services
     {
         BalanceResponseModel GetTripBalance(string uid);
         Expense MarkSettlementAsPaid(string uid, decimal value, int fromParticipantId, int toParticipantId);
+        ShortBalanceResponse GetTripShortBalance(string uid);
     }
 
     public class BalanceService : IBalanceService
@@ -90,6 +91,48 @@ namespace ExpenseSplitter.Api.Services
             _context.SaveChanges();
 
             return expense;
+        }
+
+        public ShortBalanceResponse GetTripShortBalance(string uid)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var trip = _context
+                .Trips
+                .Include(x => x.Expenses)
+                .ThenInclude(x => x.Parts)
+                .SingleOrDefault(x => 
+                    x.Uid == uid &&
+                    x.Users.Any(y => y.UserId == userId)
+                );
+
+            if (trip == null)
+                return null;
+
+            var totalCost = trip
+                .Expenses
+                .Where(x => x.Type != ExpenseType.Transfer)
+                .Sum(x => x
+                    .Parts
+                    .Select(
+                        y => (x.Type == ExpenseType.Expense ? 1.0M : -1.0M) * y.Value
+                    )
+                    .Sum()
+                );
+
+            var myCost = _context
+                .ExpensesParts
+                .Include(x => x.PartParticipants)
+                .Include(x => x.Expense)
+                .Where(x => x.Expense.TripUid == trip.Uid)
+                .Where(x => x.PartParticipants.Any(y => y.Participant.UsersClaimed.Any(z => z.UserId == userId)))
+                .Select(x => (x.Expense.Type == ExpenseType.Expense ? 1.0M : -1.0M) * (x.Value /  x.PartParticipants.Count))
+                .Sum();
+
+            return new ShortBalanceResponse
+            {
+                MyCost = myCost,
+                TotalCost = totalCost,
+            };
         }
 
         private List<ParticipantBalance> calculateParticipantsBalance(ICollection<Participant> participants, string tripUid)

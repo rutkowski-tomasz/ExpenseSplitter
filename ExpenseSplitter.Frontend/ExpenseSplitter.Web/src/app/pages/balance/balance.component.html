@@ -1,5 +1,9 @@
 
 <div class="container page-with-tabs" *ngIf="balance">
+    <div class="settlement-done" *ngIf="balance.settlesBalance.length === 0">
+        Wszystko zostało rozliczone 😊🎉
+    </div>
+
     <section class="balance">
         <div
             *ngFor="let participantBalance of balance.participantsBalance"
@@ -29,48 +33,50 @@
         </div>
     </section>
 
-    <caption>
-        Jak rozliczyć wydatki?
-    </caption>
-    <section class="settlements">
-        <div
-            *ngFor="let settlement of balance.settlesBalance"
-            class="settlement"
-        >
-            <div class="details-wrapper">
-                <div class="who">
-                    <div class="from">
-                        {{ settlement.fromParticipantNick }}
+    <ng-container *ngIf="balance.settlesBalance.length > 0">
+        <caption>
+            Jak rozliczyć wydatki?
+        </caption>
+        <section class="settlements">
+            <div
+                *ngFor="let settlement of balance.settlesBalance"
+                class="settlement"
+            >
+                <div class="details-wrapper">
+                    <div class="who">
+                        <div class="from">
+                            {{ settlement.fromParticipantNick }}
+                        </div>
+                        <div class="desc">
+                            powinien zwrócić dla
+                        </div>
+                        <div class="to">
+                            {{ settlement.toParticipantNick }}
+                        </div>
                     </div>
-                    <div class="desc">
-                        powinien zwrócić dla
-                    </div>
-                    <div class="to">
-                        {{ settlement.toParticipantNick }}
+                    <div class="value">
+                        <strong>
+                            {{ settlement.value | currency: "PLN" }}
+                        </strong>
                     </div>
                 </div>
-                <div class="value">
-                    <strong>
-                        {{ settlement.value | currency: "PLN" }}
-                    </strong>
-                </div>
-            </div>
-            <div class="more">
-                <button
-                    mat-icon-button
-                    [matMenuTriggerFor]="menu"
-                    aria-label="Settlement actions"
-                    color="primary"
-                >
-                    <mat-icon>more_horiz</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="markAsPaid(settlement)">
-                        <mat-icon>check</mat-icon>
-                        <span>Oznacz jako zapłacone</span>
+                <div class="more">
+                    <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        aria-label="Settlement actions"
+                        color="primary"
+                    >
+                        <mat-icon>more_horiz</mat-icon>
                     </button>
-                </mat-menu>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="markAsPaid(settlement)">
+                            <mat-icon>check</mat-icon>
+                            <span>Oznacz jako zapłacone</span>
+                        </button>
+                    </mat-menu>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </ng-container>
 </div>

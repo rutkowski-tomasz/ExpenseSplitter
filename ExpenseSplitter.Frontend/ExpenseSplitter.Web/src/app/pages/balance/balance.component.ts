@@ -51,7 +51,7 @@ export class BalanceComponent implements OnInit {
     public calculateBarLength(value: number): number {
 
         if (!this.maxBalance)
-            return 100;
+            return 0;
 
         return Math.abs(value) * 100 / this.maxBalance;
     }

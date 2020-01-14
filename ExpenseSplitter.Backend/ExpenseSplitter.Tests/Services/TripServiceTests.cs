@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.Json;
 using ExpenseSplitter.Api.Data;
+using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Trips;
 using ExpenseSplitter.Api.Services;
@@ -24,8 +25,10 @@ namespace ExpenseSplitter.Tests.Services
     
             _userService = new Mock<IUserService>();
             var uidGenerator = new UidGenerator();
+            var participantExtensions = new ParticipantExtensions();
+            var tripExtensions = new TripExtensions(_context, uidGenerator);
 
-            _tripService = new TripService(_context, _userService.Object, uidGenerator);
+            _tripService = new TripService(_context, _userService.Object, participantExtensions, tripExtensions);
         }
 
         [Test]

@@ -34,17 +34,20 @@ namespace ExpenseSplitter.Api.Services
         private readonly Context _context;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserExtensions _userExtensions;
 
         public UserService(
             IConfigProvider configProvider,
             Context context,
             IPasswordHasher passwordHasher,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IUserExtensions userExtensions
         ) {
             _configProvider = configProvider;
             _context = context;
             _passwordHasher = passwordHasher;
             _httpContextAccessor = httpContextAccessor;
+            _userExtensions = userExtensions;
         }
 
         public User AuthenticateUser(string email, string password)
@@ -118,7 +121,7 @@ namespace ExpenseSplitter.Api.Services
             if (id != GetCurrentUserId())
                 return null;
 
-            return GetUser(id)?.ToUserExtract();
+            return _userExtensions.ToUserExtract(GetUser(id));
         }
         
         public UserExtractModel UpdateUser(UpdateUserModel model)
@@ -128,7 +131,7 @@ namespace ExpenseSplitter.Api.Services
             user.Nick = model.Nick;
 
             _context.SaveChanges();
-            return user.ToUserExtract();
+            return _userExtensions.ToUserExtract(user);
         }
     }
     

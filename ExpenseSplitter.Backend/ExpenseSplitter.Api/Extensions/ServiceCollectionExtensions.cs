@@ -39,6 +39,9 @@ namespace ExpenseSplitter.Api.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<IExpenseExtensions, ExpenseExtensions>();
+            services.AddTransient<IParticipantExtensions, ParticipantExtensions>();
+            services.AddTransient<ITripExtensions, TripExtensions>();
+            services.AddTransient<IUserExtensions, UserExtensions>();
         }
 
         public static void ConfigureJwt(this IServiceCollection services, IConfigProvider config)

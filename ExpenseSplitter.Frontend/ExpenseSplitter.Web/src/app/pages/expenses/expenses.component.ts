@@ -25,7 +25,6 @@ export class ExpensesComponent implements OnInit {
             this.uid = params.uid;
 
             this.expenseService.GetExpenses(this.uid).subscribe(data => {
-                console.log(data);
                 this.expenses = data;
             });
         });

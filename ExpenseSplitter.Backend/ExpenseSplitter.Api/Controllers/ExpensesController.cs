@@ -49,7 +49,7 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateExpense(string uid, UpdateExpenseModel model)
+        public IActionResult UpdateExpense(string uid, [FromBody] UpdateExpenseModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();

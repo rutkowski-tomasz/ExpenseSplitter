@@ -4,9 +4,14 @@ using ExpenseSplitter.Api.Models.Participant;
 
 namespace ExpenseSplitter.Api.Extensions
 {
-    public static class ParticipantExtensions
+    public interface IParticipantExtensions
     {
-        public static ParticipantExtractModel ToParticipantExtract(this Participant participant)
+        ParticipantExtractModel ToParticipantExtract(Participant participant);
+    }
+
+    public class ParticipantExtensions : IParticipantExtensions
+    {
+        public ParticipantExtractModel ToParticipantExtract(Participant participant)
         {
             return new ParticipantExtractModel
             {

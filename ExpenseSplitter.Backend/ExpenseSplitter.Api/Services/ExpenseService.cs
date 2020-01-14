@@ -102,10 +102,12 @@ namespace ExpenseSplitter.Api.Services
             var userId = _userService.GetCurrentUserId();
             var expense = _context
                 .Expenses
-                .SingleOrDefault(x =>
+                .Include(x => x.Parts)
+                .FirstOrDefault(x =>
                     x.Trip.Uid == uid
                     && x.Id == model.Id.Value
-                    && x.Trip.Users.Any(y => y.UserId == userId));
+                    && x.Trip.Users.Any(y => y.UserId == userId)
+                );
 
             if (expense == null)
                 return null;

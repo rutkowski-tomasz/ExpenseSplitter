@@ -161,6 +161,10 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public SetDefaultPayer() {
 
+        if (this.payer.value.length !== 0) {
+            return;
+        }
+
         const userId = +this.authService.GetDecodedToken().UserId;
         const payer = this.participants.find(x => x.claimedUserIds.some(y => y === userId));
 
