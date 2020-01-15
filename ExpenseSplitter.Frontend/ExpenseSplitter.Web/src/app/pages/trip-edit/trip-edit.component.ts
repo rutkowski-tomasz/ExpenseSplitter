@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray } from '@angular/forms';
-import { UpdateTripModel } from 'src/app/models/trip/update-trip-model';
-import { UpdateTripModelParticipant } from 'src/app/models/trip/update-trip-model-participant';
+import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';
+import { TripParticipantModel } from 'src/app/models/trip/trip-participant.model';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 
@@ -108,12 +108,12 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
             const uid = this.uid;
             const name = this.name.value;
             const description = this.description.value;
-            const participants = new Array<UpdateTripModelParticipant>();
+            const participants = new Array<TripParticipantModel>();
             this.participants.value.forEach(p =>
                 participants.push({ id: p.id, nick: p.nick })
             );
 
-            const model: UpdateTripModel = { uid, name, description, participants };
+            const model: TripUpdateModel = { uid, name, description, participants };
             this.tripService.UpdateTrip(model).subscribe(_ => {
                 this.router.navigate(['/trips', uid]);
             });

@@ -2,17 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, FormArray } from '@angular/forms';
-import { ExpenseTypeEnum } from 'src/app/data/expense-type';
+import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
-import { ExpensePartModel } from 'src/app/models/expense/expense-part-model';
-import { ExpensePartParticipant } from 'src/app/data/expense-part-participant';
-import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
-import { UpdateExpenseModel } from 'src/app/models/expense/update-expense-model';
-import { MatDialog } from '@angular/material';
-import { DiscardDialog } from 'src/app/shared/discard/discard-dialog.component';
+import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
+import { ParticipantModel } from 'src/app/models/participant/participant.model';
+import { ExpenseUpdateModel } from 'src/app/models/expense/expense-update.model';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 
@@ -25,8 +22,8 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
     public uid: string;
     public id: number;
     public ExpenseTypeEnum = ExpenseTypeEnum;
-    public participants: ParticipantExtractModel[];
-    public filteredParticipants: Observable<ParticipantExtractModel[]>;
+    public participants: ParticipantModel[];
+    public filteredParticipants: Observable<ParticipantModel[]>;
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -118,7 +115,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
 
         if (this.formGroup.valid) {
 
-            const model = new UpdateExpenseModel();
+            const model = new ExpenseUpdateModel();
             model.name = this.name.value;
             model.type = this.type.value;
             model.paidAt = this.paidAt.value;
@@ -184,7 +181,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
             );
     }
 
-    public DisplayParticipant(participant?: ParticipantExtractModel): string | undefined {
+    public DisplayParticipant(participant?: ParticipantModel): string | undefined {
         return participant ? participant.nick : undefined;
     }
 
@@ -234,7 +231,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         return array;
     }
 
-    private filterParticipants(value: string): ParticipantExtractModel[] {
+    private filterParticipants(value: string): ParticipantModel[] {
         const filterValue = value.toLowerCase();
         return this.participants.filter(option => option.nick.toLowerCase().includes(filterValue));
     }

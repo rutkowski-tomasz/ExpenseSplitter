@@ -82,7 +82,7 @@ namespace ExpenseSplitter.Tests.Services
             var user = _context.Users.First(x => x.Nick == "Carol");
             _userService.Setup(x => x.GetCurrentUser()).Returns(user);
 
-            var model = new CreateTripModel()
+            var model = new TripCreateModel()
             {
                 Name = "New trip",
                 Description = "Description of the new awesome trip",
@@ -115,7 +115,7 @@ namespace ExpenseSplitter.Tests.Services
                     x.TripUid == "rome"
                 );
 
-            var model = new UpdateTripModel
+            var model = new TripUpdateModel
             {
                 Uid = "rome",
                 Name = "It was not trip to Rome",
@@ -154,7 +154,7 @@ namespace ExpenseSplitter.Tests.Services
             var user = _context.Users.First(x => x.Nick == "Diana");
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
-            var model = new UpdateTripModel
+            var model = new TripUpdateModel
             {
                 Uid = "rome",
                 Name = "Changed name",
@@ -221,7 +221,7 @@ namespace ExpenseSplitter.Tests.Services
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
-            var trip = _tripService.LeaveTrip("rome");
+            var trip = _tripService.TryLeaveTrip("rome");
 
             // Assert
             Assert.True(trip);
@@ -236,7 +236,7 @@ namespace ExpenseSplitter.Tests.Services
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
-            var trip = _tripService.LeaveTrip("rome");
+            var trip = _tripService.TryLeaveTrip("rome");
 
             // Assert
             Assert.False(trip);
@@ -250,7 +250,7 @@ namespace ExpenseSplitter.Tests.Services
             _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
 
             // Act
-            var trip = _tripService.LeaveTrip("notexisting");
+            var trip = _tripService.TryLeaveTrip("notexisting");
 
             // Assert
             Assert.False(trip);

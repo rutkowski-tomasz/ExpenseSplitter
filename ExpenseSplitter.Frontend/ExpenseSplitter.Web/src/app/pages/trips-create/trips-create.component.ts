@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { CreateTripModel } from 'src/app/models/trip/create-trip-model';
+import { TripCreateModel } from 'src/app/models/trip/trip-create.model';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';
 import { UserService } from 'src/app/services/user-service/user.service';
@@ -79,7 +79,7 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
             const description = this.description.value;
             const organizerNick = this.organizerNick.value;
 
-            const model: CreateTripModel = { name, description, organizerNick };
+            const model: TripCreateModel = { name, description, organizerNick };
             this.tripService.CreateTrip(model).subscribe(_ => {
                 this.router.navigate(['/trips']);
             })

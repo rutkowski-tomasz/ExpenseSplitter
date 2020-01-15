@@ -47,19 +47,19 @@ namespace ExpenseSplitter.Api.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public IActionResult GetUserExtract(int id)
+        public IActionResult GetUserModel(int id)
         {
-            var userExtract = _userService.GetUserExtract(id);
+            var user = _userService.GetUserModel(id);
 
-            if (userExtract == null)
+            if (user == null)
                 return Unauthorized();
 
-            return new JsonResult(userExtract);
+            return new JsonResult(user);
         }
 
         [Authorize]
         [HttpPut]
-        public IActionResult UpdateUser([FromBody] UpdateUserModel model)
+        public IActionResult UpdateUser([FromBody] UserUpdateModel model)
         {
             var user = _userService.UpdateUser(model);
             return new JsonResult(user);

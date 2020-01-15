@@ -8,10 +8,10 @@ namespace ExpenseSplitter.Api.Extensions
 {
     public interface ITripExtensions
     {
-        Trip Create(CreateTripModel model, int adderId);
-        Trip Update(Trip trip, UpdateTripModel model);
-        TripExtract ToTripExtract(Trip trip);
-        TripDetailsExtract ToTripDetailsExtract(Trip trip);
+        Trip Create(TripCreateModel model, int adderId);
+        Trip Update(Trip trip, TripUpdateModel model);
+        TripListModel ToTripListModel(Trip trip);
+        TripDetailsModel ToTripDetailsModel(Trip trip);
     }
 
     public class TripExtensions : ITripExtensions
@@ -30,7 +30,7 @@ namespace ExpenseSplitter.Api.Extensions
             _participantExtensions = participantExtensions;
         }
 
-        public Trip Create(CreateTripModel model, int adderId)
+        public Trip Create(TripCreateModel model, int adderId)
         {
             var uid = _uidGenerator.Generate(
                 Constants.UidGenerateLength,
@@ -63,7 +63,7 @@ namespace ExpenseSplitter.Api.Extensions
             return trip;
         }
 
-        public Trip Update(Trip trip, UpdateTripModel model)
+        public Trip Update(Trip trip, TripUpdateModel model)
         {
             foreach (var participant in trip.Participants.ToList())
             {
@@ -92,9 +92,9 @@ namespace ExpenseSplitter.Api.Extensions
             return trip;
         }
 
-        public TripExtract ToTripExtract(Trip trip)
+        public TripListModel ToTripListModel(Trip trip)
         {
-            return new TripExtract
+            return new TripListModel
             {
                 Uid = trip.Uid,
                 Name = trip.Name,
@@ -102,14 +102,14 @@ namespace ExpenseSplitter.Api.Extensions
             };
         }
 
-        public TripDetailsExtract ToTripDetailsExtract(Trip trip)
+        public TripDetailsModel ToTripDetailsModel(Trip trip)
         {
-            return new TripDetailsExtract
+            return new TripDetailsModel
             {
                 Uid = trip.Uid,
                 Name = trip.Name,
                 Description = trip.Description,
-                Participants = trip.Participants.Select(x => _participantExtensions.ToParticipantExtract(x)).ToList()
+                Participants = trip.Participants.Select(x => _participantExtensions.ToParticipantModel(x)).ToList()
             };
         }
     }

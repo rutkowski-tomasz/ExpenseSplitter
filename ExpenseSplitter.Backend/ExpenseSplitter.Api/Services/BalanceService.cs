@@ -10,9 +10,9 @@ namespace ExpenseSplitter.Api.Services
 {
     public interface IBalanceService
     {
-        BalanceResponseModel GetTripBalance(string uid);
+        BalanceModel GetTripBalance(string uid);
         Expense MarkSettlementAsPaid(string uid, decimal value, int fromParticipantId, int toParticipantId);
-        ShortBalanceResponse GetTripShortBalance(string uid);
+        BalanceSimpleModel GetTripShortBalance(string uid);
     }
 
     public class BalanceService : IBalanceService
@@ -31,7 +31,7 @@ namespace ExpenseSplitter.Api.Services
             _userService = userService;
         }
 
-        public BalanceResponseModel GetTripBalance(string uid)
+        public BalanceModel GetTripBalance(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             _logger.LogDebug($"User {userId} requested trip {uid} balance");
@@ -47,7 +47,7 @@ namespace ExpenseSplitter.Api.Services
             if (trip == null)
                 return null;
 
-            var response = new BalanceResponseModel();
+            var response = new BalanceModel();
             response.ParticipantsBalance = calculateParticipantsBalance(trip.Participants, uid);
 
             var balanceDiffs = buildBalanceDiffList(response.ParticipantsBalance);
@@ -93,7 +93,7 @@ namespace ExpenseSplitter.Api.Services
             return expense;
         }
 
-        public ShortBalanceResponse GetTripShortBalance(string uid)
+        public BalanceSimpleModel GetTripShortBalance(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var trip = _context
@@ -125,19 +125,20 @@ namespace ExpenseSplitter.Api.Services
                 .Include(x => x.Expense)
                 .Where(x => x.Expense.TripUid == trip.Uid)
                 .Where(x => x.PartParticipants.Any(y => y.Participant.UsersClaimed.Any(z => z.UserId == userId)))
-                .Select(x => (x.Expense.Type == ExpenseType.Expense ? 1.0M : 0.0M) * (x.Value /  x.PartParticipants.Count))
+                .Where(x => x.Expense.Type != ExpenseType.Transfer)
+                .Select(x => (x.Expense.Type == ExpenseType.Expense ? 1.0M : -1.0M) * (x.Value /  x.PartParticipants.Count))
                 .Sum();
 
-            return new ShortBalanceResponse
+            return new BalanceSimpleModel
             {
                 MyCost = myCost,
                 TotalCost = totalCost,
             };
         }
 
-        private List<ParticipantBalance> calculateParticipantsBalance(ICollection<Participant> participants, string tripUid)
+        private List<BalanceParticipantModel> calculateParticipantsBalance(ICollection<Participant> participants, string tripUid)
         {
-            var participantsBalance = new List<ParticipantBalance>();
+            var participantsBalance = new List<BalanceParticipantModel>();
 
             foreach (var participant in participants)
             {
@@ -157,7 +158,7 @@ namespace ExpenseSplitter.Api.Services
                     )
                     .Sum();
 
-                participantsBalance.Add(new ParticipantBalance {
+                participantsBalance.Add(new BalanceParticipantModel {
                     ParticipantId = participant.Id,
                     ParticipantNick = participant.Name,
                     Value = balance
@@ -168,7 +169,7 @@ namespace ExpenseSplitter.Api.Services
             return participantsBalance;
         }
 
-        private List<BalanceDiff> buildBalanceDiffList(List<ParticipantBalance> participantsBalance)
+        private List<BalanceDiff> buildBalanceDiffList(List<BalanceParticipantModel> participantsBalance)
         {
             var balanceDiffs = new List<BalanceDiff>();
 
@@ -185,9 +186,9 @@ namespace ExpenseSplitter.Api.Services
             return balanceDiffs;
         }
 
-        private List<SettleBalance> calculateSettlesBalance(List<BalanceDiff> balanceDiffs)
+        private List<BalanceSettleModel> calculateSettlesBalance(List<BalanceDiff> balanceDiffs)
         {
-            var settlesBalance = new List<SettleBalance>();
+            var settlesBalance = new List<BalanceSettleModel>();
 
             for (var i = 0; i < balanceDiffs.Count; i++)
             {
@@ -201,7 +202,7 @@ namespace ExpenseSplitter.Api.Services
 
                     var otherBalanceDiff = balanceDiffs[j];
 
-                    var settleBalance = new SettleBalance
+                    var settleBalance = new BalanceSettleModel
                     {
                         Value = Math.Min(balanceDiff.Diff, -otherBalanceDiff.Diff),
                         FromParticipantId = otherBalanceDiff.ParticipantId,

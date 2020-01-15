@@ -5,17 +5,17 @@ namespace ExpenseSplitter.Api.Extensions
 {
     public interface IUserExtensions
     {
-        UserExtractModel ToUserExtract(User user);
+        UserModel ToUserModel(User user);
     }
 
     public class UserExtensions : IUserExtensions
     {
-        public UserExtractModel ToUserExtract(User user)
+        public UserModel ToUserModel(User user)
         {
             if (user == null)
                 return null;
 
-            return new UserExtractModel
+            return new UserModel
             {
                 Id = user.Id,
                 Email = user.Email,

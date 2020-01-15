@@ -76,22 +76,30 @@ section {
         }
     }
     .fetching-results {
-        &.list {
-            .item-placeholder {
-                padding: 8px 24px;
-                border-bottom: 1px solid mat-color($black-palette, 50);
+        .item-placeholder {
+            padding: 8px 24px;
+            border-bottom: 1px solid mat-color($black-palette, 50);
 
-                .primary {
-                    height: 24px;
-                    margin-bottom: 4px;
-                    background-color: $primary;
-                    animation: fading 1.5s infinite;
-                }
-                .secondary {
-                    height: 16px;
-                    background-color: mat-color($black-palette, 400);
-                    animation: fading 1.5s infinite;
-                }
+            .primary {
+                height: 24px;
+                margin-bottom: 4px;
+                background-color: $primary;
+                animation: fading 1.5s infinite;
+            }
+            .secondary {
+                height: 16px;
+                background-color: mat-color($black-palette, 400);
+                animation: fading 1.5s infinite;
+            }
+            .positive {
+                height: 16px;
+                background-color: mat-color($primary-palette, 400);
+                animation: fading 1.5s infinite;
+            }
+            .negative {
+                height: 16px;
+                background-color: mat-color($warn-palette, 400);
+                animation: fading 1.5s infinite;
             }
         }
     }

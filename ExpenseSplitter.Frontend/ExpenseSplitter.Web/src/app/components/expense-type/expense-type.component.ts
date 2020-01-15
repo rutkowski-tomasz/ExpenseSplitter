@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ExpenseTypeEnum } from 'src/app/data/expense-type';
+import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 
 @Component({
     selector: 'es-expense-type',

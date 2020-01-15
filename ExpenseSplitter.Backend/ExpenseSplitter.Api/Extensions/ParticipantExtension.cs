@@ -6,14 +6,14 @@ namespace ExpenseSplitter.Api.Extensions
 {
     public interface IParticipantExtensions
     {
-        ParticipantExtractModel ToParticipantExtract(Participant participant);
+        ParticipantModel ToParticipantModel(Participant participant);
     }
 
     public class ParticipantExtensions : IParticipantExtensions
     {
-        public ParticipantExtractModel ToParticipantExtract(Participant participant)
+        public ParticipantModel ToParticipantModel(Participant participant)
         {
-            return new ParticipantExtractModel
+            return new ParticipantModel
             {
                 Id = participant.Id,
                 Nick = participant.Name,

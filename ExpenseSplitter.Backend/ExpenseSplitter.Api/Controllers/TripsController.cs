@@ -48,7 +48,7 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTrip([FromBody] CreateTripModel model)
+        public IActionResult CreateTrip([FromBody] TripCreateModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();
@@ -59,17 +59,17 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateTrip([FromBody] UpdateTripModel model)
+        public IActionResult UpdateTrip([FromBody] TripUpdateModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();
 
-            var trip = _tripService.UpdateTrip(model);
+            var result = _tripService.TryUpdateTrip(model);
 
-            if (trip == null)
+            if (!result)
                 return NotFound();
             
-            return new JsonResult(trip);
+            return new JsonResult(result);
         }
 
         [HttpDelete("{uid}")]
@@ -86,9 +86,9 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPost("{uid}/join")]
         public IActionResult JoinTrip(string uid)
         {
-            var trip = _tripService.JoinTrip(uid);
+            var result = _tripService.TryJoinTrip(uid);
 
-            if (trip == null)
+            if (!result)
                 return NotFound();
 
             return Ok();
@@ -97,7 +97,7 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPost("{uid}/leave")]
         public IActionResult LeaveTrip(string uid)
         {
-            var result = _tripService.LeaveTrip(uid);
+            var result = _tripService.TryLeaveTrip(uid);
 
             if (!result)
                 return NotFound();
@@ -108,7 +108,7 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPost("{uid}/participation/{id}")]
         public IActionResult ClaimTripParticipation(string uid, int id)
         {
-            var result = _tripService.ClaimTripParticipation(uid, id);
+            var result = _tripService.TryClaimTripParticipation(uid, id);
 
             if (!result)
                 return NotFound();

@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { Trip } from 'src/app/data/trip';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
-import { moveFromLeft, moveFromRight, moveFromTop, moveFromBottom } from "ngx-router-animations";
-import { TripDetailsExtract } from 'src/app/models/trip/trip-details-extract';
+import { moveFromLeft, moveFromRight } from "ngx-router-animations";
+import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
 
 @Component({
     templateUrl: './trip.component.html',
@@ -20,7 +19,7 @@ import { TripDetailsExtract } from 'src/app/models/trip/trip-details-extract';
 
 export class TripComponent implements OnInit, AfterViewInit {
 
-    public trip: TripDetailsExtract;
+    public trip: TripDetailsModel;
     public participants = '';
     public otherParticipantsCount = 0;
     public shareUrl = '';
@@ -48,7 +47,7 @@ export class TripComponent implements OnInit, AfterViewInit {
         });
     }
 
-    private buildParticipantsHeader(trip: TripDetailsExtract) {
+    private buildParticipantsHeader(trip: TripDetailsModel) {
 
         for (let i = 0; i < trip.participants.length; i++) {
 

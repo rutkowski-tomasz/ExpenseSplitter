@@ -71,6 +71,24 @@
 			left: auto;
 		}
 	}
+
+	.balance-placeholders {
+		.item-placeholder {
+			padding: 8px;
+			display: grid;
+			grid-template-columns: repeat(2, 50%);
+
+			& > div {
+				height: 24px;
+				border-radius: 4px;
+
+				&:nth-of-type(1) {
+					justify-self: end;
+					margin-right: 8px;
+				}
+			}
+		}
+	}
 }
 
 .settlements {

@@ -8,8 +8,8 @@ namespace ExpenseSplitter.Api.Extensions
 {
     public interface IExpenseExtensions
     {
-        Expense Update(Expense expense, UpdateExpenseModel model);
-        ExpenseDetailsExtactModel ToExpenseDetailsExtract(Expense expense);
+        Expense Update(Expense expense, ExpenseUpdateModel model);
+        ExpenseDetailsModel ToExpenseDetailsModel(Expense expense);
     }
 
     public class ExpenseExtensions : IExpenseExtensions
@@ -25,7 +25,7 @@ namespace ExpenseSplitter.Api.Extensions
             _userService = userService;
         }
 
-        public Expense Update(Expense expense, UpdateExpenseModel model)
+        public Expense Update(Expense expense, ExpenseUpdateModel model)
         {
             expense.Name = model.Name;
             expense.Type = model.Type;
@@ -50,11 +50,11 @@ namespace ExpenseSplitter.Api.Extensions
             return expense;
         }
 
-        public ExpenseDetailsExtactModel ToExpenseDetailsExtract(Expense expense)
+        public ExpenseDetailsModel ToExpenseDetailsModel(Expense expense)
         {
             var userId = _userService.GetCurrentUserId();
 
-            return new ExpenseDetailsExtactModel
+            return new ExpenseDetailsModel
             {
                 Id = expense.Id,
                 Name = expense.Name,

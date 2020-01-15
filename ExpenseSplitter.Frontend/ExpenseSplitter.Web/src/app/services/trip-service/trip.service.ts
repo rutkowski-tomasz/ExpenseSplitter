@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CallService } from '../call-service/call.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AuthService } from '../auth-service/auth.service';
-import { UserExtract } from 'src/app/data/user-extract';
-import { Trip } from 'src/app/data/trip';
-import { CreateTripModel } from 'src/app/models/trip/create-trip-model';
-import { UpdateTripModel } from 'src/app/models/trip/update-trip-model';
-import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
-import { TripExtract } from 'src/app/models/trip/trip-extract';
-import { TripDetailsExtract } from 'src/app/models/trip/trip-details-extract';
+import { Observable } from 'rxjs';
+import { TripCreateModel } from 'src/app/models/trip/trip-create.model';
+import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';
+import { ParticipantModel } from 'src/app/models/participant/participant.model';
+import { TripListModel } from 'src/app/models/trip/trip-list.model';
+import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
 
 @Injectable({
     providedIn: 'root'
@@ -20,39 +17,39 @@ export class TripService {
         private callService: CallService,
     ) { }
 
-    public GetTrips(): Observable<TripExtract[]> {
-        return this.callService.get<TripExtract[]>(`${this.servicePrefix}`);
+    public GetTrips(): Observable<TripListModel[]> {
+        return this.callService.get(`${this.servicePrefix}`);
     }
 
-    public GetTrip(uid: string): Observable<TripDetailsExtract> {
-        return this.callService.get<TripDetailsExtract>(`${this.servicePrefix}/${uid}`);
+    public GetTrip(uid: string): Observable<TripDetailsModel> {
+        return this.callService.get(`${this.servicePrefix}/${uid}`);
     }
 
-    public GetParticipants(uid: string): Observable<ParticipantExtractModel[]> {
-        return this.callService.get<ParticipantExtractModel[]>(`${this.servicePrefix}/${uid}/participants`);
+    public GetParticipants(uid: string): Observable<ParticipantModel[]> {
+        return this.callService.get(`${this.servicePrefix}/${uid}/participants`);
     }
 
-    public CreateTrip(model: CreateTripModel): Observable<Trip> {
+    public CreateTrip(model: TripCreateModel): Observable<string> {
         return this.callService.post(`${this.servicePrefix}`, model);
     }
 
-    public UpdateTrip(model: UpdateTripModel): Observable<Trip> {
+    public UpdateTrip(model: TripUpdateModel): Observable<boolean> {
         return this.callService.put(`${this.servicePrefix}`, model);
     }
 
-    public DeleteTrip(uid: string) {
+    public DeleteTrip(uid: string): Observable<boolean> {
         return this.callService.delete(`${this.servicePrefix}/${uid}`);
     }
 
-    public JoinTrip(uid: string) {
+    public JoinTrip(uid: string): Observable<boolean> {
         return this.callService.post(`${this.servicePrefix}/${uid}/join`, {});
     }
 
-    public LeaveTrip(uid: string) {
+    public LeaveTrip(uid: string): Observable<boolean> {
         return this.callService.post(`${this.servicePrefix}/${uid}/leave`, {});
     }
 
-    public ClaimTripParticipation(uid: string, id: number) {
+    public ClaimTripParticipation(uid: string, id: number): Observable<boolean> {
         return this.callService.post(`${this.servicePrefix}/${uid}/participation/${id}`, {});
     }
 }

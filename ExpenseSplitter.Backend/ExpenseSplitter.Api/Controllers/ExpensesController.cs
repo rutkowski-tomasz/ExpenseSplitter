@@ -35,31 +35,31 @@ namespace ExpenseSplitter.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateExpense(string uid, [FromBody] UpdateExpenseModel model)
+        public IActionResult CreateExpense(string uid, [FromBody] ExpenseUpdateModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();
 
-            var expense = _expenseService.CreateExpense(uid, model);
+            var result = _expenseService.CreateExpense(uid, model);
 
-            if (expense == null)
+            if (result == 0)
                 return NotFound();
 
-            return new JsonResult(expense);
+            return new JsonResult(result);
         }
 
         [HttpPut]
-        public IActionResult UpdateExpense(string uid, [FromBody] UpdateExpenseModel model)
+        public IActionResult UpdateExpense(string uid, [FromBody] ExpenseUpdateModel model)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity();
 
-            var expense = _expenseService.UpdateExpense(uid, model);
+            var result = _expenseService.TryUpdateExpense(uid, model);
 
-            if (expense == null)
+            if (!result)
                 return NotFound();
 
-            return new JsonResult(expense);
+            return new JsonResult(result);
         }
 
         [HttpDelete("{id}")]

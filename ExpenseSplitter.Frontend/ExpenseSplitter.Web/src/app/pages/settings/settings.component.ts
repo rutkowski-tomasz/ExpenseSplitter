@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';
-import { UpdateUserModel } from 'src/app/models/user/update-user-model';
+import { UserUpdateModel } from 'src/app/models/user/user-update.model';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { ConfigService } from 'src/app/services/config-service/config.service';
@@ -56,7 +56,7 @@ export class SettingsComponent implements OnInit {
 
             const nick = this.nick.value;
 
-            const model: UpdateUserModel = { nick };
+            const model: UserUpdateModel = { nick };
             this.userService.UpdateUser(model).subscribe(userExtract => {
                 this.userService.userExtract.next(userExtract);
                 this.router.navigate(['/trips']);

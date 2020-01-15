@@ -11,15 +11,15 @@ namespace ExpenseSplitter.Api.Services
 {
     public interface ITripService
     {
-        List<TripExtract> GetTrips();
-        TripDetailsExtract GetTrip(string uid);
-        List<ParticipantExtractModel> GetTripParticipants(string uid);
-        Trip CreateTrip(CreateTripModel model);
-        Trip UpdateTrip(UpdateTripModel model);
+        List<TripListModel> GetTrips();
+        TripDetailsModel GetTrip(string uid);
+        List<ParticipantModel> GetTripParticipants(string uid);
+        string CreateTrip(TripCreateModel model);
+        bool TryUpdateTrip(TripUpdateModel model);
         bool TryDeleteTrip(string uid);
-        Trip JoinTrip(string uid);
-        bool LeaveTrip(string uid);
-        bool ClaimTripParticipation(string uid, int id);
+        bool TryJoinTrip(string uid);
+        bool TryLeaveTrip(string uid);
+        bool TryClaimTripParticipation(string uid, int id);
     }
 
     public class TripService : ITripService
@@ -41,7 +41,7 @@ namespace ExpenseSplitter.Api.Services
             _tripExtensions = tripExtensions;
         }
 
-        public List<TripExtract> GetTrips()
+        public List<TripListModel> GetTrips()
         {
             var userId = _userService.GetCurrentUserId();
             var trips = _context
@@ -49,12 +49,12 @@ namespace ExpenseSplitter.Api.Services
                 .Where(x => x.Users.Any(y => y.User.Id == userId))
                 .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.Participants)
-                .Select(x => _tripExtensions.ToTripExtract(x));
+                .Select(x => _tripExtensions.ToTripListModel(x));
 
             return trips.ToList();
         }
 
-        public TripDetailsExtract GetTrip(string uid)
+        public TripDetailsModel GetTrip(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var trip = _context
@@ -65,13 +65,13 @@ namespace ExpenseSplitter.Api.Services
                     x => x.Uid == uid &&
                     x.Users.Any(y => y.User.Id == userId)
                 )
-                .Select(x => _tripExtensions.ToTripDetailsExtract(x))
+                .Select(x => _tripExtensions.ToTripDetailsModel(x))
                 .SingleOrDefault();
 
             return trip;
         }
 
-        public List<ParticipantExtractModel> GetTripParticipants(string uid)
+        public List<ParticipantModel> GetTripParticipants(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var participants = _context
@@ -81,23 +81,23 @@ namespace ExpenseSplitter.Api.Services
                     x.TripUid == uid 
                     && x.Trip.Users.Any(y => y.UserId == userId)
                 )
-                .Select(x => _participantExtensions.ToParticipantExtract(x))
+                .Select(x => _participantExtensions.ToParticipantModel(x))
                 .ToList();
 
             return participants;
         }
 
-        public Trip CreateTrip(CreateTripModel model)
+        public string CreateTrip(TripCreateModel model)
         {
             var trip = _tripExtensions.Create(model, _userService.GetCurrentUserId());
 
             _context.Trips.Add(trip);
             _context.SaveChanges();
 
-            return trip;
+            return trip.Uid;
         }
 
-        public Trip UpdateTrip(UpdateTripModel model)
+        public bool TryUpdateTrip(TripUpdateModel model)
         {
             var userId = _userService.GetCurrentUserId();
             var trip = _context
@@ -109,12 +109,12 @@ namespace ExpenseSplitter.Api.Services
                 );
 
             if (trip == null)
-                return null;
+                return false;
 
             _tripExtensions.Update(trip, model);
             _context.SaveChanges();
 
-            return trip;
+            return true;
         }
 
         public bool TryDeleteTrip(string uid)
@@ -134,7 +134,7 @@ namespace ExpenseSplitter.Api.Services
             return true;
         }
 
-        public Trip JoinTrip(string uid)
+        public bool TryJoinTrip(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var trip = _context
@@ -144,10 +144,10 @@ namespace ExpenseSplitter.Api.Services
                 .SingleOrDefault(x => x.Uid == uid);
 
             if (trip == null)
-                return null;
+                return false;
 
             if (trip.Users.Any(x => x.User.Id == userId))
-                return trip;
+                return true;
 
             trip.Users.Add(new TripUser
             {
@@ -157,10 +157,10 @@ namespace ExpenseSplitter.Api.Services
 
             _context.SaveChanges();
 
-            return trip;
+            return true;
         }
 
-        public bool LeaveTrip(string uid)
+        public bool TryLeaveTrip(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var tripUser = _context.TripsUsers.SingleOrDefault(
@@ -177,7 +177,7 @@ namespace ExpenseSplitter.Api.Services
             return true;
         }
 
-        public bool ClaimTripParticipation(string uid, int id)
+        public bool TryClaimTripParticipation(string uid, int id)
         {
             var userId = _userService.GetCurrentUserId();
             var tripUser = _context

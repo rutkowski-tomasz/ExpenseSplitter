@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BalanceService } from 'src/app/services/balance-service/balance.service';
-import { BalanceResponseModel } from 'src/app/models/balance/balance-response-model';
+import { BalanceModel } from 'src/app/models/balance/balance.model';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user-service/user.service';
-import { SettleBalance } from 'src/app/models/balance/settle-balance-model';
+import { BalanceSettleModel } from 'src/app/models/balance/balance-settle.model';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
-import { UpdateExpenseModel } from 'src/app/models/expense/update-expense-model';
-import { ExpenseTypeEnum } from 'src/app/data/expense-type';
+import { ExpenseUpdateModel } from 'src/app/models/expense/expense-update.model';
+import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { ConfigService } from 'src/app/services/config-service/config.service';
 })
 export class BalanceComponent implements OnInit {
 
-    public balance: BalanceResponseModel;
+    public balance: BalanceModel;
     public userId = 0;
     public maxBalance: number;
     public shareUrl: string;
@@ -56,15 +56,15 @@ export class BalanceComponent implements OnInit {
         return Math.abs(value) * 100 / this.maxBalance;
     }
 
-    public markAsPaid(settlement: SettleBalance) {
+    public markAsPaid(settlement: BalanceSettleModel) {
 
-        this.balanceService.markSettlementAsPaid(
-            this.uid,
-            settlement.value,
-            settlement.fromParticipantId,
-            settlement.toParticipantId
-        ).subscribe(_ => {
-            console.log('success');
-        });
+        // this.balanceService.markSettlementAsPaid(
+        //     this.uid,
+        //     settlement.value,
+        //     settlement.fromParticipantId,
+        //     settlement.toParticipantId
+        // ).subscribe(_ => {
+        //     console.log('success');
+        // });
     }
 }

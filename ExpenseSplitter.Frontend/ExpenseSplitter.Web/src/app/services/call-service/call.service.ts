@@ -1,5 +1,3 @@
-import { map } from 'rxjs/operators';
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -9,78 +7,42 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class CallService {
-    apiUrl: string;
+    private apiUrl: string;
 
     constructor(private http: HttpClient) {
         this.apiUrl = environment.apiUrl;
     }
 
     public get<T>(url: string, param: any = null) {
-        const finalUrl = this.formUrlParam(url, param);
-        return this.http.get(finalUrl, { withCredentials: true }).pipe(
-            map(res => {
-                return res as T;
-            })
-        );
+        return this.http.get<T>(this.buildUrl(url, param));
     }
 
-    public download(url: string, param: any = null) {
-        const finalUrl = this.formUrlParam(url, param);
-        return this.http
-            .get(finalUrl, { responseType: 'blob', observe: 'response' })
-            .pipe(
-                map(res => {
-                    return res;
-                })
-            );
+    public post<T>(url: string, postBody: any) {
+
+        const params = {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        };
+
+        return this.http.post<T>(this.buildUrl(url), JSON.stringify(postBody), params);
     }
 
-    post(url: string, postBody: any): any {
-        return this.http
-            .post(this.toAbsoluteUrl(url), JSON.stringify(postBody), {
-                withCredentials: true,
-                headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-            });
+    public postForm<T>(url: string, data?: any): Observable<T> {
+
+        return this.http.post<T>(this.buildUrl(url), this.buildFormData(data));
     }
 
-    delete(url: string, param: any = null) {
+    public put<T>(url: any, putData: any) {
 
-        const finalUrl = this.formUrlParam(url, param);
-        return this.http.delete(finalUrl, { withCredentials: true }).pipe(
-            map(res => {
-                return res;
-            })
-        );
+        return this.http.put<T>(this.buildUrl(url), putData);
     }
 
-    put<T>(url: any, putData: any) {
-        return this.http
-            .put(this.toAbsoluteUrl(url), putData, { withCredentials: true })
-            .pipe(map(res => res as T));
+    public delete<T>(url: string, param: any = null) {
+
+        return this.http.delete<T>(this.buildUrl(url, param));
     }
 
-    patch(url: any, putData: any) {
-        return this.http
-            .patch(this.toAbsoluteUrl(url), putData, { withCredentials: true })
-            .pipe(
-                map(res => {
-                    return res;
-                })
-            );
-    }
-
-    postForm<T>(url: string, data?: any): Observable<T> {
-
-        const formData = this.buildFormData(data);
-        return this.http.post(
-            this.toAbsoluteUrl(url),
-            formData,
-            { withCredentials: true }
-        ) as Observable<T>;
-    }
-
-    formUrlParam(url: string, data?: any) {
-        const urlBuilder = [this.toAbsoluteUrl(url), '?'];
+    private buildUrl(url: string, data?: any) {
+        const urlBuilder = [`${this.apiUrl}/${url}`, '?'];
 
         if (data) {
             for (const key of Object.keys(data)) {
@@ -102,16 +64,6 @@ export class CallService {
 
         urlBuilder.pop();
         return urlBuilder.join('');
-    }
-
-    private toAbsoluteUrl(url: string) {
-        const isAbsolute = new RegExp('^(?:[a-z]+:)?//', 'i').test(url);
-
-        if (isAbsolute) {
-            return url;
-        } else {
-            return `${this.apiUrl}/${url}`;
-        }
     }
 
     private buildFormData(object: any): FormData {

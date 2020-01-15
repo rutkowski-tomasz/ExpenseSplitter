@@ -24,8 +24,8 @@ namespace ExpenseSplitter.Api.Services
         string GetAuthorizationToken(User user);
         int GetCurrentUserId();
         User GetCurrentUser();
-        UserExtractModel GetUserExtract(int id);
-        UserExtractModel UpdateUser(UpdateUserModel model);
+        UserModel GetUserModel(int id);
+        UserModel UpdateUser(UserUpdateModel model);
     }
 
     public class UserService : IUserService
@@ -116,22 +116,22 @@ namespace ExpenseSplitter.Api.Services
             return GetUser(GetCurrentUserId());
         }
         
-        public UserExtractModel GetUserExtract(int id)
+        public UserModel GetUserModel(int id)
         {
             if (id != GetCurrentUserId())
                 return null;
 
-            return _userExtensions.ToUserExtract(GetUser(id));
+            return _userExtensions.ToUserModel(GetUser(id));
         }
         
-        public UserExtractModel UpdateUser(UpdateUserModel model)
+        public UserModel UpdateUser(UserUpdateModel model)
         {
             var user = GetCurrentUser();
 
             user.Nick = model.Nick;
 
             _context.SaveChanges();
-            return _userExtensions.ToUserExtract(user);
+            return _userExtensions.ToUserModel(user);
         }
     }
     

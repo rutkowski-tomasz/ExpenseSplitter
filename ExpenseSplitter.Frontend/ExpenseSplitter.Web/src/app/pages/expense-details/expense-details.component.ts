@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
-import { ExpenseDetailsExtactModel } from 'src/app/models/expense/expense-details-model';
-import { ExpensePartModel } from 'src/app/models/expense/expense-part-model';
+import { ParticipantModel } from 'src/app/models/participant/participant.model';
+import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
+import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
 
 @Component({
     templateUrl: './expense-details.component.html',
@@ -15,11 +15,11 @@ export class ExpenseDetailsComponent implements OnInit {
 
     public uid: string;
     public id: number;
-    public expense: ExpenseDetailsExtactModel;
+    public expense: ExpenseDetailsModel;
     public userId: number;
     public value: number;
     public stickyHeader: boolean = false;
-    public participants = new Array<ParticipantExtractModel>();
+    public participants = new Array<ParticipantModel>();
     public payerNick: string;
 
     public summary: Array<{ nick: string, value: number }>;
@@ -52,7 +52,7 @@ export class ExpenseDetailsComponent implements OnInit {
         });
     }
 
-    public isParticipantInvolvedInPart(participant: ParticipantExtractModel, part: ExpensePartModel) {
+    public isParticipantInvolvedInPart(participant: ParticipantModel, part: ExpensePartModel) {
         return part.participantIds.some(x => x === participant.id);
     }
 

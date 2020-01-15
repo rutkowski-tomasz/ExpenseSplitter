@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ExpenseSplitter.Api.Models.Balance
 {
-    public class BalanceResponseModel
+    public class BalanceModel
     {
-        public List<ParticipantBalance> ParticipantsBalance { get; set; }
-        public List<SettleBalance> SettlesBalance { get; set; }
+        public List<BalanceParticipantModel> ParticipantsBalance { get; set; }
+        public List<BalanceSettleModel> SettlesBalance { get; set; }
     }
 }

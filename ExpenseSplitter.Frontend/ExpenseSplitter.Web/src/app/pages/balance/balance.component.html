@@ -1,39 +1,57 @@
 
-<div class="container page-with-tabs" *ngIf="balance">
-    <div class="settlement-done" *ngIf="balance.settlesBalance.length === 0">
+<div class="container page-with-tabs">
+    <div class="settlement-done" *ngIf="balance && balance.settlesBalance.length === 0">
         Wszystko zostało rozliczone 😊🎉
     </div>
 
     <section class="balance">
-        <div
-            *ngFor="let participantBalance of balance.participantsBalance"
-            class="participant-balance"
-            [class.negative]="participantBalance.value < 0"
-        >
-            <div
-                class="nick"
-                [class.my-balance]="participantBalance.participantId === userId"
-            >
-                {{ participantBalance.participantNick }}
-                <span *ngIf="participantBalance.participantId === userId">
-                    (Ja)
-                </span>
+        <div class="fetching-results balance-placeholders" *ngIf="!balance">
+            <div class="item-placeholder">
+                <div class="secondary first" style="width: 41%;"></div>
+                <div class="positive second" style="width: 100%;"></div>
             </div>
-            <div class="value">
-                <div class="text">
-                    {{ participantBalance.value | currency: "PLN" }}
-                </div>
-                <div
-                    class="bar"
-                    [style.width.%]="
-                        calculateBarLength(participantBalance.value)
-                    "
-                ></div>
+            <div class="item-placeholder">
+                <div class="negative second" style="width: 25%;"></div>
+                <div class="secondary first" style="width: 33%;"></div>
+            </div>
+            <div class="item-placeholder">
+                <div class="negative second" style="width: 75%;"></div>
+                <div class="secondary first" style="width: 25%;"></div>
             </div>
         </div>
+
+        <ng-container *ngIf="balance">
+            <div
+                
+                *ngFor="let participantBalance of balance.participantsBalance"
+                class="participant-balance"
+                [class.negative]="participantBalance.value < 0"
+            >
+                <div
+                    class="nick"
+                    [class.my-balance]="participantBalance.participantId === userId"
+                >
+                    {{ participantBalance.participantNick }}
+                    <span *ngIf="participantBalance.participantId === userId">
+                        (Ja)
+                    </span>
+                </div>
+                <div class="value">
+                    <div class="text">
+                        {{ participantBalance.value | currency: "PLN" }}
+                    </div>
+                    <div
+                        class="bar"
+                        [style.width.%]="
+                            calculateBarLength(participantBalance.value)
+                        "
+                    ></div>
+                </div>
+            </div>
+        </ng-container>
     </section>
 
-    <ng-container *ngIf="balance.settlesBalance.length > 0">
+    <ng-container *ngIf="balance && balance.settlesBalance.length > 0">
         <caption>
             Jak rozliczyć wydatki?
         </caption>

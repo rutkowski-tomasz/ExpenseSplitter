@@ -4,7 +4,7 @@ import { MatBottomSheet } from '@angular/material';
 import { AddTripSheetComponent } from 'src/app/components/add-trip/add-trip-sheet.component';
 import { AddTripActionEnum } from 'src/app/components/add-trip/add-trip-action.enum';
 import { Router } from '@angular/router';
-import { TripExtract } from 'src/app/models/trip/trip-extract';
+import { TripListModel } from 'src/app/models/trip/trip-list.model';
 
 @Component({
     templateUrl: './trips-list.component.html',
@@ -12,7 +12,7 @@ import { TripExtract } from 'src/app/models/trip/trip-extract';
 })
 export class TripsListComponent implements OnInit {
 
-    public trips: TripExtract[];
+    public trips: TripListModel[];
     public shareUrl = window.location.origin;
 
     constructor(

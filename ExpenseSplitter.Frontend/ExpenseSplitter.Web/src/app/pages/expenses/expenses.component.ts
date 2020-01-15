@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { ActivatedRoute } from '@angular/router';
-import { Expense } from 'src/app/data/expense';
-import { ExpenseExtractModel } from 'src/app/models/expense/expense-extract-model';
+import { ExpenseListModel } from 'src/app/models/expense/expense-list.model';
 
 @Component({
     templateUrl: './expenses.component.html',
@@ -10,7 +9,7 @@ import { ExpenseExtractModel } from 'src/app/models/expense/expense-extract-mode
 })
 export class ExpensesComponent implements OnInit {
 
-    public expenses: ExpenseExtractModel[];
+    public expenses: ExpenseListModel[];
     public uid: string;
 
     constructor(
