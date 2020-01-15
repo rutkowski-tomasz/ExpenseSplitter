@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { Trip } from 'src/app/data/trip';
 import { MatBottomSheet } from '@angular/material';
 import { AddTripSheetComponent } from 'src/app/components/add-trip/add-trip-sheet.component';
 import { AddTripActionEnum } from 'src/app/components/add-trip/add-trip-action.enum';
 import { Router } from '@angular/router';
+import { TripExtract } from 'src/app/models/trip/trip-extract';
 
 @Component({
     templateUrl: './trips-list.component.html',
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class TripsListComponent implements OnInit {
 
-    public trips: Trip[];
+    public trips: TripExtract[];
     public shareUrl = window.location.origin;
 
     constructor(

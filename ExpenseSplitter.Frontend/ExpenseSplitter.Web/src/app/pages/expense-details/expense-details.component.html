@@ -23,8 +23,8 @@
             <div class="value">{{ value | currency: "PLN" }}</div>
             <div class="info">
                 <div class="paid-by">
-                    Zapłacił(a) {{ expense.payer.name }}
-                    <span *ngIf="expense.payer.id === userId">(Ja)</span>
+                    Zapłacił(a) {{ payerNick }}
+                    <span *ngIf="expense.payerId === userId">(Ja)</span>
                 </div>
                 <div class="paid-at">{{ expense.paidAt | date }}</div>
             </div>

@@ -125,7 +125,7 @@ namespace ExpenseSplitter.Api.Services
                 .Include(x => x.Expense)
                 .Where(x => x.Expense.TripUid == trip.Uid)
                 .Where(x => x.PartParticipants.Any(y => y.Participant.UsersClaimed.Any(z => z.UserId == userId)))
-                .Select(x => (x.Expense.Type == ExpenseType.Expense ? 1.0M : -1.0M) * (x.Value /  x.PartParticipants.Count))
+                .Select(x => (x.Expense.Type == ExpenseType.Expense ? 1.0M : 0.0M) * (x.Value /  x.PartParticipants.Count))
                 .Sum();
 
             return new ShortBalanceResponse

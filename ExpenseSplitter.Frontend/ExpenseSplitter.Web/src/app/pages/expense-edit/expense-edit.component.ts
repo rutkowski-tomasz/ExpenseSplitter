@@ -97,14 +97,16 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
                 this.name.setValue(data.name);
                 this.type.setValue(data.type);
                 this.paidAt.setValue(data.paidAt);
-                this.payer.setValue(data.payer);
+
+                const payer = this.participants.find(x => x.id == data.payerId);
+                this.payer.setValue(payer);
 
                 while (this.parts.length !== 0) {
                     this.parts.removeAt(0);
                 }
 
                 for (const part of data.parts) {
-                    this.parts.push(this.CreatePart(part.value, part.partParticipants));
+                    this.parts.push(this.CreatePart(part.value, part.participantIds));
                 }
             });
         });
@@ -143,12 +145,14 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
 
                 model.id = this.id;
                 this.expenseService.UpdateExpense(this.uid, model).subscribe(_ => {
+                    this.formGroup.markAsPristine();
                     this.router.navigate(['/trips', this.uid, 'expenses', this.id]);
                 });
 
             } else {
 
                 this.expenseService.CreateExpense(this.uid, model).subscribe(_ => {
+                    this.formGroup.markAsPristine();
                     this.router.navigate(['/trips', this.uid]);
                 });
             }
@@ -188,12 +192,12 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         this.parts.push(this.CreatePart());
     }
 
-    public CreatePart(value?: number, participants?: ExpensePartParticipant[]): FormGroup {
+    public CreatePart(value?: number, participantIds?: number[]): FormGroup {
         const val = value ? value.toString() : '';
 
         const group = new FormGroup({
             value: new FormControl(val, Validators.pattern(/^\d+(\.\d{0,2})?$/)),
-            participants: this.createParticipantsCheckboxes(participants)
+            participants: this.createParticipantsCheckboxes(participantIds)
         });
 
         return group;
@@ -211,14 +215,14 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public isDirty = () => this.formGroup.dirty;
 
-    private createParticipantsCheckboxes(participants?: ExpensePartParticipant[]): FormArray {
+    private createParticipantsCheckboxes(participants?: number[]): FormArray {
 
         const array = new FormArray([]);
         for (let [i, participant] of this.participants.entries()) {
 
             let checked = false;
             if (participants) {
-                checked = participants.some(x => x.participantId == participant.id);
+                checked = participants.some(x => x == participant.id);
             }
             else if (this.parts.controls.length) {
                 checked = this.parts.controls[this.parts.controls.length - 1].value.participants[i];

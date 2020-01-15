@@ -1,6 +1,16 @@
 @import "src/scss/_colors";
 @import "src/scss/_mixins";
+@import "src/scss/_variables";
 
 :host  {
 	@include is-animated-host;
+}
+
+::ng-deep .mat-tab-list .mat-tab-label {
+	width: 50%;
+	height: $tabsHeight;
+}
+
+.router-wrapper {
+	height: calc(100vh - #{$headerHeight} - #{$tabsHeight});
 }

@@ -1,12 +1,12 @@
+import { ExpensePartModel } from './expense-part-model';
 import { ExpenseTypeEnum } from 'src/app/data/expense-type';
 
-export class ExpenseExtractModel {
+export class ExpenseDetailsExtactModel {
     id: number;
     name: string;
     type: ExpenseTypeEnum;
     paidAt: Date;
-    payerName: string;
-    isPaidByMe: boolean;
+    payerId: number;
     value: number;
-    iSpent: number;
+    parts: ExpensePartModel[];
 }

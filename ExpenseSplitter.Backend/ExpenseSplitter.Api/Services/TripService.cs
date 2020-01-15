@@ -11,8 +11,8 @@ namespace ExpenseSplitter.Api.Services
 {
     public interface ITripService
     {
-        List<Trip> GetTrips();
-        Trip GetTrip(string uid);
+        List<TripExtract> GetTrips();
+        TripDetailsExtract GetTrip(string uid);
         List<ParticipantExtractModel> GetTripParticipants(string uid);
         Trip CreateTrip(CreateTripModel model);
         Trip UpdateTrip(UpdateTripModel model);
@@ -41,29 +41,32 @@ namespace ExpenseSplitter.Api.Services
             _tripExtensions = tripExtensions;
         }
 
-        public List<Trip> GetTrips()
+        public List<TripExtract> GetTrips()
         {
             var userId = _userService.GetCurrentUserId();
             var trips = _context
                 .Trips
                 .Where(x => x.Users.Any(y => y.User.Id == userId))
                 .OrderByDescending(x => x.CreatedAt)
-                .Include(x => x.Participants);
+                .Include(x => x.Participants)
+                .Select(x => _tripExtensions.ToTripExtract(x));
 
             return trips.ToList();
         }
 
-        public Trip GetTrip(string uid)
+        public TripDetailsExtract GetTrip(string uid)
         {
             var userId = _userService.GetCurrentUserId();
             var trip = _context
                 .Trips
                 .Include(x => x.Participants)
                 .ThenInclude(x => x.UsersClaimed)
-                .SingleOrDefault(
+                .Where(
                     x => x.Uid == uid &&
                     x.Users.Any(y => y.User.Id == userId)
-                );
+                )
+                .Select(x => _tripExtensions.ToTripDetailsExtract(x))
+                .SingleOrDefault();
 
             return trip;
         }

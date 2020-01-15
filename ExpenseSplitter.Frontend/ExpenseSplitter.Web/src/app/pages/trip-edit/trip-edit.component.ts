@@ -62,7 +62,7 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
                 this.name.setValue(data.name);
                 this.description.setValue(data.description);
 
-                data.participants.forEach(x => this.addParticipant(x.id, x.name));
+                data.participants.forEach(x => this.addParticipant(x.id, x.nick));
             });
         });
 

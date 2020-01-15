@@ -28,27 +28,43 @@
             *ngFor="let expense of expenses"
             [routerLink]="['/trips', uid, 'expenses', expense.id]"
         >
-            <div class="details">
-                <div class="name">
-                    {{ expense.name }}
+            <div class="content">
+                <div class="details">
+                    <div class="name">
+                        {{ expense.name }}
+                    </div>
+                    <div class="paid-by">
+                        Zapłacone przez
+                        <strong>
+                            <span *ngIf="expense.isPaidByMe">mnie</span>
+                            <span *ngIf="!expense.isPaidByMe">{{
+                                expense.payerName
+                            }}</span>
+                        </strong>
+                    </div>
                 </div>
-                <div class="paid-by">
-                    Zapłacone przez
-                    <strong>
-                        <span *ngIf="expense.isPaidByMe">mnie</span>
-                        <span *ngIf="!expense.isPaidByMe">{{
-                            expense.payerName
-                        }}</span>
-                    </strong>
+                <div class="summary">
+                    <div class="value">
+                        {{ expense.value | currency:'PLN' }}
+                    </div>
+                    <div class="date">
+                        {{ expense.paidAt | date }}
+                    </div>
                 </div>
             </div>
-            <div class="summary">
-                <div class="value">
-                    {{ expense.value | currency:'PLN' }}
-                </div>
-                <div class="date">
-                    {{ expense.paidAt | date }}
-                </div>
+
+            <div class="detailed-calculations">
+                Wpływ na mój bilans: 
+                <span *ngIf="expense.isPaidByMe">
+                    ({{ expense.value | currency:'PLN' }} - {{ expense.iSpent | currency:'PLN' }})
+                    <span [class.positive]="expense.value - expense.iSpent > 0">
+                        +{{ expense.value - expense.iSpent | currency:'PLN' }}
+                    </span>
+                </span>
+                <span *ngIf="!expense.isPaidByMe" [class.negative]="expense.iSpent > 0">
+                    -{{ expense.iSpent | currency:'PLN' }}
+                </span>
+                
             </div>
         </a>
     </section>

@@ -1,13 +1,11 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
-import { Expense } from 'src/app/data/expense';
 import { UserService } from 'src/app/services/user-service/user.service';
-import { Participant } from 'src/app/data/participant';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { ParticipantExtractModel } from 'src/app/models/participant/participant-extract-model';
-import { ExpensePart } from 'src/app/data/expense-part';
-import { CurrencyPipe } from '@angular/common';
+import { ExpenseDetailsExtactModel } from 'src/app/models/expense/expense-details-model';
+import { ExpensePartModel } from 'src/app/models/expense/expense-part-model';
 
 @Component({
     templateUrl: './expense-details.component.html',
@@ -17,11 +15,12 @@ export class ExpenseDetailsComponent implements OnInit {
 
     public uid: string;
     public id: number;
-    public expense: Expense;
+    public expense: ExpenseDetailsExtactModel;
     public userId: number;
     public value: number;
     public stickyHeader: boolean = false;
     public participants = new Array<ParticipantExtractModel>();
+    public payerNick: string;
 
     public summary: Array<{ nick: string, value: number }>;
 
@@ -53,8 +52,8 @@ export class ExpenseDetailsComponent implements OnInit {
         });
     }
 
-    public isParticipantInvolvedInPart(participant: ParticipantExtractModel, part: ExpensePart) {
-        return part.partParticipants.some(x => x.participantId === participant.id);
+    public isParticipantInvolvedInPart(participant: ParticipantExtractModel, part: ExpensePartModel) {
+        return part.participantIds.some(x => x === participant.id);
     }
 
     private calculateSummary() {
@@ -62,6 +61,7 @@ export class ExpenseDetailsComponent implements OnInit {
             return;
         }
 
+        this.payerNick = this.participants.find(x => x.id === this.expense.payerId).nick;
         this.value = this.expense.parts.reduce((p, c) => p + c.value, 0);
 
         this.summary = new Array();
@@ -73,9 +73,9 @@ export class ExpenseDetailsComponent implements OnInit {
                     .expense
                     .parts
                     .filter(x =>
-                        x.partParticipants.some(y => y.participantId === participant.id)
+                        x.participantIds.some(y => y === participant.id)
                     )
-                    .reduce((p, c) => p + c.value / c.partParticipants.length, 0),
+                    .reduce((p, c) => p + c.value / c.participantIds.length, 0),
             });
         }
     }

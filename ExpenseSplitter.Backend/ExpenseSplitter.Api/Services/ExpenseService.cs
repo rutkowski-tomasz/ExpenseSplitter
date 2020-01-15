@@ -11,7 +11,7 @@ namespace ExpenseSplitter.Api.Services
     public interface IExpenseService
     {
         List<ExpenseExtractModel> GetExpenses(string uid);
-        Expense GetExpense(string uid, int id);
+        ExpenseDetailsExtactModel GetExpense(string uid, int id);
         Expense CreateExpense(string uid, UpdateExpenseModel model);
         Expense UpdateExpense(string uid, UpdateExpenseModel model);
         bool TryDeleteExpense(string uid, int id);
@@ -51,25 +51,36 @@ namespace ExpenseSplitter.Api.Services
                     PayerName = x.Payer.Name,
                     IsPaidByMe = x.Payer.UsersClaimed.Any(y => y.Id == userId),
                     Value = x.Parts.Sum(x => x.Value),
+                    ISpent = x
+                        .Parts
+                        .Where(
+                            k => k.PartParticipants.Any(
+                                l => l.Participant.UsersClaimed.Any(
+                                    m => m.UserId == userId
+                                )
+                            )
+                        )
+                        .Sum(x => x.Value / x.PartParticipants.Count),
                 })
                 .ToList();
 
             return expenses;
         }
 
-        public Expense GetExpense(string uid, int id)
+        public ExpenseDetailsExtactModel GetExpense(string uid, int id)
         {
             var userId = _userService.GetCurrentUserId();
             var expense = _context
                 .Expenses
-                .Include(x => x.Payer)
                 .Include(x => x.Parts)
                 .ThenInclude(x => x.PartParticipants)
                 .ThenInclude(x => x.Participant)
-                .SingleOrDefault(x =>
+                .Where(x =>
                     x.TripUid == uid
                     && x.Id == id
-                    && x.Trip.Users.Any(y => y.UserId == userId));
+                    && x.Trip.Users.Any(y => y.UserId == userId))
+                .Select(x => _expenseExtensions.ToExpenseDetailsExtract(x))
+                .SingleOrDefault();
 
             return expense;
         }

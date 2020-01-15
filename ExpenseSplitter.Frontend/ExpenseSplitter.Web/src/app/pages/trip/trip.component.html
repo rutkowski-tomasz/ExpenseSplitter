@@ -34,18 +34,30 @@
 <mat-tab-group (selectedTabChange)="tabClicked($event)" [selectedIndex]="selectedIndex" #matTabGroup>
     <mat-tab [label]="{link: '/trips/' + this.uid + '/expenses'}">
         <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">attach_money</mat-icon>
-            Wydatki
+            <div class="tab-wrapper">
+                <div class="icon">
+                    <mat-icon class="example-tab-icon">attach_money</mat-icon>
+                </div>
+                <div class="text">
+                    Wydatki
+                </div>
+            </div>
         </ng-template>
     </mat-tab>
     <mat-tab [label]="{link: '/trips/' + this.uid + '/balance'}">
         <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
-            Bilans
+            <div class="tab-wrapper">
+                <div class="icon">
+                    <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
+                </div>
+                <div class="text">
+                    Bilans
+                </div>
+            </div>
         </ng-template>
     </mat-tab>
 </mat-tab-group>
 
-<div [@routeAnimations]="getState(outlet)" class="router-wrapper" style="height: calc(100% - 95px);">
+<div [@routeAnimations]="getState(outlet)" class="router-wrapper">
     <router-outlet #outlet="outlet"></router-outlet>
 </div>

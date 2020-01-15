@@ -10,19 +10,24 @@ namespace ExpenseSplitter.Api.Extensions
     {
         Trip Create(CreateTripModel model, int adderId);
         Trip Update(Trip trip, UpdateTripModel model);
+        TripExtract ToTripExtract(Trip trip);
+        TripDetailsExtract ToTripDetailsExtract(Trip trip);
     }
 
     public class TripExtensions : ITripExtensions
     {
         private readonly Context _context;
         private readonly IUidGenerator _uidGenerator;
+        private readonly IParticipantExtensions _participantExtensions;
 
         public TripExtensions(
             Context context,
-            IUidGenerator uidGenerator
+            IUidGenerator uidGenerator,
+            IParticipantExtensions participantExtensions
         ) {
             _context = context;
             _uidGenerator = uidGenerator;
+            _participantExtensions = participantExtensions;
         }
 
         public Trip Create(CreateTripModel model, int adderId)
@@ -85,6 +90,27 @@ namespace ExpenseSplitter.Api.Extensions
             }
 
             return trip;
+        }
+
+        public TripExtract ToTripExtract(Trip trip)
+        {
+            return new TripExtract
+            {
+                Uid = trip.Uid,
+                Name = trip.Name,
+                Description = trip.Description,
+            };
+        }
+
+        public TripDetailsExtract ToTripDetailsExtract(Trip trip)
+        {
+            return new TripDetailsExtract
+            {
+                Uid = trip.Uid,
+                Name = trip.Name,
+                Description = trip.Description,
+                Participants = trip.Participants.Select(x => _participantExtensions.ToParticipantExtract(x)).ToList()
+            };
         }
     }
 }

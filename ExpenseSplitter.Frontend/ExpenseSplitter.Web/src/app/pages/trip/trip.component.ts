@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { moveFromLeft, moveFromRight, moveFromTop, moveFromBottom } from "ngx-router-animations";
+import { TripDetailsExtract } from 'src/app/models/trip/trip-details-extract';
 
 @Component({
     templateUrl: './trip.component.html',
@@ -19,7 +20,7 @@ import { moveFromLeft, moveFromRight, moveFromTop, moveFromBottom } from "ngx-ro
 
 export class TripComponent implements OnInit, AfterViewInit {
 
-    public trip: Trip;
+    public trip: TripDetailsExtract;
     public participants = '';
     public otherParticipantsCount = 0;
     public shareUrl = '';
@@ -47,17 +48,17 @@ export class TripComponent implements OnInit, AfterViewInit {
         });
     }
 
-    private buildParticipantsHeader(trip: Trip) {
+    private buildParticipantsHeader(trip: TripDetailsExtract) {
 
         for (let i = 0; i < trip.participants.length; i++) {
 
             const left = trip.participants.length - 1 - i;
-            if (this.participants.length + trip.participants[i].name.length > 26 && left > 1) {
+            if (this.participants.length + trip.participants[i].nick.length > 26 && left > 1) {
                 this.otherParticipantsCount = left;
                 break;
             }
 
-            this.participants += trip.participants[i].name + ', ';  
+            this.participants += trip.participants[i].nick + ', ';  
         }
 
         this.participants = this.participants.substr(0, this.participants.length - 2);
