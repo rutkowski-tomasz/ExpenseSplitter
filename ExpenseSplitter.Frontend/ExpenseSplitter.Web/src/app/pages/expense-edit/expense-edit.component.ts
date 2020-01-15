@@ -42,6 +42,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         ]),
         parts: new FormArray([ ])
     });
+    public loadingCount = 1;
 
     public expenseNameMaxLength = 0;
     public get name(): AbstractControl {
@@ -79,6 +80,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
             this.id = params.id;
 
             this.tripService.GetParticipants(this.uid).subscribe(data => {
+                this.loadingCount -= 1;
                 this.participants = data;
 
                 this.SetDefaultPayer();
@@ -90,7 +92,10 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
                 return;
             }
 
+            this.loadingCount += 1;
             this.expenseService.GetExpense(this.uid, this.id).subscribe(data => {
+                this.loadingCount -= 1;
+
                 this.name.setValue(data.name);
                 this.type.setValue(data.type);
                 this.paidAt.setValue(data.paidAt);

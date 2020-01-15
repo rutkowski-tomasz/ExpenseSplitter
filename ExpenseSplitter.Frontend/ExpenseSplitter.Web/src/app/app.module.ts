@@ -18,6 +18,7 @@ import { PipesModule } from './pipes/pipes.module';
 import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/link-copied-snack-bar.component';
 import { DiscardDialog } from './shared/discard/discard-dialog.component';
 import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
+import { IsAliveInterceptor } from './interceptors/is-alive.interceptor';
 registerLocaleData(locale);
 
 @NgModule({
@@ -47,6 +48,11 @@ registerLocaleData(locale);
         {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthoriedInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: IsAliveInterceptor,
             multi: true
         },
     ],

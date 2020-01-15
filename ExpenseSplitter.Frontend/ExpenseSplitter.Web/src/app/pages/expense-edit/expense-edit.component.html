@@ -21,6 +21,8 @@
 </es-header>
 
 <div class="container">
+    <es-loading *ngIf="loadingCount !== 0"></es-loading>
+
     <form
         [formGroup]="formGroup"
         (ngSubmit)="OnSubmit()"

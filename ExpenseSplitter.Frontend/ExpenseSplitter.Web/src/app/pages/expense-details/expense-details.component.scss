@@ -31,7 +31,25 @@
             font-size: 14px;
             line-height: 16px;
         }
-	}
+    }
+    
+    .details-placeholder {
+        background-color: $primary;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .name, .value {
+            height: 20px;
+            margin-bottom: 4px;
+        }
+        .info {
+            padding: 24px 8px 8px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
 }
 
 .summary {
@@ -42,6 +60,22 @@
         border-bottom: 1px solid mat-color($black-palette, 50);
         display: flex;
         justify-content: space-between;
+        line-height: 24px;
+    }
+
+    .summary-placeholders {
+        
+        .item-placeholder {
+            margin: 8px 16px;
+            padding: 0;
+            border-bottom: 1px solid mat-color($black-palette, 50);
+            display: flex;
+            justify-content: space-between;
+            & > div {
+                height: 20px;
+                margin-bottom: 4px;
+            }
+        }
     }
 }
 

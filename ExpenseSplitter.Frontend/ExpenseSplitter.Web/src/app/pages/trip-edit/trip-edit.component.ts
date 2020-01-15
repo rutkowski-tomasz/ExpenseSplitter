@@ -95,6 +95,7 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
     public onDelete() {
 
         this.tripService.DeleteTrip(this.uid).subscribe(_ => {
+            this.formGroup.markAsPristine();
             this.router.navigate(['/trips']);
         });
     }

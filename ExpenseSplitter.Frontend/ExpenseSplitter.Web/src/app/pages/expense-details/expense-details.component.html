@@ -18,6 +18,15 @@
 
 <div class="container">
     <section class="details" [class.sticky]="stickyHeader">
+        <div class="fetching-results details-placeholder" *ngIf="!expense">
+            <div class="inverted name" style="width: 120px;"></div>
+            <div class="inverted value" style="width: 70px;"></div>
+            <div class="info">
+                <div class="inverted paid-by" style="width: 90px;"></div>
+                <div class="inverted paid-at" style="width: 70px;"></div>
+            </div>
+        </div>
+
         <div class="details-container" *ngIf="expense">
             <div class="name">{{ expense.name }}</div>
             <div class="value">{{ value | currency: "PLN" }}</div>
@@ -34,19 +43,36 @@
     <caption>
         W sumie
     </caption>
-    <section class="summary" *ngIf="summary">
-        <div *ngFor="let sum of summary" class="summary-row">
-            <div class="nick">{{ sum.nick }}</div>
-            <div class="value">
-                <ng-container *ngIf="sum.value !== 0; else noValue">
-                    {{ sum.value | currency:'PLN' }}
-                </ng-container>
-                <ng-template #noValue>&mdash;</ng-template>
+    <section class="summary">
+        <div class="fetching-results summary-placeholders" *ngIf="!summary">
+            <div class="item-placeholder">
+                <div class="secondary first" style="width: 80px;"></div>
+                <div class="secondary second" style="width: 45px;"></div>
+            </div>
+            <div class="item-placeholder">
+                <div class="secondary first" style="width: 80px;"></div>
+                <div class="secondary second" style="width: 45px;"></div>
+            </div>
+            <div class="item-placeholder">
+                <div class="secondary first" style="width: 80px;"></div>
+                <div class="secondary second" style="width: 45px;"></div>
             </div>
         </div>
+
+        <ng-container *ngIf="summary">
+            <div *ngFor="let sum of summary" class="summary-row">
+                <div class="nick">{{ sum.nick }}</div>
+                <div class="value">
+                    <ng-container *ngIf="sum.value !== 0; else noValue">
+                        {{ sum.value | currency:'PLN' }}
+                    </ng-container>
+                    <ng-template #noValue>&mdash;</ng-template>
+                </div>
+            </div>
+        </ng-container>
     </section>
 
-    <caption>
+    <caption *ngIf="expense && expense.parts">
         Pozycje na rachunku
     </caption>
     <section class="parts" *ngIf="expense && expense.parts">

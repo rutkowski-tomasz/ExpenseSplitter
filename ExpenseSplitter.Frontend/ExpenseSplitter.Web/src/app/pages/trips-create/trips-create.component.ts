@@ -81,6 +81,7 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
 
             const model: TripCreateModel = { name, description, organizerNick };
             this.tripService.CreateTrip(model).subscribe(_ => {
+                this.formGroup.markAsPristine();
                 this.router.navigate(['/trips']);
             })
         }
