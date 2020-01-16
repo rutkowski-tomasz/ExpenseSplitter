@@ -61,6 +61,9 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPut]
         public IActionResult UpdateUser([FromBody] UserUpdateModel model)
         {
+            if (!ModelState.IsValid)
+                return UnprocessableEntity();
+
             var user = _userService.UpdateUser(model);
             return new JsonResult(user);
         }
