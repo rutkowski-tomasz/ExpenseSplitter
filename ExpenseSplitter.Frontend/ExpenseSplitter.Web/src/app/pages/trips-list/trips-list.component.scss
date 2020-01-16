@@ -19,6 +19,8 @@
         color: mat-color($black-palette, 400);
 
         .details {
+            max-width: calc(100% - 40px);
+
             .name {
                 line-height: 24px;
                 font-weight: 600;
@@ -28,6 +30,8 @@
 
             .description {
                 line-height: 16px;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
         }
 
