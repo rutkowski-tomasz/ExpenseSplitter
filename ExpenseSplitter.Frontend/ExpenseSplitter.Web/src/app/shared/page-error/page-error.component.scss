@@ -1,0 +1,46 @@
+@import "src/scss/_colors";
+@import "src/scss/_variables";
+
+.page-error {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: -100vh;
+    left: 0;
+    background: $background;
+    transition: top 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.is-error {
+        top: 0;
+    }
+
+    .error-container {
+        max-width: 70%;
+        text-align: center;
+
+        .icon mat-icon {
+            font-size: 80px;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 32px;
+            color: $primary;
+        }
+
+        .title {
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-bottom: 32px;
+            font-size: 20px;
+            line-height: 24px;
+            color: mat-color($black-palette, 500);
+        }
+
+        .description {
+            text-align: justify;
+            font-size: 13px;
+        }
+    }
+}

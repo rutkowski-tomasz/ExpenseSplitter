@@ -1,0 +1,30 @@
+
+<div class="page-error" [class.is-error]="error !== null">
+
+    <div class="error-container">
+        <div class="icon">
+            <mat-icon>build</mat-icon>
+        </div>
+
+        <div class="title">
+            <ng-container [ngSwitch]="error">
+                <span *ngSwitchCase="PageErrorEnum.SERVERDOWN">
+                    Serwer offline 
+                </span>
+            </ng-container>
+        </div>
+
+        <div class="description">
+            <ng-container [ngSwitch]="error">
+                <span *ngSwitchCase="PageErrorEnum.SERVERDOWN">
+                    😥 Nie udało się nawiązać połączenia z serwerem, prawdopodobnie jest on wyłączony.
+                    
+                    <br>
+                    <br>
+                    👉 Spróbuj ponownie później.
+                </span>
+            </ng-container>
+        </div>
+    </div>
+
+</div>

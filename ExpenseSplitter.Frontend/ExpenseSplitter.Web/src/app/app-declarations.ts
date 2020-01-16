@@ -20,6 +20,7 @@ import { DiscardDialog } from './shared/discard/discard-dialog.component';
 import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
 import { TripJoinComponent } from './pages/trip-join/trip-join.component';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { PageErrorComponent } from './shared/page-error/page-error.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -46,6 +47,7 @@ export const appDeclarations = [
     DiscardDialog,
     AddTripSheetComponent,
     LoadingComponent,
+    PageErrorComponent,
 
     ShareDirective,
 ];
