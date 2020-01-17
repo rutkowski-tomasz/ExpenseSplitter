@@ -15,12 +15,12 @@ export class TripJoinComponent implements OnInit, AfterViewInit {
     public formGroup = new FormGroup({
         uid: new FormControl('', [ Validators.required ]),
     });
-    public uidInvalid = false;
-    public tooManyRequests = false;
 
     public get uid(): AbstractControl {
         return this.formGroup.get('uid');
     }
+
+    public isSubmitting = false;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -48,25 +48,30 @@ export class TripJoinComponent implements OnInit, AfterViewInit {
 
         this.formGroup.markAllAsTouched();
 
-        if (this.formGroup.valid) {
+        if (this.formGroup.valid && !this.isSubmitting) {
 
-            this.uidInvalid = false;
-            this.tooManyRequests = false;
+            this.isSubmitting = true;
 
             let uid = this.uid.value;
             uid = uid.replace(/.+\/join\/([a-zA-Z0-9]+)$/, '$1');
             
-            this.tripService.JoinTrip(uid).subscribe(_ => {
-                this.router.navigate(['/trips', uid]);
-            }, (error: HttpErrorResponse) => {
+            this.tripService.JoinTrip(uid).subscribe(
+                _ => {
+                    this.router.navigate(['/trips', uid]);
+                },
+                (error: HttpErrorResponse) => {
 
-                if (error.status === 429) {
-                    this.uid.setErrors({ tooManyRequests: true });
+                    if (error.status === 429) {
+                        this.uid.setErrors({ tooManyRequests: true });
+                    }
+                    else if (error.status === 404) {
+                        this.uid.setErrors({ uidInvalid: true });
+                    }
+                },
+                () => {
+                    this.isSubmitting = false;
                 }
-                else if (error.status === 404) {
-                    this.uid.setErrors({ uidInvalid: true });
-                }
-            });
+            );
         }
     }
 }

@@ -130,3 +130,7 @@ section {
     overflow-x: scroll;
     padding-bottom: 8px;
 }
+.is-submitting {
+    transition: opacity 0.1s ease-in-out;
+    opacity: 0.3;
+}

@@ -20,6 +20,7 @@ export class SettingsComponent implements OnInit {
         ]),
     });
     public isLoading = false;
+    public isSubmitting = false;
 
     public participantNameMaxLength = 0;
     public get nick(): AbstractControl {
@@ -52,15 +53,23 @@ export class SettingsComponent implements OnInit {
 
         this.formGroup.markAllAsTouched();
 
-        if (this.formGroup.valid) {
+        if (this.formGroup.valid && !this.isSubmitting) {
+
+            this.isSubmitting = true;
 
             const nick = this.nick.value;
 
             const model: UserUpdateModel = { nick };
-            this.userService.UpdateUser(model).subscribe(userExtract => {
-                this.userService.userExtract.next(userExtract);
-                this.router.navigate(['/trips']);
-            });
+            this.userService.UpdateUser(model).subscribe(
+                userExtract => {
+                    this.userService.userExtract.next(userExtract);
+                    this.router.navigate(['/trips']);
+                },
+                () => {},
+                () => {
+                    this.isSubmitting = false;
+                }
+            );
         }
     }
 

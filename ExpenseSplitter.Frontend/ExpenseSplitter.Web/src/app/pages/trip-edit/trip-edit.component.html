@@ -10,7 +10,7 @@
     </ng-container>
 
     <ng-container right>
-        <a role="button" type="button" (click)="editForm.ngSubmit.emit()">
+        <a role="button" type="button" (click)="editForm.ngSubmit.emit()" [class.is-submitting]="isSubmitting">
             Zapisz
         </a>
     </ng-container>

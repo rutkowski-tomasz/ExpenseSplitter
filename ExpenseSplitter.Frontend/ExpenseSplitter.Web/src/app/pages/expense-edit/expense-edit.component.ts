@@ -43,6 +43,7 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         parts: new FormArray([ ])
     });
     public loadingCount = 1;
+    public isSubmitting = false;
 
     public expenseNameMaxLength = 0;
     public get name(): AbstractControl {
@@ -118,7 +119,11 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public OnSubmit() {
 
-        if (this.formGroup.valid) {
+        this.formGroup.markAllAsTouched();
+
+        if (this.formGroup.valid && !this.isSubmitting) {
+
+            this.isSubmitting = true;
 
             const model = new ExpenseUpdateModel();
             model.name = this.name.value;
@@ -146,17 +151,29 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
             if (this.id) {
 
                 model.id = this.id;
-                this.expenseService.UpdateExpense(this.uid, model).subscribe(_ => {
-                    this.formGroup.markAsPristine();
-                    this.router.navigate(['/trips', this.uid, 'expenses', this.id]);
-                });
+                this.expenseService.UpdateExpense(this.uid, model).subscribe(
+                    _ => {
+                        this.formGroup.markAsPristine();
+                        this.router.navigate(['/trips', this.uid, 'expenses', this.id]);
+                    },
+                    () => {},
+                    () => {
+                        this.isSubmitting = false;
+                    }
+                );
 
             } else {
 
-                this.expenseService.CreateExpense(this.uid, model).subscribe(_ => {
-                    this.formGroup.markAsPristine();
-                    this.router.navigate(['/trips', this.uid]);
-                });
+                this.expenseService.CreateExpense(this.uid, model).subscribe(
+                    _ => {
+                        this.formGroup.markAsPristine();
+                        this.router.navigate(['/trips', this.uid]);
+                    },
+                    () => {},
+                    () => {
+                        this.isSubmitting = false;
+                    }
+                );
             }
         }
     }

@@ -45,6 +45,8 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
         return this.formGroup.get('organizerNick');
     }
 
+    public isSubmitting = false;
+
     constructor(
         private tripService: TripService,
         private router: Router,
@@ -69,21 +71,29 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
 
     public isDirty = () => this.formGroup.dirty;
 
-    public submit() {
+    public onSubmit() {
 
         this.formGroup.markAllAsTouched();
 
-        if (this.formGroup.valid) {
+        if (this.formGroup.valid && !this.isSubmitting) {
+
+            this.isSubmitting = true;
 
             const name = this.name.value;
             const description = this.description.value;
             const organizerNick = this.organizerNick.value;
 
             const model: TripCreateModel = { name, description, organizerNick };
-            this.tripService.CreateTrip(model).subscribe(_ => {
-                this.formGroup.markAsPristine();
-                this.router.navigate(['/trips']);
-            })
+            this.tripService.CreateTrip(model).subscribe(
+                _ => {
+                    this.formGroup.markAsPristine();
+                    this.router.navigate(['/trips']);
+                },
+                () => {},
+                () => {
+                    this.isSubmitting = true;
+                }
+            );
         }
     }
 

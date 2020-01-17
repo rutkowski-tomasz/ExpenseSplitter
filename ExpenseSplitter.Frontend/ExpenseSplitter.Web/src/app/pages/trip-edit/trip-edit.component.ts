@@ -44,6 +44,8 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
         return this.formGroup.get('participants') as FormArray;
     }
 
+    public isSubmitting = false;
+
     constructor(
         private tripService: TripService,
         private router: Router,
@@ -104,7 +106,9 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
 
         this.formGroup.markAllAsTouched();
 
-        if (this.formGroup.valid) {
+        if (this.formGroup.valid && !this.isSubmitting) {
+
+            this.isSubmitting = true;
 
             const uid = this.uid;
             const name = this.name.value;
@@ -115,9 +119,15 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
             );
 
             const model: TripUpdateModel = { uid, name, description, participants };
-            this.tripService.UpdateTrip(model).subscribe(_ => {
-                this.router.navigate(['/trips', uid]);
-            });
+            this.tripService.UpdateTrip(model).subscribe(
+                _ => {
+                    this.router.navigate(['/trips', uid]);
+                },
+                () => {},
+                () => {
+                    this.isSubmitting = false;
+                }
+            );
         }
     }
 
