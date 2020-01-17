@@ -25,7 +25,7 @@ export class IsAliveInterceptor implements HttpInterceptor {
                         this.isAliveService.serverIsAlive.next(false);
                     }
 
-                    return of(error);
+                    throw error;
                 })
             );
     }

@@ -21,13 +21,11 @@ export class BalanceComponent implements OnInit {
     public shareUrl: string;
 
     private uid: string;
-    a;
 
     constructor(
         private balanceService: BalanceService,
         private activatedRoute: ActivatedRoute,
         private userService: UserService,
-        private configService: ConfigService,
     ) { }
 
     public ngOnInit() {
