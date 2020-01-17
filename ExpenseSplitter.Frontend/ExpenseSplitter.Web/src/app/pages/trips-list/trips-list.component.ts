@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { MatBottomSheet } from '@angular/material';
 import { AddTripSheetComponent } from 'src/app/components/add-trip/add-trip-sheet.component';
 import { AddTripActionEnum } from 'src/app/components/add-trip/add-trip-action.enum';
 import { Router } from '@angular/router';
 import { TripListModel } from 'src/app/models/trip/trip-list.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     templateUrl: './trips-list.component.html',
     styleUrls: ['./trips-list.component.scss']
 })
-export class TripsListComponent implements OnInit {
+export class TripsListComponent implements OnInit, OnDestroy {
 
     public trips: TripListModel[];
     public shareUrl = window.location.origin;
+
+    private isNotDestroyed = new Subject();
 
     constructor(
         private tripService: TripService,
@@ -22,21 +26,30 @@ export class TripsListComponent implements OnInit {
     ) { }
 
     public ngOnInit() {
-        this.tripService.GetTrips().subscribe(data => {
-            this.trips = data;
-        });
+        this.tripService.GetTrips()
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(data => {
+                this.trips = data;
+            });
+    }
+
+    public ngOnDestroy(): void {
+        this.isNotDestroyed.next();
+        this.isNotDestroyed.complete();
     }
 
     public addNewTrip() {
         const bottomSheetRef = this.matBottomSheet.open(AddTripSheetComponent);
 
-        bottomSheetRef.afterDismissed().subscribe((result: AddTripActionEnum) => {
+        bottomSheetRef.afterDismissed()
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe((result: AddTripActionEnum) => {
 
-            if (result === AddTripActionEnum.JOIN) {
-                this.router.navigate(['/join']);
-            } else if(result === AddTripActionEnum.CREATE) {
-                this.router.navigate(['/trips', 'new']);
-            }
-        });
+                if (result === AddTripActionEnum.JOIN) {
+                    this.router.navigate(['/join']);
+                } else if(result === AddTripActionEnum.CREATE) {
+                    this.router.navigate(['/trips', 'new']);
+                }
+            });
     }
 }

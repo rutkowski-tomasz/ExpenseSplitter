@@ -44,10 +44,12 @@ export class BalanceComponent implements OnInit, OnDestroy {
                 this.uid = params.uid;
                 this.shareUrl = `${window.location.origin}/${this.uid}`;
 
-                this.balanceService.GetBalance(this.uid).subscribe(data => {
-                    this.balance = data;
-                    this.maxBalance = Math.max(...data.participantsBalance.map(x => Math.abs(x.value)));
-                });
+                this.balanceService.GetBalance(this.uid)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(data => {
+                        this.balance = data;
+                        this.maxBalance = Math.max(...data.participantsBalance.map(x => Math.abs(x.value)));
+                    });
             });
     }
 

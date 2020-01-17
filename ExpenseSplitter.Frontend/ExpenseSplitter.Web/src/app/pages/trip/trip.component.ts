@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { moveFromLeft, moveFromRight } from "ngx-router-animations";
 import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     templateUrl: './trip.component.html',
@@ -17,7 +19,7 @@ import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
     ]
 })
 
-export class TripComponent implements OnInit, AfterViewInit {
+export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public trip: TripDetailsModel;
     public participants = '';
@@ -28,6 +30,8 @@ export class TripComponent implements OnInit, AfterViewInit {
     @ViewChild('matTabGroup', { static: false }) matTabGroup: MatTabGroup;
     public selectedIndex = 0;
 
+    private isNotDestroyed = new Subject();
+
     constructor(
         private tripService: TripService,
         private activatedRoute: ActivatedRoute,
@@ -35,16 +39,27 @@ export class TripComponent implements OnInit, AfterViewInit {
         private changeDetectorRef: ChangeDetectorRef,
     ) { }
 
-    ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
-            this.uid = params.uid;
-            this.tripService.GetTrip(this.uid).subscribe(data => {
-                this.trip = data;
-                this.buildParticipantsHeader(data);
+    public ngOnInit() {
+        this.activatedRoute.params
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(params => {
 
-                this.shareUrl = `${window.location.origin}/join/${this.trip.uid}`;
+                this.uid = params.uid;
+                this.tripService.GetTrip(this.uid)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(data => {
+
+                        this.trip = data;
+                        this.buildParticipantsHeader(data);
+
+                        this.shareUrl = `${window.location.origin}/join/${this.trip.uid}`;
+                    });
             });
-        });
+    }
+
+    public ngOnDestroy(): void {
+        this.isNotDestroyed.next();
+        this.isNotDestroyed.complete();
     }
 
     private buildParticipantsHeader(trip: TripDetailsModel) {

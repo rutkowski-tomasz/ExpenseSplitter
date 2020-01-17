@@ -18,7 +18,7 @@
 
 <div class="container">
 
-    <form [formGroup]="formGroup" (ngSubmit)="submit()" class="vertical-form" #settingsForm="ngForm">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="vertical-form" #settingsForm="ngForm">
         <caption>Moje ustawienia</caption>
         <section>
             <es-loading *ngIf="isLoading"></es-loading>

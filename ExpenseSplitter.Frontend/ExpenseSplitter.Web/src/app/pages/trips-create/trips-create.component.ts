@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { TripCreateModel } from 'src/app/models/trip/trip-create.model';
 import { Router } from '@angular/router';
@@ -6,12 +6,14 @@ import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@an
 import { UserService } from 'src/app/services/user-service/user.service';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     templateUrl: './trips-create.component.html',
     styleUrls: ['./trips-create.component.scss']
 })
-export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
+export class TripsCreateComponent implements OnInit, OnDestroy, ConfirmDiscardChanges {
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -47,6 +49,8 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
 
     public isSubmitting = false;
 
+    private isNotDestroyed = new Subject();
+
     constructor(
         private tripService: TripService,
         private router: Router,
@@ -57,16 +61,23 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
     public ngOnInit() {
         
         this.isLoading = true;
-        this.userService.userExtract.subscribe(userExtract => {
+        this.userService.userExtract
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(userExtract => {
 
-            if (userExtract.nick !== null) {
-                this.isLoading = false;
-            }
+                if (userExtract.nick !== null) {
+                    this.isLoading = false;
+                }
 
-            this.organizerNick.setValue(userExtract.nick);
-        });
+                this.organizerNick.setValue(userExtract.nick);
+            });
 
         this.loadConfiguration();
+    }
+
+    public ngOnDestroy(): void {
+        this.isNotDestroyed.next();
+        this.isNotDestroyed.complete();
     }
 
     public isDirty = () => this.formGroup.dirty;
@@ -84,43 +95,47 @@ export class TripsCreateComponent implements OnInit, ConfirmDiscardChanges {
             const organizerNick = this.organizerNick.value;
 
             const model: TripCreateModel = { name, description, organizerNick };
-            this.tripService.CreateTrip(model).subscribe(
-                _ => {
-                    this.formGroup.markAsPristine();
-                    this.router.navigate(['/trips']);
-                },
-                () => {},
-                () => {
-                    this.isSubmitting = true;
-                }
-            );
+            this.tripService.CreateTrip(model)
+                .pipe(takeUntil(this.isNotDestroyed))
+                .subscribe(
+                    _ => {
+                        this.formGroup.markAsPristine();
+                        this.router.navigate(['/trips']);
+                    },
+                    () => {},
+                    () => {
+                        this.isSubmitting = true;
+                    }
+                );
         }
     }
 
     private loadConfiguration() {
 
-        this.configService.GetConstants().subscribe(constants => {
+        this.configService.GetConstants()
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(constants => {
 
-            this.name.setValidators([
-                Validators.required,
-                Validators.minLength(constants['TripNameMinLength']),
-                Validators.maxLength(constants['TripNameMaxLength']),
-            ]);
+                this.name.setValidators([
+                    Validators.required,
+                    Validators.minLength(constants['TripNameMinLength']),
+                    Validators.maxLength(constants['TripNameMaxLength']),
+                ]);
 
-            this.description.setValidators([
-                Validators.minLength(constants['TripDescriptionMinLength']),
-                Validators.maxLength(constants['TripDescriptionMaxLength']),
-            ]);
+                this.description.setValidators([
+                    Validators.minLength(constants['TripDescriptionMinLength']),
+                    Validators.maxLength(constants['TripDescriptionMaxLength']),
+                ]);
 
-            this.organizerNick.setValidators([
-                Validators.required,
-                Validators.minLength(constants['ParticipantNameMinLength']),
-                Validators.maxLength(constants['ParticipantNameMaxLength']),
-            ])
+                this.organizerNick.setValidators([
+                    Validators.required,
+                    Validators.minLength(constants['ParticipantNameMinLength']),
+                    Validators.maxLength(constants['ParticipantNameMaxLength']),
+                ])
 
-            this.tripNameMaxLength = constants['TripNameMaxLength'];
-            this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
-            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
-        });
+                this.tripNameMaxLength = constants['TripNameMaxLength'];
+                this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
+                this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+            });
     }
 }

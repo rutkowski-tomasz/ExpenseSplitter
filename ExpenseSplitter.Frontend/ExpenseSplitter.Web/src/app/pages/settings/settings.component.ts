@@ -55,7 +55,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.loadConfiguration();
     }
 
-    public submit() {
+    public ngOnDestroy(): void {
+        this.isNotDestroyed.next();
+        this.isNotDestroyed.complete();
+    }
+
+    public onSubmit() {
 
         this.formGroup.markAllAsTouched();
 
@@ -79,11 +84,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
                     }
                 );
         }
-    }
-
-    public ngOnDestroy(): void {
-        this.isNotDestroyed.next();
-        this.isNotDestroyed.complete();
     }
 
     public logOut() {

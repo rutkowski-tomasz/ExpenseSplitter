@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray } from '@angular/forms';
@@ -6,12 +6,14 @@ import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';
 import { TripParticipantModel } from 'src/app/models/trip/trip-participant.model';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     templateUrl: './trip-edit.component.html',
     styleUrls: ['./trip-edit.component.scss']
 })
-export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
+export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChanges {
 
     public uid: string;
 
@@ -46,6 +48,8 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public isSubmitting = false;
 
+    private isNotDestroyed = new Subject();
+
     constructor(
         private tripService: TripService,
         private router: Router,
@@ -55,20 +59,30 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public ngOnInit() {
 
-        this.activatedRoute.params.subscribe(params => {
-            this.uid = params.uid;
-            this.isLoading = true;
-            this.tripService.GetTrip(this.uid).subscribe(data => {
+        this.activatedRoute.params
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(params => {
 
-                this.isLoading = false;
-                this.name.setValue(data.name);
-                this.description.setValue(data.description);
+                this.uid = params.uid;
+                this.isLoading = true;
+                this.tripService.GetTrip(this.uid)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(data => {
 
-                data.participants.forEach(x => this.addParticipant(x.id, x.nick));
+                        this.isLoading = false;
+                        this.name.setValue(data.name);
+                        this.description.setValue(data.description);
+
+                        data.participants.forEach(x => this.addParticipant(x.id, x.nick));
+                    });
             });
-        });
 
         this.loadConfiguration();
+    }
+
+    public ngOnDestroy(): void {
+        this.isNotDestroyed.next();
+        this.isNotDestroyed.complete();
     }
 
     public addParticipant(id?: number, nick?: string)
@@ -96,10 +110,13 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
 
     public onDelete() {
 
-        this.tripService.DeleteTrip(this.uid).subscribe(_ => {
-            this.formGroup.markAsPristine();
-            this.router.navigate(['/trips']);
-        });
+        this.tripService.DeleteTrip(this.uid)
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(_ => {
+
+                this.formGroup.markAsPristine();
+                this.router.navigate(['/trips']);
+            });
     }
 
     public onSubmit() {
@@ -119,15 +136,17 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
             );
 
             const model: TripUpdateModel = { uid, name, description, participants };
-            this.tripService.UpdateTrip(model).subscribe(
-                _ => {
-                    this.router.navigate(['/trips', uid]);
-                },
-                () => {},
-                () => {
-                    this.isSubmitting = false;
-                }
-            );
+            this.tripService.UpdateTrip(model)
+                .pipe(takeUntil(this.isNotDestroyed))
+                .subscribe(
+                    _ => {
+                        this.router.navigate(['/trips', uid]);
+                    },
+                    () => {},
+                    () => {
+                        this.isSubmitting = false;
+                    }
+                );
         }
     }
 
@@ -135,29 +154,31 @@ export class TripEditComponent implements OnInit, ConfirmDiscardChanges {
 
     private loadConfiguration() {
 
-        this.configService.GetConstants().subscribe(constants => {
+        this.configService.GetConstants()
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(constants => {
 
-            this.name.setValidators([
-                Validators.required,
-                Validators.minLength(constants['TripNameMinLength']),
-                Validators.maxLength(constants['TripNameMaxLength']),
-            ]);
+                this.name.setValidators([
+                    Validators.required,
+                    Validators.minLength(constants['TripNameMinLength']),
+                    Validators.maxLength(constants['TripNameMaxLength']),
+                ]);
 
-            this.description.setValidators([
-                Validators.minLength(constants['TripDescriptionMinLength']),
-                Validators.maxLength(constants['TripDescriptionMaxLength']),
-            ]);
+                this.description.setValidators([
+                    Validators.minLength(constants['TripDescriptionMinLength']),
+                    Validators.maxLength(constants['TripDescriptionMaxLength']),
+                ]);
 
-            this.participants.setValidators([
-                Validators.required,
-                Validators.minLength(constants['ParticipantNameMinLength']),
-                Validators.maxLength(constants['ParticipantNameMaxLength']),
-            ]);
+                this.participants.setValidators([
+                    Validators.required,
+                    Validators.minLength(constants['ParticipantNameMinLength']),
+                    Validators.maxLength(constants['ParticipantNameMaxLength']),
+                ]);
 
-            this.tripNameMaxLength = constants['TripNameMaxLength'];
-            this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
-            this.participantNameMinLength = constants['ParticipantNameMinLength'];
-            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
-        });
+                this.tripNameMaxLength = constants['TripNameMaxLength'];
+                this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
+                this.participantNameMinLength = constants['ParticipantNameMinLength'];
+                this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+            });
     }
 }
