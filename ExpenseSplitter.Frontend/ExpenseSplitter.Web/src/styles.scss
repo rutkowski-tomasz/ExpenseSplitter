@@ -122,8 +122,9 @@ section {
     color: $primary;
 }
 .full-width-button {
-    display: block;
-    text-align: center;
+    display: block !important;
+    text-align: center !important;
+    width: 100%;
 }
 .hscrollable {
     width: 100%;

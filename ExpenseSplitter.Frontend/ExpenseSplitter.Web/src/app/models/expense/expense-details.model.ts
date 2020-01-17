@@ -8,5 +8,6 @@ export class ExpenseDetailsModel {
     paidAt: Date;
     payerId: number;
     value: number;
+    myParticipantId: number;
     parts: ExpensePartModel[];
 }

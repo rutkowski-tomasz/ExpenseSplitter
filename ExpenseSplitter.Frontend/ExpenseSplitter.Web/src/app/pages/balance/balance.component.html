@@ -26,13 +26,11 @@
                 *ngFor="let participantBalance of balance.participantsBalance"
                 class="participant-balance"
                 [class.negative]="participantBalance.value < 0"
+                [class.my-balance]="participantBalance.isMyBalance"
             >
-                <div
-                    class="nick"
-                    [class.my-balance]="participantBalance.participantId === userId"
-                >
+                <div class="nick">
                     {{ participantBalance.participantNick }}
-                    <span *ngIf="participantBalance.participantId === userId">
+                    <span *ngIf="participantBalance.isMyBalance">
                         (Ja)
                     </span>
                 </div>
@@ -64,12 +62,18 @@
                     <div class="who">
                         <div class="from">
                             {{ settlement.fromParticipantNick }}
+                            <span *ngIf="settlement.amIFromParticipant">
+                                (Ja)
+                            </span>
                         </div>
                         <div class="desc">
                             powinien zwrócić dla
                         </div>
                         <div class="to">
                             {{ settlement.toParticipantNick }}
+                            <span *ngIf="settlement.amIToParticipant">
+                                (Ja)
+                            </span>
                         </div>
                     </div>
                     <div class="value">

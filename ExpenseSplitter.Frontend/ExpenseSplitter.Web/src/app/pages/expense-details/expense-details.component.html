@@ -33,7 +33,7 @@
             <div class="info">
                 <div class="paid-by">
                     Zapłacił(a) {{ payerNick }}
-                    <span *ngIf="expense.payerId === userId">(Ja)</span>
+                    <span *ngIf="expense.payerId == expense.myParticipantId">(Ja)</span>
                 </div>
                 <div class="paid-at">{{ expense.paidAt | date }}</div>
             </div>
@@ -61,7 +61,10 @@
 
         <ng-container *ngIf="summary">
             <div *ngFor="let sum of summary" class="summary-row">
-                <div class="nick">{{ sum.nick }}</div>
+                <div class="nick">
+                    {{ sum.nick }}
+                    {{ sum | json }}
+                </div>
                 <div class="value">
                     <ng-container *ngIf="sum.value !== 0; else noValue">
                         {{ sum.value | currency:'PLN' }}
@@ -85,6 +88,7 @@
                         <th class="rotate" *ngFor="let participant of participants">
                             <div>
                                 <span>{{ participant.nick }}</span>
+                                {{ participant | json }}
                             </div>
                         </th>
                     </tr>

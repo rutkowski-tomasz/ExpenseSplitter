@@ -49,7 +49,7 @@ namespace ExpenseSplitter.Api.Services
                     Type = x.Type,
                     PaidAt = x.PaidAt,
                     PayerName = x.Payer.Name,
-                    IsPaidByMe = x.Payer.UsersClaimed.Any(y => y.Id == userId),
+                    IsPaidByMe = x.Payer.UsersClaimed.Any(y => y.UserId == userId),
                     Value = x.Parts.Sum(x => x.Value),
                     ISpent = x
                         .Parts
@@ -70,6 +70,14 @@ namespace ExpenseSplitter.Api.Services
         public ExpenseDetailsModel GetExpense(string uid, int id)
         {
             var userId = _userService.GetCurrentUserId();
+            var myParticipantId = _context.TripsParticipants
+                .Where(x =>
+                    x.TripUid == uid &&
+                    x.UsersClaimed.Any(y => y.UserId == userId)
+                )
+                .Select(x => x.Id)
+                .FirstOrDefault();
+
             var expense = _context
                 .Expenses
                 .Include(x => x.Parts)
@@ -79,7 +87,7 @@ namespace ExpenseSplitter.Api.Services
                     x.TripUid == uid
                     && x.Id == id
                     && x.Trip.Users.Any(y => y.UserId == userId))
-                .Select(x => _expenseExtensions.ToExpenseDetailsModel(x))
+                .Select(x => _expenseExtensions.ToExpenseDetailsModel(x, myParticipantId))
                 .SingleOrDefault();
 
             return expense;

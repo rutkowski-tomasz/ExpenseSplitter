@@ -9,7 +9,7 @@ namespace ExpenseSplitter.Api.Extensions
     public interface IExpenseExtensions
     {
         Expense Update(Expense expense, ExpenseUpdateModel model);
-        ExpenseDetailsModel ToExpenseDetailsModel(Expense expense);
+        ExpenseDetailsModel ToExpenseDetailsModel(Expense expense, int myParticipantId);
     }
 
     public class ExpenseExtensions : IExpenseExtensions
@@ -50,7 +50,7 @@ namespace ExpenseSplitter.Api.Extensions
             return expense;
         }
 
-        public ExpenseDetailsModel ToExpenseDetailsModel(Expense expense)
+        public ExpenseDetailsModel ToExpenseDetailsModel(Expense expense, int myParticipantId)
         {
             var userId = _userService.GetCurrentUserId();
 
@@ -62,6 +62,7 @@ namespace ExpenseSplitter.Api.Extensions
                 PaidAt = expense.PaidAt,
                 PayerId = expense.PayerId,
                 Value = expense.Parts.Sum(x => x.Value),
+                MyParticipantId = myParticipantId,
                 Parts = expense.Parts.Select(x =>
                     new ExpensePartModel {
                         Value = x.Value,
