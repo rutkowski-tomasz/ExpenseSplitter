@@ -19,6 +19,8 @@ import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/
 import { DiscardDialog } from './shared/discard/discard-dialog.component';
 import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
 import { IsAliveInterceptor } from './interceptors/is-alive.interceptor';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 registerLocaleData(locale);
 
 @NgModule({
@@ -35,6 +37,7 @@ registerLocaleData(locale);
         ReactiveFormsModule,
         AppMaterialModule,
         PipesModule,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ],
     providers: [
         AppConfig,

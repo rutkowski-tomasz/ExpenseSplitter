@@ -1,0 +1,90 @@
+{
+    "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+    "index": "/index.html",
+    "assetGroups": [
+        {
+            "name": "app",
+            "installMode": "prefetch",
+            "resources": {
+                "files": [
+                    "/favicon.ico",
+                    "/index.html",
+                    "/manifest.webmanifest",
+                    "/*.css",
+                    "/*.js"
+                ],
+                "urls": [
+                    "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap",
+                    "https://fonts.gstatic.com/**"
+                ]
+            }
+        },
+        {
+            "name": "assets",
+            "installMode": "lazy",
+            "updateMode": "prefetch",
+            "resources": {
+                "files": [
+                    "/assets/**",
+                    "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+                ]
+            }
+        }
+    ],
+    "dataGroups": [
+        {
+            "name": "tripsList",
+            "urls": [
+                "http://localhost:8091/public/trips"
+            ],
+            "cacheConfig": {
+                "maxSize": 1,
+                "maxAge": "3d",
+                "timeout": "5s",
+                "strategy": "freshness"
+            }
+        },
+        {
+            "name": "tripsDetails",
+            "urls": [
+                "http://localhost:8091/public/trips/*",
+                "http://localhost:8091/public/trips/*/participants",
+                "http://localhost:8091/public/trips/*/balance",
+                "http://localhost:8091/public/trips/*/balance/short",
+                "http://localhost:8091/public/trips/*/expenses"
+            ],
+            "cacheConfig": {
+                "maxSize": 3,
+                "maxAge": "3d",
+                "timeout": "5s",
+                "strategy": "freshness"
+            }
+        },
+        {
+            "name": "expensesList",
+            "urls": [
+                "http://localhost:8091/public/trips/*/expenses/*"
+            ],
+            "cacheConfig": {
+                "maxSize": 10,
+                "maxAge": "3d",
+                "timeout": "5s",
+                "strategy": "freshness"
+            }
+        },
+        {
+            "name": "rarelyChangingData",
+            "urls": [
+                "http://localhost:8091/public/config/constants",
+                "http://localhost:8091/public/users/*"
+            ],
+            "cacheConfig": {
+                "maxSize": 1,
+                "maxAge": "7d",
+                "timeout": "2s",
+                "strategy": "performance"
+            }
+        }
+    ]
+}
