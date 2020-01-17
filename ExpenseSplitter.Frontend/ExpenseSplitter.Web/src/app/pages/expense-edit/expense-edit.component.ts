@@ -1,29 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
-import { startWith, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { startWith, map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { ExpenseUpdateModel } from 'src/app/models/expense/expense-update.model';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 import { ConfigService } from 'src/app/services/config-service/config.service';
+import { SettlementQueryModel } from './settlement-query.model';
+import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
 
 @Component({
     templateUrl: './expense-edit.component.html',
     styleUrls: ['./expense-edit.component.scss']
 })
-export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
+export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardChanges {
 
     public uid: string;
     public id: number;
     public ExpenseTypeEnum = ExpenseTypeEnum;
     public participants: ParticipantModel[];
     public filteredParticipants: Observable<ParticipantModel[]>;
+    public expense: ExpenseDetailsModel;
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -66,6 +69,11 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         return this.formGroup.get('parts') as FormArray;
     }
 
+    public settlementQueryModel: SettlementQueryModel;
+    @ViewChild('defaultSettlementName', { static: false }) defaultSettlementName: ElementRef;
+
+    private isNotDestroyed = new Subject();
+
     constructor(
         private expenseService: ExpenseService,
         private tripService: TripService,
@@ -76,45 +84,90 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
     ) { }
 
     public ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
-            this.uid = params.uid;
-            this.id = params.id;
 
-            this.tripService.GetParticipants(this.uid).subscribe(data => {
-                this.loadingCount -= 1;
-                this.participants = data;
+        const query = this.activatedRoute.snapshot.queryParams;
 
-                this.SetDefaultPayer();
-                this.InitAutocomplete();
-                this.AddPart();
-            });
+        if ('settlementFrom' in query &&
+            'settlementTo' in query && 
+            'value' in query) {
 
-            if (!this.id) {
-                return;
+                this.settlementQueryModel = new SettlementQueryModel(
+                    parseInt(query.settlementFrom, 10),
+                    parseInt(query.settlementTo, 10),
+                    parseFloat(query.value)
+                );
             }
 
-            this.loadingCount += 1;
-            this.expenseService.GetExpense(this.uid, this.id).subscribe(data => {
-                this.loadingCount -= 1;
+        this.activatedRoute.params
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(params => {
 
-                this.name.setValue(data.name);
-                this.type.setValue(data.type);
-                this.paidAt.setValue(data.paidAt);
+                this.uid = params.uid;
+                this.id = params.id;
 
-                const payer = this.participants.find(x => x.id == data.payerId);
-                this.payer.setValue(payer);
+                this.tripService.GetParticipants(this.uid)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(data => {
 
-                while (this.parts.length !== 0) {
-                    this.parts.removeAt(0);
+                        this.loadingCount -= 1;
+                        this.participants = data;
+
+                        this.prepareDefaultFormValues();
+                    });
+
+                if (!this.id) {
+                    return;
                 }
 
-                for (const part of data.parts) {
-                    this.parts.push(this.CreatePart(part.value, part.participantIds));
-                }
+                this.loadingCount += 1;
+                this.expenseService.GetExpense(this.uid, this.id)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(data => {
+
+                        this.loadingCount -= 1;
+                        this.expense = data;
+
+                        this.prepareDefaultFormValues();
+                    });
             });
-        });
 
         this.loadConfiguration();
+    }
+
+    public ngOnDestroy(): void {
+        this.isNotDestroyed.next();
+        this.isNotDestroyed.complete();
+    }
+
+    public prepareDefaultFormValues() {
+
+        if (!this.participants.length) {
+            return;
+        }
+
+        this.SetDefaultPayer();
+        this.InitAutocomplete();
+        this.AddPart();
+        this.SetSettlementDetails();
+
+        if (!this.expense)
+            return;
+        
+        this.name.setValue(this.expense.name);
+        this.type.setValue(this.expense.type);
+        this.paidAt.setValue(this.expense.paidAt);
+
+        const payer = this.participants.find(x => x.id == this.expense.payerId);
+        this.payer.setValue(payer);
+
+        this.removeAllParts();
+        for (const part of this.expense.parts) {
+            this.parts.push(this.CreatePart(part.value, part.participantIds));
+        }
+
+        if (!this.settlementQueryModel) {
+            return;
+        }
     }
 
     public OnSubmit() {
@@ -151,30 +204,40 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
             if (this.id) {
 
                 model.id = this.id;
-                this.expenseService.UpdateExpense(this.uid, model).subscribe(
-                    _ => {
-                        this.formGroup.markAsPristine();
-                        this.router.navigate(['/trips', this.uid, 'expenses', this.id]);
-                    },
-                    () => {},
-                    () => {
-                        this.isSubmitting = false;
-                    }
-                );
+                this.expenseService.UpdateExpense(this.uid, model)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(
+                        _ => {
+                            this.formGroup.markAsPristine();
+                            this.router.navigate(['/trips', this.uid, 'expenses', this.id]);
+                        },
+                        () => {},
+                        () => {
+                            this.isSubmitting = false;
+                        }
+                    );
 
             } else {
 
-                this.expenseService.CreateExpense(this.uid, model).subscribe(
-                    _ => {
-                        this.formGroup.markAsPristine();
-                        this.router.navigate(['/trips', this.uid]);
-                    },
-                    () => {},
-                    () => {
-                        this.isSubmitting = false;
-                    }
-                );
+                this.expenseService.CreateExpense(this.uid, model)
+                    .pipe(takeUntil(this.isNotDestroyed))
+                    .subscribe(
+                        _ => {
+                            this.formGroup.markAsPristine();
+                            this.router.navigate(['/trips', this.uid]);
+                        },
+                        () => {},
+                        () => {
+                            this.isSubmitting = false;
+                        }
+                    );
             }
+        }
+    }
+
+    public removeAllParts() {
+        while (this.parts.length !== 0) {
+            this.removePart(0);
         }
     }
 
@@ -226,10 +289,25 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
         return part.get('participants') as FormArray;
     }
 
+    public SetSettlementDetails() {
+
+        const payer = this.participants.find(x => x.id == this.settlementQueryModel.settlementFrom);
+        this.payer.setValue(payer);
+
+        this.removeAllParts();
+        this.parts.push(this.CreatePart(this.settlementQueryModel.value, [this.settlementQueryModel.settlementTo]));
+
+        this.name.setValue(this.defaultSettlementName.nativeElement.innerText);
+
+        this.type.setValue(ExpenseTypeEnum.Transfer);
+    }
+
     public onDelete() {
-        this.expenseService.DeleteExpense(this.uid, this.id).subscribe(_ => {
-            this.router.navigate(['/trips', this.uid]);
-        });
+        this.expenseService.DeleteExpense(this.uid, this.id)
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(_ => {
+                this.router.navigate(['/trips', this.uid]);
+            });
     }
 
     public isDirty = () => this.formGroup.dirty;
@@ -260,16 +338,18 @@ export class ExpenseEditComponent implements OnInit, ConfirmDiscardChanges {
     
     private loadConfiguration() {
 
-        this.configService.GetConstants().subscribe(constants => {
+        this.configService.GetConstants()
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(constants => {
 
-            this.name.setValidators([
-                Validators.required,
-                Validators.minLength(constants['ExpenseNameMinLength']),
-                Validators.maxLength(constants['ExpenseNameMaxLength']),
-            ])
+                this.name.setValidators([
+                    Validators.required,
+                    Validators.minLength(constants['ExpenseNameMinLength']),
+                    Validators.maxLength(constants['ExpenseNameMaxLength']),
+                ])
 
-            this.expenseNameMaxLength = constants['ExpenseNameMaxLength'];
-        });
+                this.expenseNameMaxLength = constants['ExpenseNameMaxLength'];
+            });
     }
 }
 

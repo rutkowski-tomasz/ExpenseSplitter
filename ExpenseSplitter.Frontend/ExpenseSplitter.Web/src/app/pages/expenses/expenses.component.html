@@ -30,7 +30,7 @@
         >
             <div class="content">
                 <div class="details">
-                    <div class="name">
+                    <div class="name" [class.is-transfer]="expense.type === ExpenseTypeEnum.Transfer">
                         {{ expense.name }}
                     </div>
                     <div class="paid-by">

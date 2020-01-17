@@ -27,6 +27,10 @@
                     color: $primary;
                     line-height: 24px;
                     margin-bottom: 4px;
+
+                    &.is-transfer {
+                        color: mat-color($black-palette, 400);
+                    }
                 }
 
                 .paid-by {

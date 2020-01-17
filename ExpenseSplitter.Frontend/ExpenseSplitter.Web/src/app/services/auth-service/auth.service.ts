@@ -37,6 +37,7 @@ export class AuthService {
             .postForm(`${this.servicePrefix}/login`, { email, password })
             .pipe(
                 map((data: { token: string }) => {
+                    console.log(data);
                     this.setToken(data.token);
                     return true;
                 })

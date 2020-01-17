@@ -18,14 +18,6 @@ export class BalanceService {
         return this.callService.get<BalanceModel>(`${this.servicePrefix(uid)}`);
     }
 
-    // public markSettlementAsPaid(uid: string, value: number, fromParticipantId: number, toParticipantId: number): Observable<Expense> {
-    //     return this.callService.postForm(`${this.servicePrefix(uid)}/markSettlementAsPaid`, {
-    //         value,
-    //         fromParticipantId,
-    //         toParticipantId,
-    //     });
-    // }
-
     public GetShortBalance(uid: string): Observable<BalanceSimpleModel> {
         return this.callService.get<BalanceSimpleModel>(`${this.servicePrefix(uid)}/short`);
     }

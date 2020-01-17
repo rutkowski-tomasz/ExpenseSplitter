@@ -5,10 +5,13 @@
     </ng-container>
 
     <ng-container left>
-        <a *ngIf="uid && id" [routerLink]="['/trips', uid, 'expenses', id]">
+        <a *ngIf="settlementQueryModel" [routerLink]="['/trips', uid, 'balance']">
             Anuluj
         </a>
-        <a *ngIf="uid && !id" [routerLink]="['/trips', uid]">
+        <a *ngIf="!settlementQueryModel && uid && id" [routerLink]="['/trips', uid, 'expenses', id]">
+            Anuluj
+        </a>
+        <a *ngIf="!settlementQueryModel && uid && !id" [routerLink]="['/trips', uid]">
             Anuluj
         </a>
     </ng-container>
@@ -31,6 +34,7 @@
     >
         <section>
             <mat-form-field>
+                <span #defaultSettlementName hidden>Zwrot kosztów</span>
                 <input
                     matInput
                     placeholder="Nazwa wydatku"

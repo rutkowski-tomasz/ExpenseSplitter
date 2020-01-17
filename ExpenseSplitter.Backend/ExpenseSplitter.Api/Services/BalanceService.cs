@@ -11,7 +11,6 @@ namespace ExpenseSplitter.Api.Services
     public interface IBalanceService
     {
         BalanceModel GetTripBalance(string uid);
-        Expense MarkSettlementAsPaid(string uid, decimal value, int fromParticipantId, int toParticipantId);
         BalanceSimpleModel GetTripShortBalance(string uid);
     }
 
@@ -54,43 +53,6 @@ namespace ExpenseSplitter.Api.Services
             response.SettlesBalance = calculateSettlesBalance(balanceDiffs);
 
             return response;
-        }
-
-        public Expense MarkSettlementAsPaid(string uid, decimal value, int fromParticipantId, int toParticipantId)
-        {
-            var userId = _userService.GetCurrentUserId();
-            var trip = _context
-                .Trips
-                .Include(x => x.Expenses)
-                .SingleOrDefault(x => 
-                    x.Uid == uid &&
-                    x.Users.Any(y => y.UserId == userId)
-                );
-
-            if (trip == null)
-                return null;
-
-            var expense = new Expense();
-            expense.PaidAt = DateTime.Now;
-            expense.Type = ExpenseType.Transfer;
-            expense.AdderId = userId;
-            expense.PayerId = fromParticipantId;
-
-            expense.Parts = new List<ExpensePart>() {
-                new ExpensePart {
-                    Value = value,
-                    PartParticipants = new List<ExpensePartParticipant> {
-                        new ExpensePartParticipant {
-                            ParticipantId = toParticipantId
-                        }
-                    }
-                }
-            };
-
-            trip.Expenses.Add(expense);
-            _context.SaveChanges();
-
-            return expense;
         }
 
         public BalanceSimpleModel GetTripShortBalance(string uid)

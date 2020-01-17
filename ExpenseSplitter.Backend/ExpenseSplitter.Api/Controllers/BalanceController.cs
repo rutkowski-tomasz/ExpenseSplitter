@@ -38,17 +38,5 @@ namespace ExpenseSplitter.Api.Controllers
 
             return new JsonResult(balance);
         }
-
-        [HttpPost("markSettlementAsPaid")]
-        public IActionResult MarkSettlementAsPaid(string uid, string value, int fromParticipantId, int toParticipantId)
-        {
-            var decimalValue = decimal.Parse(value, CultureInfo.InvariantCulture);
-            var expense = _balanceService.MarkSettlementAsPaid(uid, decimalValue, fromParticipantId, toParticipantId);
-
-            if (expense == null)
-                return NotFound();
-
-            return Ok();
-        }
     }
 }
