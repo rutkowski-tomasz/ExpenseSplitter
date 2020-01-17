@@ -6,7 +6,7 @@ import { AddTripActionEnum } from 'src/app/components/add-trip/add-trip-action.e
 import { Router } from '@angular/router';
 import { TripListModel } from 'src/app/models/trip/trip-list.model';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 
 @Component({
     templateUrl: './trips-list.component.html',
@@ -16,6 +16,7 @@ export class TripsListComponent implements OnInit, OnDestroy {
 
     public trips: TripListModel[];
     public shareUrl = window.location.origin;
+    public lastUpdatedTripUid: string;
 
     private isNotDestroyed = new Subject();
 
@@ -29,7 +30,18 @@ export class TripsListComponent implements OnInit, OnDestroy {
         this.tripService.GetTrips()
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(data => {
+                console.log(`data`);
                 this.trips = data;
+            });
+
+        this.tripService.lastUpdatedTripUid
+            .pipe(
+                takeUntil(this.isNotDestroyed),
+                filter(x => x !== null)
+            )
+            .subscribe(uid => {
+                this.lastUpdatedTripUid = uid;
+                this.tripService.lastUpdatedTripUid.next(null);
             });
     }
 

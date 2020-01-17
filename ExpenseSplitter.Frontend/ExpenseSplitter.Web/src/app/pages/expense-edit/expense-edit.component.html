@@ -135,7 +135,7 @@
                                 type="number"
                                 step="0.01"
                                 min="0.01"
-                                placeholder="Pozycja {{ i + 1 }}"
+                                placeholder="Kwota pozycji {{ i + 1 }}"
                                 matInput
                                 formControlName="value"
                                 required
@@ -153,17 +153,19 @@
                                 let j = index
                             "
                         >
-                            <mat-checkbox
-                                color="primary"
-                                [formControlName]="j"
-                            ></mat-checkbox>
-                            {{ participants[j].nick }}
+                            <div class="participant">
+                                <mat-checkbox
+                                    color="primary"
+                                    [formControlName]="j"
+                                ></mat-checkbox>
+                                {{ participants[j].nick }}
+                            </div>
                         </label>
                     </div>
                 </div>
             </div>
 
-            <a mat-button color="primary" (click)="AddPart()">
+            <a mat-button color="primary" class="add-part-button" (click)="AddPart()">
                 Dodaj pozycje
             </a>
         </section>

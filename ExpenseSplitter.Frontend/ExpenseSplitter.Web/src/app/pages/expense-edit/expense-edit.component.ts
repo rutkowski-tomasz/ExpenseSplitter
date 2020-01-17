@@ -141,32 +141,33 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
     public prepareDefaultFormValues() {
 
-        if (!this.participants.length) {
-            return;
+        if (this.participants && this.participants.length) {
+            
+            this.SetDefaultPayer();
+            this.InitAutocomplete();
+            this.AddPart();
+            
+            if (this.settlementQueryModel) {
+                this.SetSettlementDetails();
+            }
         }
 
-        this.SetDefaultPayer();
-        this.InitAutocomplete();
-        this.AddPart();
-        this.SetSettlementDetails();
+        if (this.expense) {
 
-        if (!this.expense)
-            return;
-        
-        this.name.setValue(this.expense.name);
-        this.type.setValue(this.expense.type);
-        this.paidAt.setValue(this.expense.paidAt);
+            this.name.setValue(this.expense.name);
+            this.type.setValue(this.expense.type);
+            this.paidAt.setValue(this.expense.paidAt);
+    
+            if (this.participants) {
 
-        const payer = this.participants.find(x => x.id == this.expense.payerId);
-        this.payer.setValue(payer);
+                const payer = this.participants.find(x => x.id == this.expense.payerId);
+                this.payer.setValue(payer);
 
-        this.removeAllParts();
-        for (const part of this.expense.parts) {
-            this.parts.push(this.CreatePart(part.value, part.participantIds));
-        }
-
-        if (!this.settlementQueryModel) {
-            return;
+                this.removeAllParts();
+                for (const part of this.expense.parts) {
+                    this.parts.push(this.CreatePart(part.value, part.participantIds));
+                }
+            }
         }
     }
 

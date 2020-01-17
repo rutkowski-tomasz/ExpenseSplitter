@@ -26,6 +26,7 @@
         <a
             class="expense"
             *ngFor="let expense of expenses"
+            [class.last-edited]="lastUpdatedExpenseId && lastUpdatedExpenseId === expense.id"
             [routerLink]="['/trips', uid, 'expenses', expense.id]"
         >
             <div class="content">

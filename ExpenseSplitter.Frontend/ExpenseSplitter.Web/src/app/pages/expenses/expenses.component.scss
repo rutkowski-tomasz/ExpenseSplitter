@@ -62,6 +62,16 @@
                 color: mat-color($green-palette, 500);
             }
         }
+
+        &.last-edited {
+            animation: editedAnimation 800ms ease-in-out 150ms;
+
+            @keyframes editedAnimation {
+                from { background-color: $background; }
+                50% { background-color: rgba($primary, 0.3); }
+                to { background-color: $background; }
+            }
+        }
     }
     
     .fetching-results.list .item-placeholder {

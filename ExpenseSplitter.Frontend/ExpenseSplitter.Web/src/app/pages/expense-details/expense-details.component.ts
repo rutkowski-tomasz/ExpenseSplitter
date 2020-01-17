@@ -74,7 +74,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
     }
 
     private calculateSummary() {
-        if (!!this.participants || !this.participants.length || !this.expense) {
+        if (!this.participants || !this.participants.length || !this.expense) {
             return;
         }
 

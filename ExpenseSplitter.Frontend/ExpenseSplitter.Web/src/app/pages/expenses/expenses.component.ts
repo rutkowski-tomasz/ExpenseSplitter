@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ExpenseListModel } from 'src/app/models/expense/expense-list.model';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { Subject } from 'rxjs';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 
 @Component({
     templateUrl: './expenses.component.html',
@@ -15,6 +15,7 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     public expenses: ExpenseListModel[];
     public ExpenseTypeEnum = ExpenseTypeEnum;
     public uid: string;
+    public lastUpdatedExpenseId: number;
 
     private isNotDestroyed = new Subject();
 
@@ -36,6 +37,16 @@ export class ExpensesComponent implements OnInit, OnDestroy {
                     .subscribe(data => {
                         this.expenses = data;
                     });
+            });
+
+        this.expenseService.lastUpdatedExpenseId
+            .pipe(
+                takeUntil(this.isNotDestroyed),
+                filter(x => x !== null)
+            )
+            .subscribe(id => {
+                this.lastUpdatedExpenseId = id;
+                this.expenseService.lastUpdatedExpenseId.next(null);
             });
     }
 
