@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CallService } from '../call-service/call.service';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +32,7 @@ export class AuthService {
         this.RedirectToLogin();
     }
 
-    public logIn(email: string, password: string): any {
+    public logIn(email: string, password: string): Observable<boolean> {
         return this.callService
             .postForm(`${this.servicePrefix}/login`, { email, password })
             .pipe(
@@ -42,7 +43,7 @@ export class AuthService {
             );
     }
 
-    public Register(email: string, password: string, nick: string) {
+    public Register(email: string, password: string, nick: string): Observable<boolean>  {
         return this.callService
             .postForm(`${this.servicePrefix}/register`, { email, password, nick })
             .pipe(

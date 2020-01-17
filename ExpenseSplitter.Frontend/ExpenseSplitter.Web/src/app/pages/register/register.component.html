@@ -1,80 +1,94 @@
-<div class="login-wrapper">
-    <mat-card>
-        <mat-card-title>Rejestracja</mat-card-title>
-        <mat-card-content>
-            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-                <mat-form-field>
-                    <input
-                        type="email"
-                        matInput
-                        placeholder="Email"
-                        formControlName="email"
-                    />
-                    <mat-hint align="end" *ngIf="userEmailMaxLength">{{ email.value?.length || 0 }}/{{ userEmailMaxLength }}</mat-hint>
-                    <mat-error *ngIf="email.invalid && email.errors.required">
-                        Wprowadź email
-                    </mat-error>
-                    <mat-error *ngIf="email.invalid && email.errors.email">
-                        Niepoprawny adres email
-                    </mat-error>
-                    <mat-error *ngIf="email.invalid && email.errors.maxlength">
-                        Za długi email, usuń jeszcze {{ email.errors.maxlength.actualLength - email.errors.maxlength.requiredLength }} znaków
-                    </mat-error>
-                    <mat-error *ngIf="email.invalid && email.errors.taken">
-                        Podany adres email jest już zajęty
-                    </mat-error>
-                </mat-form-field>
+<div class="auth-container">
+    <div class="background">
+        <div class="third circle"></div>
+        <div class="second circle"></div>
+        <div class="first circle"></div>
 
-                <mat-form-field>
-                    <input
-                        type="password"
-                        matInput
-                        placeholder="Hasło"
-                        formControlName="password"
-                    />
-                    <mat-error *ngIf="password.invalid && password.errors.required">
-                        Wprowadź hasło
-                    </mat-error>
-                </mat-form-field>
+        <div class="welcome">Załóż konto w jednym prostym kroku!</div>
+    </div>
+    <div class="foreground">
+        <h1>Rejestracja</h1>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <mat-form-field>
+                <input
+                    type="email"
+                    matInput
+                    placeholder="Email"
+                    formControlName="email"
+                />
+                <mat-hint align="end" *ngIf="userEmailMaxLength">{{ email.value?.length || 0 }}/{{ userEmailMaxLength }}</mat-hint>
+                <mat-error *ngIf="email.invalid && email.errors.required">
+                    Wprowadź email
+                </mat-error>
+                <mat-error *ngIf="email.invalid && email.errors.email">
+                    Niepoprawny adres email
+                </mat-error>
+                <mat-error *ngIf="email.invalid && email.errors.maxlength">
+                    Za długi email, usuń jeszcze {{ email.errors.maxlength.actualLength - email.errors.maxlength.requiredLength }} znaków
+                </mat-error>
+                <mat-error *ngIf="email.invalid && email.errors.taken">
+                    Podany adres email jest już zajęty
+                </mat-error>
+            </mat-form-field>
 
-                <mat-form-field>
-                    <input
-                        type="password"
-                        matInput
-                        placeholder="Potwierdź hasło"
-                        formControlName="repassword"
-                    />
-                    <mat-error *ngIf="repassword.invalid && repassword.errors.required">
-                        Wprowadź hasło
-                    </mat-error>
-                    <mat-error *ngIf="repassword.invalid && repassword.errors.mismatch">
-                        Wprowadzone hasła różnią się
-                    </mat-error>
-                </mat-form-field>
+            <mat-form-field>
+                <input
+                    type="password"
+                    matInput
+                    placeholder="Hasło"
+                    formControlName="password"
+                />
+                <mat-error *ngIf="password.invalid && password.errors.required">
+                    Wprowadź hasło
+                </mat-error>
+            </mat-form-field>
 
-                <mat-form-field>
-                    <input
-                        type="text"
-                        matInput
-                        placeholder="Nick"
-                        formControlName="nick"
-                    />
-                    <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
-                    <mat-error *ngIf="nick.invalid && nick.errors.required">
-                        Wprowadź nick
-                    </mat-error>
-                    <mat-error *ngIf="nick.invalid && nick.errors.minlength">
-                        Za krótki nick, dopisz jeszcze {{ nick.errors.minlength.requiredLength - nick.errors.minlength.actualLength }} znaków
-                    </mat-error>
-                    <mat-error *ngIf="nick.invalid && nick.errors.maxlength">
-                        Za długi nick, usuń jeszcze {{ nick.errors.maxlength.actualLength - nick.errors.maxlength.requiredLength }} znaków
-                    </mat-error>
-                </mat-form-field>
+            <mat-form-field>
+                <input
+                    type="password"
+                    matInput
+                    placeholder="Potwierdź hasło"
+                    formControlName="repassword"
+                />
+                <mat-error *ngIf="repassword.invalid && repassword.errors.required">
+                    Wprowadź hasło
+                </mat-error>
+                <mat-error *ngIf="repassword.invalid && repassword.errors.mismatch">
+                    Wprowadzone hasła różnią się
+                </mat-error>
+            </mat-form-field>
 
-                <button type="submit" class="size-normal" mat-raised-button color="primary">
-                    Zarejestruj
-                </button>
-            </form>
-        </mat-card-content>
-    </mat-card>
+            <mat-form-field>
+                <input
+                    type="text"
+                    matInput
+                    placeholder="Nick"
+                    formControlName="nick"
+                />
+                <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
+                <mat-error *ngIf="nick.invalid && nick.errors.required">
+                    Wprowadź nick
+                </mat-error>
+                <mat-error *ngIf="nick.invalid && nick.errors.minlength">
+                    Za krótki nick, dopisz jeszcze {{ nick.errors.minlength.requiredLength - nick.errors.minlength.actualLength }} znaków
+                </mat-error>
+                <mat-error *ngIf="nick.invalid && nick.errors.maxlength">
+                    Za długi nick, usuń jeszcze {{ nick.errors.maxlength.actualLength - nick.errors.maxlength.requiredLength }} znaków
+                </mat-error>
+            </mat-form-field>
+
+            <button type="submit" class="submit-button" mat-raised-button color="primary">
+                Zarejestruj
+            </button>
+
+            <div class="other-action">
+                <span>
+                    Masz już konto?
+                </span>
+                <a routerLink="/login">
+                    Zaloguj się
+                </a>
+            </div>
+        </form>
+    </div>
 </div>

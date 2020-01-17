@@ -135,11 +135,15 @@ namespace ExpenseSplitter.Api.Services
         public bool TryDeleteExpense(string uid, int id)
         {
             var userId = _userService.GetCurrentUserId();
-            var expense = _context.Expenses.SingleOrDefault(x =>
-                x.TripUid == uid
-                && x.Id == id
-                && x.Trip.Users.Any(y => y.UserId == userId)
-            );
+            var expense = _context
+                .Expenses
+                .Include(x => x.Parts)
+                .ThenInclude(x => x.PartParticipants)
+                .SingleOrDefault(x =>
+                    x.TripUid == uid
+                    && x.Id == id
+                    && x.Trip.Users.Any(y => y.UserId == userId)
+                );
 
             if (expense == null)
                 return false;
