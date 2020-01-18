@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray, ValidationErrors } from '@angular/forms';
 import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';
 import { TripParticipantModel } from 'src/app/models/trip/trip-participant.model';
 import { ConfigService } from 'src/app/services/config-service/config.service';
@@ -26,7 +26,10 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         description: new FormControl('', [
             Validators.maxLength(50),
         ]),
-        participants: new FormArray([]),
+        participants: new FormArray([], [
+            Validators.required,
+            Validators.minLength(1)
+        ]),
     });
     public isLoading = false;
 
@@ -97,11 +100,35 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         if (this.participantNameMaxLength) {
             validators.push( Validators.maxLength(this.participantNameMaxLength) );
         }
+        validators.push(this.uniqueNick())
 
         this.participants.push(new FormGroup({
             id: new FormControl(id),
             nick: new FormControl(nick, validators),
         }));
+    }
+
+    public uniqueNick(): (AbstractControl) => ValidationErrors | null {
+        return (control: AbstractControl): ValidationErrors | null => {
+
+            const value = control.value.trim().toLowerCase();
+
+            for (const participantGroup of this.participants.controls) {
+                const nickControl = participantGroup.get('nick');
+
+                if (control == nickControl) {
+                    continue;
+                }
+
+                if (nickControl.value.trim().toLowerCase() !== value) {
+                    continue;
+                }
+
+                return { notUnique: true };
+            }
+
+            return null;
+        };
     }
 
     public removeParticipant(index: number) {
@@ -140,6 +167,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
                 .pipe(takeUntil(this.isNotDestroyed))
                 .subscribe(
                     _ => {
+                        this.formGroup.markAsPristine();
                         this.router.navigate(['/trips', uid]);
                     },
                     () => {},
@@ -167,12 +195,6 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
                 this.description.setValidators([
                     Validators.minLength(constants['TripDescriptionMinLength']),
                     Validators.maxLength(constants['TripDescriptionMaxLength']),
-                ]);
-
-                this.participants.setValidators([
-                    Validators.required,
-                    Validators.minLength(constants['ParticipantNameMinLength']),
-                    Validators.maxLength(constants['ParticipantNameMaxLength']),
                 ]);
 
                 this.tripNameMaxLength = constants['TripNameMaxLength'];

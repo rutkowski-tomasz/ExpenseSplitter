@@ -130,6 +130,14 @@
                             }}
                             znaków
                         </mat-error>
+                        <mat-error
+                            *ngIf="
+                                participant.get('nick').invalid &&
+                                participant.get('nick').errors.notUnique
+                            "
+                        >
+                            Nick musi być unikalny
+                        </mat-error>
                     </mat-form-field>
                     <div class="actions">
                         <mat-icon (click)="removeParticipant(i)"

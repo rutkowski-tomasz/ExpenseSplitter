@@ -1,3 +1,4 @@
+using System.Linq;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Trips;
 using ExpenseSplitter.Api.Services;
@@ -62,6 +63,9 @@ namespace ExpenseSplitter.Api.Controllers
         public IActionResult UpdateTrip([FromBody] TripUpdateModel model)
         {
             if (!ModelState.IsValid)
+                return UnprocessableEntity();
+
+            if (model.Participants.GroupBy(x => x.Nick).Any(g => g.Count() > 1))
                 return UnprocessableEntity();
 
             var result = _tripService.TryUpdateTrip(model);
