@@ -60,7 +60,7 @@
             >
                 <div class="details-wrapper">
                     <div class="who">
-                        <div class="from">
+                        <div class="from" [class.my-participant]="settlement.amIFromParticipant">
                             {{ settlement.fromParticipantNick }}
                             <span *ngIf="settlement.amIFromParticipant">
                                 (Ja)
@@ -69,7 +69,7 @@
                         <div class="desc">
                             powinien zwrócić dla
                         </div>
-                        <div class="to">
+                        <div class="to" [class.my-participant]="settlement.amIToParticipant">
                             {{ settlement.toParticipantNick }}
                             <span *ngIf="settlement.amIToParticipant">
                                 (Ja)

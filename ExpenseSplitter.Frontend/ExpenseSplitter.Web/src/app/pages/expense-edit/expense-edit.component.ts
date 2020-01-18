@@ -14,6 +14,7 @@ import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-ch
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { SettlementQueryModel } from './settlement-query.model';
 import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
+import { UserService } from 'src/app/services/user-service/user.service';
 
 @Component({
     templateUrl: './expense-edit.component.html',
@@ -71,6 +72,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
     public settlementQueryModel: SettlementQueryModel;
     @ViewChild('defaultSettlementName', { static: false }) defaultSettlementName: ElementRef;
+    @ViewChild('me', { static: false }) me: ElementRef;
 
     private isNotDestroyed = new Subject();
 
@@ -81,6 +83,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         private activatedRoute: ActivatedRoute,
         private authService: AuthService,
         private configService: ConfigService,
+        private userService: UserService,
     ) { }
 
     public ngOnInit() {
@@ -111,6 +114,11 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
                         this.loadingCount -= 1;
                         this.participants = data;
+                        this.participants.forEach(particpant => {
+                            if (this.isClaimedParticipant(particpant.id)) {
+                                particpant.nick += ` ${this.me.nativeElement.innerText}`;
+                            }
+                        });
 
                         this.prepareDefaultFormValues();
                     });
@@ -195,7 +203,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
                 for (let i = 0; i < participantControls.length; i++) {
                     if (!participantControls[i].value)
                         continue;
-                    
+
                         participantIds.push(this.participants[i].id);
                 }
 
@@ -312,6 +320,16 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
     }
 
     public isDirty = () => this.formGroup.dirty;
+
+    public isClaimedParticipant(participantId: number): boolean {
+        const participant = this.participants.find(x => x.id == participantId);
+        if (participant == null) {
+            return false;
+        }
+
+        const userId = this.userService.userExtract.value.id;
+        return participant.claimedUserIds.some(x => x == userId);
+    }
 
     private createParticipantsCheckboxes(participants?: number[]): FormArray {
 

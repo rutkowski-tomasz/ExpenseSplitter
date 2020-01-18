@@ -24,7 +24,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
     public participants = new Array<ParticipantModel>();
     public payerNick: string;
 
-    public summary: Array<{ nick: string, value: number }>;
+    public summary: Array<{ id: number, nick: string, value: number }>;
 
     private isNotDestroyed = new Subject();
 
@@ -69,8 +69,18 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
         this.isNotDestroyed.complete();
     }
 
-    public isParticipantInvolvedInPart(participant: ParticipantModel, part: ExpensePartModel) {
+    public isParticipantInvolvedInPart(participant: ParticipantModel, part: ExpensePartModel): boolean {
         return part.participantIds.some(x => x === participant.id);
+    }
+
+    public isClaimedParticipant(participantId: number): boolean {
+        const participant = this.participants.find(x => x.id == participantId);
+        if (participant == null) {
+            return false;
+        }
+
+        const userId = this.userService.userExtract.value.id;
+        return participant.claimedUserIds.some(x => x == userId);
     }
 
     private calculateSummary() {
@@ -85,6 +95,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
         for (const participant of this.participants) {
 
             this.summary.push({
+                id: participant.id,
                 nick: participant.nick,
                 value: this
                     .expense

@@ -33,7 +33,7 @@
             <div class="info">
                 <div class="paid-by">
                     Zapłacił(a) {{ payerNick }}
-                    <span *ngIf="expense.payerId == expense.myParticipantId">(Ja)</span>
+                    <span *ngIf="isClaimedParticipant(expense.payerId)">(Ja)</span>
                 </div>
                 <div class="paid-at">{{ expense.paidAt | date }}</div>
             </div>
@@ -60,10 +60,16 @@
         </div>
 
         <ng-container *ngIf="summary">
-            <div *ngFor="let sum of summary" class="summary-row">
+            <div
+                *ngFor="let sum of summary"
+                class="summary-row"
+                [class.my-summary]="isClaimedParticipant(sum.id)"
+            >
                 <div class="nick">
                     {{ sum.nick }}
-                    {{ sum | json }}
+                    <span *ngIf="isClaimedParticipant(sum.id)">
+                        (Ja)
+                    </span>
                 </div>
                 <div class="value">
                     <ng-container *ngIf="sum.value !== 0; else noValue">
@@ -85,10 +91,15 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th class="rotate" *ngFor="let participant of participants">
+                        <th
+                            class="rotate"
+                            *ngFor="let participant of participants"
+                            [class.my-header]="isClaimedParticipant(participant.id)"
+                        >
                             <div>
-                                <span>{{ participant.nick }}</span>
-                                {{ participant | json }}
+                                <span>{{ participant.nick }}
+                                    <span *ngIf="isClaimedParticipant(participant.id)">(Ja)</span>
+                                </span>
                             </div>
                         </th>
                     </tr>

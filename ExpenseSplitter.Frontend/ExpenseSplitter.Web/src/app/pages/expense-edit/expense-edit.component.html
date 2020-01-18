@@ -23,6 +23,7 @@
     </ng-container>
 </es-header>
 
+<span #me hidden>(Ja)</span>
 <div class="container">
     <es-loading *ngIf="loadingCount !== 0"></es-loading>
 
@@ -113,6 +114,7 @@
                     <mat-option
                         *ngFor="let participant of filteredParticipants | async"
                         [value]="participant"
+                        [class.my-participant]="isClaimedParticipant(participant.id)"
                     >
                         {{ participant.nick }}
                     </mat-option>
@@ -153,13 +155,17 @@
                                 let j = index
                             "
                         >
-                            <div class="participant">
+                            <div
+                                class="participant"
+                                [class.my-participant]="isClaimedParticipant(participants[j].id)"
+                            >
                                 <mat-checkbox
                                     color="primary"
                                     [formControlName]="j"
                                 ></mat-checkbox>
                                 {{ participants[j].nick }}
-                            </div>
+                        </div>
+
                         </label>
                     </div>
                 </div>

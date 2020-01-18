@@ -21,7 +21,7 @@
         }
 
         .value {
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .info {
@@ -61,6 +61,10 @@
         display: flex;
         justify-content: space-between;
         line-height: 24px;
+
+        &.my-summary {
+            font-weight: 600;
+        }
     }
 
     .summary-placeholders {
@@ -99,7 +103,11 @@
 	}
 
 	th {
-		font-weight: 500;
+        font-weight: 400;
+
+        &.my-header {
+            font-weight: 500;
+        }
 	}
 
     th.rotate {
