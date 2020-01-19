@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth-service/auth.service';
 import { UserModel } from 'src/app/models/user/user.model';
 import { UserUpdateModel } from 'src/app/models/user/user-update.model';
+import { AppConfig } from 'src/app/app.config';
 
 @Injectable({
     providedIn: 'root'
@@ -18,12 +19,15 @@ export class UserService {
         nick: null,
         isEmailConfirmed: null,
     });
+    public preferences = new BehaviorSubject<any>(null);
 
     constructor(
         private callService: CallService,
         private authService: AuthService,
+        private appConfig: AppConfig,
     ) {
         this.loadUserExtract();
+        this.initalizePreferences();
     }
 
     public loadUserExtract(): void {
@@ -40,5 +44,26 @@ export class UserService {
 
     public UpdateUser(model: UserUpdateModel): Observable<UserModel> {
         return this.callService.put<UserModel>(`${this.servicePrefix}`, model);
+    }
+
+    private initalizePreferences()
+    {
+        const preferences = { };
+        preferences[this.appConfig.detailedCalculations] = this.getPreference(this.appConfig.detailedCalculations);
+
+        this.preferences.next(preferences);
+    }
+
+    public setPreference(key: string, value: any): void {
+
+        const preferences = { ...this.preferences.value };
+        preferences[key] = value;
+        this.preferences.next(preferences);
+
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    public getPreference(key: string): any {
+        return JSON.parse(localStorage.getItem(key));
     }
 }

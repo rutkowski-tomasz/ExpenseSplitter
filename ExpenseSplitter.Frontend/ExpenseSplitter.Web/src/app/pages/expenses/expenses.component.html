@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="detailed-calculations">
+            <div class="detailed-calculations" *ngIf="detailedCalculations">
                 Wpływ na mój bilans: 
                 <span *ngIf="expense.isPaidByMe">
                     ({{ expense.value | currency:'PLN' }} - {{ expense.iSpent | currency:'PLN' }})

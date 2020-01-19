@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { moveFromLeft, moveFromRight } from "ngx-router-animations";
 import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user-service/user.service';
+import { AppConfig } from 'src/app/app.config';
 
 @Component({
     templateUrl: './trip.component.html',
@@ -26,6 +28,8 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
     public otherParticipantsCount = 0;
     public shareUrl = '';
     public uid: string;
+    public detailedCalculations: boolean;
+    public isExpenseListView: boolean;
 
     @ViewChild('matTabGroup', { static: false }) matTabGroup: MatTabGroup;
     public selectedIndex = 0;
@@ -37,9 +41,14 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
         private activatedRoute: ActivatedRoute,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
+        private userService: UserService,
+        private appConfig: AppConfig,
     ) { }
 
     public ngOnInit() {
+
+        this.detailedCalculations = this.userService.getPreference(this.appConfig.detailedCalculations);
+
         this.activatedRoute.params
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(params => {
@@ -55,11 +64,44 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.shareUrl = `${window.location.origin}/join/${this.trip.uid}`;
                     });
             });
+
+        this.updateIsExpenseListView(this.router.url);
+
+        this.router.events
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe((val) => {
+                if (!(val instanceof NavigationEnd)) {
+                    return;
+                }
+
+                this.updateIsExpenseListView(val.url);
+            });
+    }
+
+    private updateIsExpenseListView(url: string): void {
+        this.isExpenseListView = !url.endsWith('balance');
     }
 
     public ngOnDestroy(): void {
         this.isNotDestroyed.next();
         this.isNotDestroyed.complete();
+    }
+
+    public ngAfterViewInit(): void {
+        this.updateSelectedTab();
+    }
+
+    public toggleDetailedCalculations() {
+        this.detailedCalculations = !this.detailedCalculations;
+        this.userService.setPreference(this.appConfig.detailedCalculations, this.detailedCalculations);
+    }
+
+    public tabClicked($event: MatTabChangeEvent) {
+        this.router.navigate([$event.tab.textLabel.link], { relativeTo: this.activatedRoute });
+    }
+
+    public getState(outlet: RouterOutlet) {
+        return outlet && outlet.activatedRouteData && outlet.activatedRouteData.state;
     }
 
     private buildParticipantsHeader(trip: TripDetailsModel) {
@@ -78,11 +120,7 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
         this.participants = this.participants.substr(0, this.participants.length - 2);
     }
 
-    ngAfterViewInit(): void {
-        this.updateSelectedTab();
-    }
-
-    updateSelectedTab() {
+    private updateSelectedTab() {
 
         const tabs = this.matTabGroup._tabs;
 
@@ -95,13 +133,5 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.changeDetectorRef.detectChanges();
             }
         });
-    }
-
-    tabClicked($event: MatTabChangeEvent) {
-        this.router.navigate([$event.tab.textLabel.link], { relativeTo: this.activatedRoute });
-    }
-
-    getState(outlet: RouterOutlet) {
-        return outlet && outlet.activatedRouteData && outlet.activatedRouteData.state;
     }
 }

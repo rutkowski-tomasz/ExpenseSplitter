@@ -11,27 +11,47 @@
     </ng-container>
 
     <ng-container right>
-        <button
-            mat-icon-button
-            [matMenuTriggerFor]="menu"
-            aria-label="Application menu"
-        >
-            <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngIf="trip" [routerLink]="['/trips', trip.uid, 'edit']">
-                <mat-icon>edit</mat-icon>
-                <span>Edytuj</span>
+        <ng-container *ngIf="isExpenseListView">
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                aria-label="Application menu"
+            >
+                <mat-icon>more_vert</mat-icon>
             </button>
-            <button mat-menu-item *ngIf="trip" [routerLink]="['/trips', trip.uid, 'who-am-i']">
-                <mat-icon>emoji_people</mat-icon>
-                <span>Zmień kim jestem</span>
-            </button>
-            <button mat-menu-item *ngIf="trip" esShare [esShareTitle]="trip.name" esShareText="Hej! Właśnie założyłem rozliczenie {{ trip.name }}." [esShareUrl]="shareUrl">
-                <mat-icon>share</mat-icon>
-                <span>Udostępnij rozliczenie</span>
-            </button>
-        </mat-menu>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngIf="trip" [routerLink]="['/trips', trip.uid, 'edit']">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edytuj</span>
+                </button>
+                <button mat-menu-item *ngIf="trip" [routerLink]="['/trips', trip.uid, 'who-am-i']">
+                    <mat-icon>emoji_people</mat-icon>
+                    <span>Wybierz kim jesteś</span>
+                </button>
+                <button mat-menu-item *ngIf="trip" (click)="toggleDetailedCalculations()">
+                    <mat-icon>star_border</mat-icon>
+                    <span>
+                        Pokaż obliczenia
+                    </span>
+                    <mat-icon class="toggle" *ngIf="detailedCalculations" color="primary">toggle_on</mat-icon>
+                    <mat-icon class="toggle" *ngIf="!detailedCalculations">toggle_off</mat-icon>
+                </button>
+            </mat-menu>
+        </ng-container>
+
+        <ng-container *ngIf="!isExpenseListView">
+            <a
+                role="button"
+                type="button"
+                *ngIf="trip"
+                esShare
+                [esShareTitle]="trip.name"
+                esShareText="Hej! Właśnie założyłem rozliczenie {{ trip.name }}."
+                [esShareUrl]="shareUrl"
+            >
+                Udostępnij
+            </a>
+        </ng-container>
     </ng-container>
 </es-header>
 

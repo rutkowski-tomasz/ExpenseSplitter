@@ -70,7 +70,7 @@ export class TripJoinComponent implements OnInit, OnDestroy, AfterViewInit {
                 .pipe(takeUntil(this.isNotDestroyed))
                 .subscribe(
                     _ => {
-                        this.router.navigate(['/trips', uid]);
+                        this.router.navigate(['/trips', uid, 'who-am-i']);
                     },
                     (error: HttpErrorResponse) => {
 

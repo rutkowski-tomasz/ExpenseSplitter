@@ -5,6 +5,8 @@ import { ExpenseListModel } from 'src/app/models/expense/expense-list.model';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user-service/user.service';
+import { AppConfig } from 'src/app/app.config';
 
 @Component({
     templateUrl: './expenses.component.html',
@@ -16,15 +18,24 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     public ExpenseTypeEnum = ExpenseTypeEnum;
     public uid: string;
     public lastUpdatedExpenseId: number;
+    public detailedCalculations: boolean;
 
     private isNotDestroyed = new Subject();
 
     constructor(
         private expenseService: ExpenseService,
         private activatedRoute: ActivatedRoute,
+        private userService: UserService,
+        private appConfig: AppConfig,
     ) { }
 
     public ngOnInit() {
+
+        this.userService.preferences
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(preferences => {
+                this.detailedCalculations = preferences[this.appConfig.detailedCalculations];
+            });
 
         this.activatedRoute.parent.params
             .pipe(takeUntil(this.isNotDestroyed))

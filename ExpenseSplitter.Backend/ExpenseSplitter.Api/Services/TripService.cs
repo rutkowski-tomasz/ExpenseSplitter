@@ -152,7 +152,7 @@ namespace ExpenseSplitter.Api.Services
             if (trip.Users.Any(x => x.User.Id == userId))
                 return true;
 
-            trip.Users.Add(new TripUser
+            _context.TripsUsers.Add(new TripUser
             {
                 TripUid = uid,
                 UserId = userId,

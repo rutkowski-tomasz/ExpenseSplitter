@@ -12,7 +12,7 @@ namespace ExpenseSplitter.Api.Data
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public int ParticipantId { get; set; }
+        public int? ParticipantId { get; set; }
         public Participant Participant { get; set; }
     }
 }

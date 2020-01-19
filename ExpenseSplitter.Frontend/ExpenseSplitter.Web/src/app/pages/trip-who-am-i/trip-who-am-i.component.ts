@@ -84,7 +84,7 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
         const userId = this.user.id;
         const participant = this.participants.find(x => x.claimedUserIds.some(y => y === userId));
 
-        this.chosenParticipantId = participant !== null ? participant.id : null;
+        this.chosenParticipantId = participant ? participant.id : null;
         this.myParticipantId = this.chosenParticipantId;
     }
 }

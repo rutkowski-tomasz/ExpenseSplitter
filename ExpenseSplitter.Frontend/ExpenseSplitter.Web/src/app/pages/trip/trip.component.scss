@@ -14,3 +14,8 @@
 .router-wrapper {
 	height: calc(100vh - #{$headerHeight} - #{$tabsHeight});
 }
+
+.toggle {
+	margin: 0 0 0 16px;
+	transform: scale(1.5);
+}
