@@ -28,6 +28,7 @@ import {
     MatAutocompleteModule,
     MAT_SNACK_BAR_DEFAULT_OPTIONS,
     MatBottomSheetModule,
+    MatRadioModule,
 } from '@angular/material';
 
 const materialModules = [
@@ -57,6 +58,7 @@ const materialModules = [
     MatExpansionModule,
     MatAutocompleteModule,
     MatBottomSheetModule,
+    MatRadioModule,
 ];
 
 @NgModule({

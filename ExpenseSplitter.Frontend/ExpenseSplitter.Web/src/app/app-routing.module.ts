@@ -17,6 +17,7 @@ import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.componen
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
 import { DiscardCanDeactivateGuard } from './shared/discard/discard.deactivate.guard';
 import { TripJoinComponent } from './pages/trip-join/trip-join.component';
+import { TripWhoAmIComponent } from './pages/trip-who-am-i/trip-who-am-i.component';
 
 const routes: Routes = [
     {
@@ -44,6 +45,12 @@ const routes: Routes = [
                         path: ':uid/edit',
                         component: TripEditComponent,
                         data: { state: 'tripEdit' },
+                        canDeactivate: [ DiscardCanDeactivateGuard ],
+                    },
+                    {
+                        path: ':uid/who-am-i',
+                        component: TripWhoAmIComponent,
+                        data: { state: 'tripWhoAmI' },
                         canDeactivate: [ DiscardCanDeactivateGuard ],
                     },
                     {

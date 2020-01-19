@@ -22,6 +22,7 @@ import { TripJoinComponent } from './pages/trip-join/trip-join.component';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { PageErrorComponent } from './shared/page-error/page-error.component';
 import { CantRemoveParticipantWithExpensesSnackBarComponent } from './components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
+import { TripWhoAmIComponent } from './pages/trip-who-am-i/trip-who-am-i.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -35,6 +36,7 @@ export const appDeclarations = [
     TripEditComponent,
     TripComponent,
     TripJoinComponent,
+    TripWhoAmIComponent,
     ExpensesComponent,
     BalanceComponent,
     SettingsComponent,

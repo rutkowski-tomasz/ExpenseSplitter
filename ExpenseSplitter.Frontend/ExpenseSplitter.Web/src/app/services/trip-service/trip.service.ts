@@ -44,7 +44,7 @@ export class TripService {
         return this.callService
             .put<boolean>(`${this.servicePrefix}`, model)
             .pipe(
-                tap(x => this.lastUpdatedTripUid.next(model.uid))
+                tap(_ => this.lastUpdatedTripUid.next(model.uid))
             );
     }
 
@@ -62,5 +62,9 @@ export class TripService {
 
     public ClaimTripParticipation(uid: string, id: number): Observable<boolean> {
         return this.callService.post(`${this.servicePrefix}/${uid}/participation/${id}`, {});
+    }
+
+    public SetWhoAmI(uid: string, participantId: number) {
+        return this.callService.postForm(`${this.servicePrefix}/${uid}/setWhoAmI`, { participantId });
     }
 }

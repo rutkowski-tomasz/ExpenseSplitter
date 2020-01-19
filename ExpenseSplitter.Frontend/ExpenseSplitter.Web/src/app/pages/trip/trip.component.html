@@ -23,6 +23,10 @@
                 <mat-icon>edit</mat-icon>
                 <span>Edytuj</span>
             </button>
+            <button mat-menu-item *ngIf="trip" [routerLink]="['/trips', trip.uid, 'who-am-i']">
+                <mat-icon>emoji_people</mat-icon>
+                <span>Zmień kim jestem</span>
+            </button>
             <button mat-menu-item *ngIf="trip" esShare [esShareTitle]="trip.name" esShareText="Hej! Właśnie założyłem rozliczenie {{ trip.name }}." [esShareUrl]="shareUrl">
                 <mat-icon>share</mat-icon>
                 <span>Udostępnij rozliczenie</span>

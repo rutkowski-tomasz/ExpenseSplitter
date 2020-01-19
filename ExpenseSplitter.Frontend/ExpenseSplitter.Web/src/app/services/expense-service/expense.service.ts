@@ -38,7 +38,7 @@ export class ExpenseService {
         return this.callService
             .put<boolean>(`${this.servicePrefix}/${uid}/expenses`, model)
             .pipe(
-                tap(x => this.lastUpdatedExpenseId.next(model.id))
+                tap(_ => this.lastUpdatedExpenseId.next(model.id))
             );
     }
 

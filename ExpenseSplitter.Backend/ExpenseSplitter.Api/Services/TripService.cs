@@ -20,6 +20,7 @@ namespace ExpenseSplitter.Api.Services
         bool TryJoinTrip(string uid);
         bool TryLeaveTrip(string uid);
         bool TryClaimTripParticipation(string uid, int id);
+        bool TripSetWhoAmI(string uid, int participantId);
     }
 
     public class TripService : ITripService
@@ -201,6 +202,24 @@ namespace ExpenseSplitter.Api.Services
 
             tripUser.ParticipantId = participant.Id;
 
+            _context.SaveChanges();
+            return true;
+        }
+
+        public bool TripSetWhoAmI(string uid, int participantId)
+        {
+            var userId = _userService.GetCurrentUserId();
+            var tripUser = _context
+                .TripsUsers
+                .SingleOrDefault(x =>
+                    x.TripUid == uid &&
+                    x.UserId == userId
+                );
+
+            if (tripUser == null)
+                return false;
+
+            tripUser.ParticipantId = participantId;
             _context.SaveChanges();
             return true;
         }

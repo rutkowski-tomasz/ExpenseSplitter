@@ -1,0 +1,39 @@
+<es-header>
+    <ng-container heading>
+        Zmień kim jestem
+    </ng-container>
+
+    <ng-container left>
+        <button mat-icon-button [routerLink]="['/trips', uid]">
+            <mat-icon>arrow_back_ios</mat-icon>
+        </button>
+    </ng-container>
+
+    <ng-container right>
+        <a
+            role="button"
+            type="button"
+            (click)="onSubmit()"
+            [class.is-submitting]="isSubmitting"
+        >
+            Zapisz
+        </a>
+    </ng-container>
+</es-header>
+
+<div class="container">
+    <section>
+        <mat-radio-group
+            [(ngModel)]="chosenParticipantId"
+        >
+            <mat-radio-button
+                *ngFor="let participant of participants"
+                [value]="participant.id"
+                color="primary"
+                class="participant"
+            >
+                {{ participant.nick }}
+            </mat-radio-button>
+        </mat-radio-group>
+    </section>
+</div>

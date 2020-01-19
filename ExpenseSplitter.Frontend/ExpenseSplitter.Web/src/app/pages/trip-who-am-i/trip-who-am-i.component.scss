@@ -1,0 +1,11 @@
+@import "src/scss/_colors";
+@import "src/scss/_mixins";
+
+:host {
+    @include is-animated-host;
+}
+
+.participant {
+    display: block;
+    margin-bottom: 8px;
+}

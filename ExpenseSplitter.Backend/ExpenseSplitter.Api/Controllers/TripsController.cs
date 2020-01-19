@@ -119,5 +119,16 @@ namespace ExpenseSplitter.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{uid}/setWhoAmI")]
+        public IActionResult SetWhoAmI(string uid, int participantId)
+        {
+            var result = _tripService.TripSetWhoAmI(uid, participantId);
+
+            if (!result)
+                return NotFound();
+
+            return Ok();
+        }
     }
 }
