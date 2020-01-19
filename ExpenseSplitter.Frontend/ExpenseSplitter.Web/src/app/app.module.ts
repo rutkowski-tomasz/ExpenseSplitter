@@ -21,6 +21,7 @@ import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.comp
 import { IsAliveInterceptor } from './interceptors/is-alive.interceptor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { CantRemoveParticipantWithExpensesSnackBarComponent } from './components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
 registerLocaleData(locale);
 
 @NgModule({
@@ -62,6 +63,7 @@ registerLocaleData(locale);
     bootstrap: [AppComponent],
     entryComponents: [
         LinkCopiedSnackBarComponent,
+        CantRemoveParticipantWithExpensesSnackBarComponent,
         DiscardDialog,
         AddTripSheetComponent,
     ],

@@ -8,6 +8,9 @@ import { ConfigService } from 'src/app/services/config-service/config.service';
 import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
+import { CantRemoveParticipantWithExpensesSnackBarComponent } from 'src/app/components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     templateUrl: './trip-edit.component.html',
@@ -16,6 +19,7 @@ import { takeUntil } from 'rxjs/operators';
 export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChanges {
 
     public uid: string;
+    private trip: TripDetailsModel;
 
     public formGroup = new FormGroup({
         name: new FormControl('', [
@@ -58,6 +62,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private configService: ConfigService,
+        private snackBar: MatSnackBar,
     ) { }
 
     public ngOnInit() {
@@ -73,6 +78,8 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
                     .subscribe(data => {
 
                         this.isLoading = false;
+
+                        this.trip = data;
                         this.name.setValue(data.name);
                         this.description.setValue(data.description);
 
@@ -100,7 +107,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         if (this.participantNameMaxLength) {
             validators.push( Validators.maxLength(this.participantNameMaxLength) );
         }
-        validators.push(this.uniqueNick())
+        validators.push(this.uniqueNick());
 
         this.participants.push(new FormGroup({
             id: new FormControl(id),
@@ -131,7 +138,15 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         };
     }
 
-    public removeParticipant(index: number) {
+    public removeParticipant(index: number, participantFormGroup: FormGroup) {
+        
+        const hasExpenses = this.hasAnyExpenses(participantFormGroup);
+
+        if (hasExpenses) {
+            this.snackBar.openFromComponent(CantRemoveParticipantWithExpensesSnackBarComponent);
+            return;
+        }
+
         this.participants.removeAt(index);
     }
 
@@ -179,6 +194,13 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
     }
 
     public isDirty = () => this.formGroup.dirty;
+
+    public hasAnyExpenses(participantFormGroup: FormGroup): boolean {
+
+        const id: number = participantFormGroup.value.id;
+        const participant = this.trip.participants.find(x => x.id === id);
+        return participant ? participant.hasAnyExpenses : false;
+    }
 
     private loadConfiguration() {
 

@@ -17,6 +17,7 @@ namespace ExpenseSplitter.Api.Extensions
             {
                 Id = participant.Id,
                 Nick = participant.Name,
+                HasAnyExpenses = participant.ExpenseParticipations.Count > 0,
                 ClaimedUserIds = participant.UsersClaimed.Select(x => x.UserId).ToList(),
             };
         }

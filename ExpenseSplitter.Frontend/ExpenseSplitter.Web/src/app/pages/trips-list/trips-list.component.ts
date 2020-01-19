@@ -30,7 +30,6 @@ export class TripsListComponent implements OnInit, OnDestroy {
         this.tripService.GetTrips()
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(data => {
-                console.log(`data`);
                 this.trips = data;
             });
 

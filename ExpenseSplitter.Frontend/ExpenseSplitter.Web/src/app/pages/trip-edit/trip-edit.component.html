@@ -140,9 +140,12 @@
                         </mat-error>
                     </mat-form-field>
                     <div class="actions">
-                        <mat-icon (click)="removeParticipant(i)"
-                            >close</mat-icon
+                        <mat-icon
+                            [class.cant-delete]="hasAnyExpenses(participant)"
+                            (click)="removeParticipant(i, participant)"
                         >
+                            close
+                        </mat-icon>
                     </div>
                 </div>
             </div>

@@ -61,6 +61,8 @@ namespace ExpenseSplitter.Api.Services
                 .Trips
                 .Include(x => x.Participants)
                 .ThenInclude(x => x.UsersClaimed)
+                .Include(x => x.Participants)
+                .ThenInclude(x => x.ExpenseParticipations)
                 .Where(
                     x => x.Uid == uid &&
                     x.Users.Any(y => y.User.Id == userId)

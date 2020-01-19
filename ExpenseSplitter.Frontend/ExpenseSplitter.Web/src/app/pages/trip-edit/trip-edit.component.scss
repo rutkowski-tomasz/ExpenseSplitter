@@ -1,4 +1,5 @@
 @import "src/scss/_mixins";
+@import "src/scss/_colors";
 
 :host  {
 	@include is-animated-host;
@@ -9,5 +10,9 @@
 	align-items: center;
 	.actions {
 		margin-left: 8px;
+
+		.cant-delete {
+			color: mat-color($black-palette, 100);
+		}
 	}
 }

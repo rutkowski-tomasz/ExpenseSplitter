@@ -21,6 +21,7 @@ import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.comp
 import { TripJoinComponent } from './pages/trip-join/trip-join.component';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { PageErrorComponent } from './shared/page-error/page-error.component';
+import { CantRemoveParticipantWithExpensesSnackBarComponent } from './components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
 
 export const appDeclarations = [
     LoginLayoutComponent,
@@ -48,6 +49,7 @@ export const appDeclarations = [
     AddTripSheetComponent,
     LoadingComponent,
     PageErrorComponent,
+    CantRemoveParticipantWithExpensesSnackBarComponent,
 
     ShareDirective,
 ];
