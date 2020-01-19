@@ -94,14 +94,5 @@
                 }
             }
         }
-
-        > mat-error {
-            color: pink;
-            line-height: 1.125;
-            height: 13px;
-            font-weight: 400;
-            font-size: 75%;
-            color: $warn;
-        }
     }
 }

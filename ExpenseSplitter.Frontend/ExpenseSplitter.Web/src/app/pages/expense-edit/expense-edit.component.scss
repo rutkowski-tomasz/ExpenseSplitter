@@ -1,15 +1,26 @@
 @import "src/scss/_mixins";
 
-:host  {
-	@include is-animated-host;
+:host {
+    @include is-animated-host;
 }
-.part-field {
-	display: flex;
-	align-items: center;
+
+.part {
+    .value-field {
+        display: flex;
+        align-items: center;
+    }
+    .participants {
+        margin-bottom: 8px;
+    }
+    .error-wrapper {
+		height: 13px;
+		margin-bottom: 16px;
+    }
 }
+
 .add-part-button {
-	margin-top: 24px;
+    margin-top: 24px;
 }
 .my-participant {
-	font-weight: 500;
+    font-weight: 500;
 }

@@ -140,3 +140,10 @@ section {
     transition: opacity 0.1s ease-in-out;
     opacity: 0.3;
 }
+mat-error {
+    line-height: 13px;
+    height: 13px;
+    font-weight: 400;
+    font-size: 12px;
+    color: $warn;
+}

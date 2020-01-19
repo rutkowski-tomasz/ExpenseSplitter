@@ -340,9 +340,11 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         return participant.claimedUserIds.some(x => x == userId);
     }
 
+    public getPartParticipantErrors = (partGroup: FormGroup) => partGroup.controls.participants.errors;
+
     private createParticipantsCheckboxes(participants?: number[]): FormArray {
 
-        const array = new FormArray([]);
+        const array = new FormArray([], [this.atLeastOneChecked()]);
         for (let [i, participant] of this.participants.entries()) {
 
             let checked = false;
@@ -364,7 +366,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         return this.participants.filter(option => option.nick.toLowerCase().includes(filterValue));
     }
 
-    public validNumber(min?: number, max?: number): (AbstractControl) => ValidationErrors | null {
+    private validNumber(min?: number, max?: number): (AbstractControl) => ValidationErrors | null {
         return (control: AbstractControl): ValidationErrors | null => {
             const value = parseFloat(control.value);
 
@@ -377,6 +379,14 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
             }
 
             return null;
+        };
+    }
+
+    private atLeastOneChecked(): (FormArray) => ValidationErrors | null {
+        return (formArray: FormArray): ValidationErrors | null => {
+
+            const anyChecked = formArray.controls.some(x => x.value);
+            return !anyChecked ? { noneChecked: true } : null;
         };
     }
 

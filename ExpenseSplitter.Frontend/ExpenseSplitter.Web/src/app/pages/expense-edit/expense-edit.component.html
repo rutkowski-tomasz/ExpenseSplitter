@@ -129,9 +129,10 @@
             <div
                 formArrayName="parts"
                 *ngFor="let part of parts.controls; let i = index"
+                class="part"
             >
                 <div [formGroupName]="i">
-                    <div class="part-field">
+                    <div class="value-field">
                         <mat-form-field>
                             <input
                                 type="number"
@@ -162,7 +163,7 @@
                         <label
                             formArrayName="participants"
                             *ngFor="
-                                let order of GetParticipants(part).controls;
+                                let participant of GetParticipants(part).controls;
                                 let j = index
                             "
                         >
@@ -175,9 +176,14 @@
                                     [formControlName]="j"
                                 ></mat-checkbox>
                                 {{ participants[j].nick }}
-                        </div>
-
+                            </div>
                         </label>
+                    </div>
+
+                    <div class="error-wrapper">
+                        <mat-error *ngIf="getPartParticipantErrors(part) && getPartParticipantErrors(part).noneChecked">
+                            Przynajmniej jedna osoba musi brać udział w wydatku
+                        </mat-error>
                     </div>
                 </div>
             </div>
