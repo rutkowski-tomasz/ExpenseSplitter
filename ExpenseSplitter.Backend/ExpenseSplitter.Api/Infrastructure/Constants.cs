@@ -8,6 +8,8 @@ namespace ExpenseSplitter.Api.Infrastructure
         public const int ExpenseNameMinLength = 3;
         public const int ExpenseNameMaxLength = 50;
         public const string ExpenseValueType = "decimal(12, 2)";
+        public const double ExpenseValueMin = 0;
+        public const double ExpenseValueMax = 999999999999.99;
         public const int ParticipantNameMinLength = 2;
         public const int ParticipantNameMaxLength = 20;
         public const int TripNameMaxLength = 40;

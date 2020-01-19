@@ -6,7 +6,7 @@ namespace ExpenseSplitter.Api.Models.Participant
     {
         public int Id { get; set; }
         public string Nick { get; set; }
-        public bool HasAnyExpenses { get; set; }
+        public bool? HasAnyExpenses { get; set; }
         public List<int> ClaimedUserIds { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, FormArray, ValidationErrors } from '@angular/forms';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { startWith, map, takeUntil } from 'rxjs/operators';
@@ -66,6 +66,8 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         return this.formGroup.get('payer');
     }
 
+    public expenseValueMax: number;
+    public expenseValueMin: number;
     public get parts(): FormArray {
         return this.formGroup.get('parts') as FormArray;
     }
@@ -287,12 +289,19 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         const val = value ? value.toString() : '';
 
         const group = new FormGroup({
-            value: new FormControl(val, Validators.pattern(/^\d+(\.\d{0,2})?$/)),
+            value: new FormControl(val, [
+                Validators.required,
+                this.validNumber(this.expenseValueMin, this.expenseValueMax)
+            ]),
             participants: this.createParticipantsCheckboxes(participantIds)
         });
 
         return group;
     }
+
+    public getPartValueErrors = (part: FormGroup) => {
+        return part.controls.value.errors;
+    };
 
     public GetParticipants(part: FormGroup): FormArray {
         return part.get('participants') as FormArray;
@@ -354,7 +363,23 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         const filterValue = value.toLowerCase();
         return this.participants.filter(option => option.nick.toLowerCase().includes(filterValue));
     }
-    
+
+    public validNumber(min?: number, max?: number): (AbstractControl) => ValidationErrors | null {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const value = parseFloat(control.value);
+
+            if (min !== null && !isNaN(value) && value < min) {
+                return { tooLow: { min } };
+            }
+
+            if (max !== null && !isNaN(value) && value > max) {
+                return { tooHigh: { max }};
+            }
+
+            return null;
+        };
+    }
+
     private loadConfiguration() {
 
         this.configService.GetConstants()
@@ -365,7 +390,19 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
                     Validators.required,
                     Validators.minLength(constants['ExpenseNameMinLength']),
                     Validators.maxLength(constants['ExpenseNameMaxLength']),
-                ])
+                ]);
+
+                this.expenseValueMin = constants['ExpenseValueMin'];
+                this.expenseValueMax = constants['ExpenseValueMax'];
+
+                for (const partGroup of this.parts.controls) {
+                    const valueControl = (partGroup as FormGroup).controls.value;
+
+                    valueControl.setValidators([
+                        Validators.required,
+                        this.validNumber(this.expenseValueMin, this.expenseValueMax)
+                    ]);
+                }
 
                 this.expenseNameMaxLength = constants['ExpenseNameMaxLength'];
             });

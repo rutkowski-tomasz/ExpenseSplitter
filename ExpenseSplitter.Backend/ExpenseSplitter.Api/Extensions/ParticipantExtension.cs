@@ -13,11 +13,16 @@ namespace ExpenseSplitter.Api.Extensions
     {
         public ParticipantModel ToParticipantModel(Participant participant)
         {
+            bool? hasExpenses = null;
+            if (participant.ExpenseParticipations != null) {
+                hasExpenses = participant.ExpenseParticipations.Count > 0;
+            }
+
             return new ParticipantModel
             {
                 Id = participant.Id,
                 Nick = participant.Name,
-                HasAnyExpenses = participant.ExpenseParticipations.Count > 0,
+                HasAnyExpenses = hasExpenses,
                 ClaimedUserIds = participant.UsersClaimed.Select(x => x.UserId).ToList(),
             };
         }

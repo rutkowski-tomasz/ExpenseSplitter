@@ -143,6 +143,16 @@
                                 inputmode="decimal"
                                 required
                             />
+
+                            <mat-error *ngIf="getPartValueErrors(part) && getPartValueErrors(part).required">
+                                Wymagane jest wprowadzenie poprawnej kwoty
+                            </mat-error>
+                            <mat-error *ngIf="getPartValueErrors(part) && getPartValueErrors(part).tooLow">
+                                Podano zbyt niską kwotę, minimum {{ getPartValueErrors(part).tooLow.min }}
+                            </mat-error>
+                            <mat-error *ngIf="getPartValueErrors(part) && getPartValueErrors(part).tooHigh">
+                                Podano zbyt wysoką kwotę, maximum {{ getPartValueErrors(part).tooHigh.max }}
+                            </mat-error>
                         </mat-form-field>
                         <div class="actions">
                             <mat-icon (click)="removePart(i)">close</mat-icon>
@@ -182,7 +192,7 @@
         <caption>
             Zarządzanie
         </caption>
-        <section>
+        <section class="no-padding">
             <button
                 mat-button
                 role="button"
