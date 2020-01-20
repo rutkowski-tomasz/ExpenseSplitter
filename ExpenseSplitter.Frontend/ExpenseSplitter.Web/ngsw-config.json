@@ -34,12 +34,25 @@
     ],
     "dataGroups": [
         {
-            "name": "tripsList",
+            "name": "rarelyChangingData",
             "urls": [
-                "http://localhost:8091/public/trips"
+                "/public/config/constants",
+                "/public/users/*"
             ],
             "cacheConfig": {
-                "maxSize": 1,
+                "maxSize": 2,
+                "maxAge": "7d",
+                "timeout": "2s",
+                "strategy": "performance"
+            }
+        },
+        {
+            "name": "expensesList",
+            "urls": [
+                "/public/trips/**/expenses/**"
+            ],
+            "cacheConfig": {
+                "maxSize": 250,
                 "maxAge": "3d",
                 "timeout": "5s",
                 "strategy": "freshness"
@@ -48,42 +61,29 @@
         {
             "name": "tripsDetails",
             "urls": [
-                "http://localhost:8091/public/trips/*",
-                "http://localhost:8091/public/trips/*/participants",
-                "http://localhost:8091/public/trips/*/balance",
-                "http://localhost:8091/public/trips/*/balance/short",
-                "http://localhost:8091/public/trips/*/expenses"
+                "/public/trips/**",
+                "/public/trips/**/participants",
+                "/public/trips/**/balance",
+                "/public/trips/**/balance/short",
+                "/public/trips/**/expenses"
             ],
             "cacheConfig": {
-                "maxSize": 3,
+                "maxSize": 25,
                 "maxAge": "3d",
                 "timeout": "5s",
                 "strategy": "freshness"
             }
         },
         {
-            "name": "expensesList",
+            "name": "tripsList",
             "urls": [
-                "http://localhost:8091/public/trips/*/expenses/*"
-            ],
-            "cacheConfig": {
-                "maxSize": 10,
-                "maxAge": "3d",
-                "timeout": "5s",
-                "strategy": "freshness"
-            }
-        },
-        {
-            "name": "rarelyChangingData",
-            "urls": [
-                "http://localhost:8091/public/config/constants",
-                "http://localhost:8091/public/users/*"
+                "/public/trips"
             ],
             "cacheConfig": {
                 "maxSize": 1,
-                "maxAge": "7d",
-                "timeout": "2s",
-                "strategy": "performance"
+                "maxAge": "3d",
+                "timeout": "5s",
+                "strategy": "freshness"
             }
         }
     ]

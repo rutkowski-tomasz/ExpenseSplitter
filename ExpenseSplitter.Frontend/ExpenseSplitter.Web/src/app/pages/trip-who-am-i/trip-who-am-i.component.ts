@@ -20,6 +20,7 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
 
     public myParticipantId: number;
     public chosenParticipantId: number;
+    public isSubmitting = false;
 
     private isNotDestroyed = new Subject();
 
@@ -64,10 +65,14 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
 
     public onSubmit(): void {
 
+        this.isSubmitting = true;
+
         this.tripService
             .SetWhoAmI(this.uid, this.chosenParticipantId)
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(_ => {
+                this.isSubmitting = false;
+
                 this.myParticipantId = this.chosenParticipantId;
                 this.router.navigate(['/trips', this.uid]);
             });

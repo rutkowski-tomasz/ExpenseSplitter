@@ -57,15 +57,11 @@ namespace ExpenseSplitter.Api.Services
 
         public User AuthenticateUser(string email, string password)
         {
-            var hashedPassword = _passwordHasher.Hash(password);
             var user = _context
                 .Users
-                .FirstOrDefault(x =>
-                    x.Email == email.ToLowerInvariant()
-                    && _passwordHasher.Check(x.Password, password)
-                );
+                .FirstOrDefault(x => x.Email == email.ToLowerInvariant());
 
-            if (user == null)
+            if (user == null || !_passwordHasher.Check(user.Password, password))
                 return null;
 
             _logger.LogInformation("Authenticated user #{Id} with email: {Email}", user.Id, email);
