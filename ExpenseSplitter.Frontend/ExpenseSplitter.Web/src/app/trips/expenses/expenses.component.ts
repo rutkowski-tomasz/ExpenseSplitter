@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ExpenseService } from 'src/app/services/expense-service/expense.service';
+import { ExpenseService } from 'src/app/expenses/expense-service/expense.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseListModel } from 'src/app/models/expense/expense-list.model';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';

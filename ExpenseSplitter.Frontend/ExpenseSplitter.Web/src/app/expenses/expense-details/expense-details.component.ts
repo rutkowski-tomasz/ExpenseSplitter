@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ExpenseService } from 'src/app/services/expense-service/expense.service';
+import { ExpenseService } from 'src/app/expenses/expense-service/expense.service';
 import { UserService } from 'src/app/auth/user-service/user.service';
-import { TripService } from 'src/app/services/trip-service/trip.service';
+import { TripService } from 'src/app/trips/trip-service/trip.service';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';

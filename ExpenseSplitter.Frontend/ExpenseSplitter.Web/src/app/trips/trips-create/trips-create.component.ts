@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { TripService } from 'src/app/services/trip-service/trip.service';
+import { TripService } from 'src/app/trips/trip-service/trip.service';
 import { TripCreateModel } from 'src/app/models/trip/trip-create.model';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';

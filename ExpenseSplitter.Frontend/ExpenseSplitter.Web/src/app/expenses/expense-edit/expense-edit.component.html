@@ -24,6 +24,7 @@
 </es-header>
 
 <span #me hidden>(Ja)</span>
+<span #defaultSettlementName hidden>Zwrot kosztów</span>
 <div class="container">
     <es-loading *ngIf="loadingCount !== 0"></es-loading>
 
@@ -35,7 +36,6 @@
     >
         <section>
             <mat-form-field>
-                <span #defaultSettlementName hidden>Zwrot kosztów</span>
                 <input
                     matInput
                     placeholder="Nazwa wydatku"

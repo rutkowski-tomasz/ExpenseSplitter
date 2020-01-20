@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatIconModule } from '@angular/material';
+import { MatDialogModule, MatIconModule, MatButtonModule, MatSnackBarModule, MatBottomSheetModule } from '@angular/material';
 
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingComponent } from './components/loading/loading.component';
@@ -33,9 +33,13 @@ const pipes = [
     ],
     imports: [
         CommonModule,
+        RouterModule,
+
+        MatButtonModule,
         MatDialogModule,
         MatIconModule,
-        RouterModule,
+        MatSnackBarModule,
+        MatBottomSheetModule,
     ],
     exports: [
         CommonModule,

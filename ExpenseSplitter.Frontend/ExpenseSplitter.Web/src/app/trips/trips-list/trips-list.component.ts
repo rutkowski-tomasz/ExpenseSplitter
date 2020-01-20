@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TripService } from 'src/app/services/trip-service/trip.service';
+import { TripService } from 'src/app/trips/trip-service/trip.service';
 import { MatBottomSheet } from '@angular/material';
-import { AddTripSheetComponent } from 'src/app/components/add-trip/add-trip-sheet.component';
-import { AddTripActionEnum } from 'src/app/components/add-trip/add-trip-action.enum';
+import { AddTripSheetComponent } from 'src/app/trips/add-trip/add-trip-sheet.component';
+import { AddTripActionEnum } from 'src/app/trips/add-trip/add-trip-action.enum';
 import { Router } from '@angular/router';
 import { TripListModel } from 'src/app/models/trip/trip-list.model';
 import { Subject } from 'rxjs';
@@ -57,7 +57,7 @@ export class TripsListComponent implements OnInit, OnDestroy {
             .subscribe((result: AddTripActionEnum) => {
 
                 if (result === AddTripActionEnum.JOIN) {
-                    this.router.navigate(['/join']);
+                    this.router.navigate(['/trips', 'join']);
                 } else if(result === AddTripActionEnum.CREATE) {
                     this.router.navigate(['/trips', 'new']);
                 }

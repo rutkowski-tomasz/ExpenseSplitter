@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BalanceService } from 'src/app/services/balance-service/balance.service';
+import { BalanceService } from 'src/app/expenses/balance-service/balance.service';
 import { BalanceModel } from 'src/app/models/balance/balance.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/auth/user-service/user.service';

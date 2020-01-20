@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { TripService } from 'src/app/services/trip-service/trip.service';
+import { TripService } from 'src/app/trips/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray, ValidationErrors } from '@angular/forms';
 import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';
@@ -9,7 +9,7 @@ import { ConfigService } from 'src/app/shared/services/config-service/config.ser
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
-import { CantRemoveParticipantWithExpensesSnackBarComponent } from 'src/app/components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
+import { CantRemoveParticipantWithExpensesSnackBarComponent } from 'src/app/expenses/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
 import { MatSnackBar } from '@angular/material';
 
 @Component({

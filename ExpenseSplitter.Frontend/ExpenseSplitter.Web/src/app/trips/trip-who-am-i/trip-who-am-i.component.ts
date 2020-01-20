@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil, filter, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { TripService } from 'src/app/services/trip-service/trip.service';
+import { TripService } from 'src/app/trips/trip-service/trip.service';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { UserService } from 'src/app/auth/user-service/user.service';
 import { UserModel } from 'src/app/models/user/user.model';

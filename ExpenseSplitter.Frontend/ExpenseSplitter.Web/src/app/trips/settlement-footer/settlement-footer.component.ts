@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { BalanceService } from 'src/app/services/balance-service/balance.service';
+import { BalanceService } from 'src/app/expenses/balance-service/balance.service';
 import { BalanceSimpleModel } from 'src/app/models/balance/balance-simple.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

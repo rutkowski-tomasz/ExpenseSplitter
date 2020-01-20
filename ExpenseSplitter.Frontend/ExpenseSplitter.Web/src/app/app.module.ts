@@ -3,8 +3,6 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { appDeclarations } from './app-declarations';
-import { AppMaterialModule } from './app-material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,33 +12,31 @@ import { AppConfig } from './shared/app.config';
 
 import { registerLocaleData } from '@angular/common';
 import locale from '@angular/common/locales/pl';
-import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
 import { IsAliveInterceptor } from './shared/interceptors/is-alive.interceptor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { CantRemoveParticipantWithExpensesSnackBarComponent } from './components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
 import { SharedModule } from './shared/shared.module';
+import { ErrorStateMatcher, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 registerLocaleData(locale);
 
 @NgModule({
     declarations: [
         AppComponent,
-        ...appDeclarations,
     ],
     imports: [
+        AppRoutingModule,
+        SharedModule,
+
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        AppRoutingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        AppMaterialModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-        SharedModule,
     ],
     providers: [
         AppConfig,
         ɵDomSanitizerImpl,
+        { provide: ErrorStateMatcher, useClass: ErrorStateMatcher },
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 }},
         { provide: LOCALE_ID, useValue: 'pl' },
         {
             provide: HTTP_INTERCEPTORS,
@@ -59,9 +55,5 @@ registerLocaleData(locale);
         },
     ],
     bootstrap: [AppComponent],
-    entryComponents: [
-        CantRemoveParticipantWithExpensesSnackBarComponent,
-        AddTripSheetComponent,
-    ],
 })
 export class AppModule { }

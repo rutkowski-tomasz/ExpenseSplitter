@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { TripService } from 'src/app/services/trip-service/trip.service';
+import { TripService } from 'src/app/trips/trip-service/trip.service';
 import { ActivatedRoute, Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
@@ -61,7 +61,7 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.trip = data;
                         this.buildParticipantsHeader(data);
 
-                        this.shareUrl = `${window.location.origin}/join/${this.trip.uid}`;
+                        this.shareUrl = `${window.location.origin}/trips/join/${this.trip.uid}`;
                     });
             });
 
