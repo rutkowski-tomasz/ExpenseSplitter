@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { CallService } from '../call-service/call.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { CallService } from 'src/app/services/call-service/call.service';
 
 @Injectable({
     providedIn: 'root'

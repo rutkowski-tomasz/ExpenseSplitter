@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
-import { AnonymousGuard } from './guards/anonymous.guard';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { TripsListComponent } from './pages/trips-list/trips-list.component';
 import { LoggedInGuard } from './guards/logged-in.guard';
@@ -11,7 +7,6 @@ import { TripsCreateComponent } from './pages/trips-create/trips-create.componen
 import { TripComponent } from './pages/trip/trip.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { BalanceComponent } from './pages/balance/balance.component';
-import { SettingsComponent } from './pages/settings/settings.component';
 import { TripEditComponent } from './pages/trip-edit/trip-edit.component';
 import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
@@ -104,11 +99,6 @@ const routes: Routes = [
                 data: { state: 'tripJoin' },
             },
             {
-                path: 'settings',
-                component: SettingsComponent,
-                data: { state: 'settings' },
-            },
-            {
                 path: '',
                 redirectTo: 'trips',
                 pathMatch: 'full'
@@ -117,23 +107,12 @@ const routes: Routes = [
     },
     {
         path: '',
-        component: LoginLayoutComponent,
-        canActivate: [AnonymousGuard],
-        children: [
-            {
-                path: 'login',
-                component: LoginComponent
-            },
-            {
-                path: 'register',
-                component: RegisterComponent
-            },
-        ]
+        loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
     },
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

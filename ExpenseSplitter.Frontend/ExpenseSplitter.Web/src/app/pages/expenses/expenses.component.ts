@@ -5,7 +5,7 @@ import { ExpenseListModel } from 'src/app/models/expense/expense-list.model';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
-import { UserService } from 'src/app/services/user-service/user.service';
+import { UserService } from 'src/app/auth/user-service/user.service';
 import { AppConfig } from 'src/app/app.config';
 
 @Component({

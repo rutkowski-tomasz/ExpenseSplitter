@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BalanceService } from 'src/app/services/balance-service/balance.service';
 import { BalanceModel } from 'src/app/models/balance/balance.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from 'src/app/services/user-service/user.service';
+import { UserService } from 'src/app/auth/user-service/user.service';
 import { BalanceSettleModel } from 'src/app/models/balance/balance-settle.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';

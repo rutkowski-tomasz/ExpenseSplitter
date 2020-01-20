@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
         </div>
     `,
 })
-export class DiscardDialog {
+export class DiscardDialogComponent {
 
     constructor() { }
 }

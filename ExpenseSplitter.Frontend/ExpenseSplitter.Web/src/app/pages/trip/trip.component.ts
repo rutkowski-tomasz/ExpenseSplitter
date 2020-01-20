@@ -7,7 +7,7 @@ import { moveFromLeft, moveFromRight } from "ngx-router-animations";
 import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { UserService } from 'src/app/services/user-service/user.service';
+import { UserService } from 'src/app/auth/user-service/user.service';
 import { AppConfig } from 'src/app/app.config';
 
 @Component({

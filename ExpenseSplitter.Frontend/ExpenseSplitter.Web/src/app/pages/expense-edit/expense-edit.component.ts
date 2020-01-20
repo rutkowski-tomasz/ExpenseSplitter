@@ -6,7 +6,7 @@ import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 import { ExpenseService } from 'src/app/services/expense-service/expense.service';
 import { startWith, map, takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
-import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { AuthService } from 'src/app/auth/auth-service/auth.service';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { ExpenseUpdateModel } from 'src/app/models/expense/expense-update.model';
@@ -14,7 +14,7 @@ import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-ch
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { SettlementQueryModel } from './settlement-query.model';
 import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
-import { UserService } from 'src/app/services/user-service/user.service';
+import { UserService } from 'src/app/auth/user-service/user.service';
 
 @Component({
     templateUrl: './expense-edit.component.html',

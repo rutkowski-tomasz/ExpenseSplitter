@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CallService } from '../call-service/call.service';
+import { CallService } from '../../services/call-service/call.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth-service/auth.service';
 import { UserModel } from 'src/app/models/user/user.model';

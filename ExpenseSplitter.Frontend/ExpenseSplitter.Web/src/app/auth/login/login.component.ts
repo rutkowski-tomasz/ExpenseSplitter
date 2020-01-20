@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserService } from 'src/app/services/user-service/user.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../auth-service/auth.service';
+import { UserService } from '../user-service/user.service';
 
 @Component({
     templateUrl: './login.component.html',
