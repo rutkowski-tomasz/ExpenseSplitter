@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CallService } from '../call-service/call.service';
+import { CallService } from '../../shared/services/call-service/call.service';
 import { Observable, BehaviorSubject, pipe } from 'rxjs';
 import { TripCreateModel } from 'src/app/models/trip/trip-create.model';
 import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';

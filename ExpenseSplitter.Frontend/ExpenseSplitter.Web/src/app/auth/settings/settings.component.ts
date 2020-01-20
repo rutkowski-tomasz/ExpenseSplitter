@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@an
 import { UserUpdateModel } from 'src/app/models/user/user-update.model';
 import { UserService } from 'src/app/auth/user-service/user.service';
 import { AuthService } from 'src/app/auth/auth-service/auth.service';
-import { ConfigService } from 'src/app/services/config-service/config.service';
+import { ConfigService } from 'src/app/shared/services/config-service/config.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

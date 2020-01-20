@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CallService } from '../../services/call-service/call.service';
+import { CallService } from '../../shared/services/call-service/call.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth-service/auth.service';
 import { UserModel } from 'src/app/models/user/user.model';
 import { UserUpdateModel } from 'src/app/models/user/user-update.model';
-import { AppConfig } from 'src/app/app.config';
+import { AppConfig } from 'src/app/shared/app.config';
 
 @Injectable({
     providedIn: 'root'

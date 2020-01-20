@@ -4,8 +4,8 @@ import { TripCreateModel } from 'src/app/models/trip/trip-create.model';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';
 import { UserService } from 'src/app/auth/user-service/user.service';
-import { ConfigService } from 'src/app/services/config-service/config.service';
-import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
+import { ConfirmDiscardChanges } from 'src/app/shared/components/discard-dialog/confirm-discard-changes.interface';
+import { ConfigService } from 'src/app/shared/services/config-service/config.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

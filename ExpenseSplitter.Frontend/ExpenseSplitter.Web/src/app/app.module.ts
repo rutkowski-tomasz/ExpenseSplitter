@@ -10,14 +10,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TokenInterceptor } from './auth/token.interceptor';
 import { UnauthoriedInterceptor } from './auth/unathorized.interceptor';
-import { AppConfig } from './app.config';
+import { AppConfig } from './shared/app.config';
 
 import { registerLocaleData } from '@angular/common';
 import locale from '@angular/common/locales/pl';
-import { PipesModule } from './pipes/pipes.module';
-import { LinkCopiedSnackBarComponent } from './components/link-copied-snack-bar/link-copied-snack-bar.component';
 import { AddTripSheetComponent } from './components/add-trip/add-trip-sheet.component';
-import { IsAliveInterceptor } from './interceptors/is-alive.interceptor';
+import { IsAliveInterceptor } from './shared/interceptors/is-alive.interceptor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { CantRemoveParticipantWithExpensesSnackBarComponent } from './components/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
@@ -37,7 +35,6 @@ registerLocaleData(locale);
         FormsModule,
         ReactiveFormsModule,
         AppMaterialModule,
-        PipesModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         SharedModule,
     ],
@@ -63,7 +60,6 @@ registerLocaleData(locale);
     ],
     bootstrap: [AppComponent],
     entryComponents: [
-        LinkCopiedSnackBarComponent,
         CantRemoveParticipantWithExpensesSnackBarComponent,
         AddTripSheetComponent,
     ],

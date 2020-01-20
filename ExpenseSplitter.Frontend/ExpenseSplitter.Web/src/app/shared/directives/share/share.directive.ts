@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { LinkCopiedSnackBarComponent } from '../components/link-copied-snack-bar/link-copied-snack-bar.component';
+import { LinkCopiedSnackBarComponent } from './link-copied-snack-bar.component';
 
 @Directive({
     selector: '[esShare]'

@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { LoginLayoutComponent } from './login-layout/login-layout.component';
-import { AnonymousGuard } from '../guards/anonymous.guard';
+import { AnonymousGuard } from '../shared/guards/anonymous.guard';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { SettingsComponent } from './settings/settings.component';
-import { LoggedInGuard } from '../guards/logged-in.guard';
+import { LoggedInGuard } from '../shared/guards/logged-in.guard';
 
 const routes: Routes = [
     {

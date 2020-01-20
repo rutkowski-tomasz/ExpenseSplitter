@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
-import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
+import { HomeLayoutComponent } from './shared/components/home-layout/home-layout.component';
 import { TripsListComponent } from './pages/trips-list/trips-list.component';
-import { LoggedInGuard } from './guards/logged-in.guard';
+import { LoggedInGuard } from './shared/guards/logged-in.guard';
 import { TripsCreateComponent } from './pages/trips-create/trips-create.component';
 import { TripComponent } from './pages/trip/trip.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
@@ -10,9 +10,9 @@ import { BalanceComponent } from './pages/balance/balance.component';
 import { TripEditComponent } from './pages/trip-edit/trip-edit.component';
 import { ExpenseEditComponent } from './pages/expense-edit/expense-edit.component';
 import { ExpenseDetailsComponent } from './pages/expense-details/expense-details.component';
-import { DiscardCanDeactivateGuard } from './shared/discard/discard.deactivate.guard';
 import { TripJoinComponent } from './pages/trip-join/trip-join.component';
 import { TripWhoAmIComponent } from './pages/trip-who-am-i/trip-who-am-i.component';
+import { DiscardCanDeactivateGuard } from './shared/components/discard-dialog/discard.deactivate.guard';
 
 const routes: Routes = [
     {

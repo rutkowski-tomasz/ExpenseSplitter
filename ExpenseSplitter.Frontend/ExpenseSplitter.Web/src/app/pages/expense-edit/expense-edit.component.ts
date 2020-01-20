@@ -10,11 +10,11 @@ import { AuthService } from 'src/app/auth/auth-service/auth.service';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { ExpenseUpdateModel } from 'src/app/models/expense/expense-update.model';
-import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
-import { ConfigService } from 'src/app/services/config-service/config.service';
+import { ConfigService } from 'src/app/shared/services/config-service/config.service';
 import { SettlementQueryModel } from './settlement-query.model';
 import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
 import { UserService } from 'src/app/auth/user-service/user.service';
+import { ConfirmDiscardChanges } from 'src/app/shared/components/discard-dialog/confirm-discard-changes.interface';
 
 @Component({
     templateUrl: './expense-edit.component.html',

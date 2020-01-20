@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
-import { AppConfig } from './app.config';
+import { AppConfig } from './shared/app.config';
 import { ɵDomSanitizerImpl, HAMMER_LOADER } from '@angular/platform-browser';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 

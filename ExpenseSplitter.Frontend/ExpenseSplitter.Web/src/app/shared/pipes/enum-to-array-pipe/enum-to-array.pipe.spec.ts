@@ -1,6 +1,6 @@
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { TestBed } from '@angular/core/testing';
-import { AppConfig } from 'src/app/app.config';
+import { AppConfig } from 'src/app/shared/app.config';
 import { EnumToArrayPipe } from './enum-to-array.pipe';
 
 describe('EnumToArrayPipe', () => {

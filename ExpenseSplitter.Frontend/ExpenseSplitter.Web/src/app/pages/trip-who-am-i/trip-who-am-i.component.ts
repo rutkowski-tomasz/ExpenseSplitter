@@ -6,7 +6,7 @@ import { TripService } from 'src/app/services/trip-service/trip.service';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { UserService } from 'src/app/auth/user-service/user.service';
 import { UserModel } from 'src/app/models/user/user.model';
-import { ConfirmDiscardChanges } from 'src/app/shared/discard/confirm-discard-changes.interface';
+import { ConfirmDiscardChanges } from 'src/app/shared/components/discard-dialog/confirm-discard-changes.interface';
 
 @Component({
     templateUrl: './trip-who-am-i.component.html',

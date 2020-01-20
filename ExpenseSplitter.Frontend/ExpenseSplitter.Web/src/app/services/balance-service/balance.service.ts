@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CallService } from '../call-service/call.service';
+import { CallService } from '../../shared/services/call-service/call.service';
 import { Observable } from 'rxjs';
 import { BalanceModel } from 'src/app/models/balance/balance.model';
 import { BalanceSimpleModel } from 'src/app/models/balance/balance-simple.model';

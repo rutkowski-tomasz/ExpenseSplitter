@@ -8,7 +8,7 @@ import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserService } from 'src/app/auth/user-service/user.service';
-import { AppConfig } from 'src/app/app.config';
+import { AppConfig } from 'src/app/shared/app.config';
 
 @Component({
     templateUrl: './trip.component.html',
