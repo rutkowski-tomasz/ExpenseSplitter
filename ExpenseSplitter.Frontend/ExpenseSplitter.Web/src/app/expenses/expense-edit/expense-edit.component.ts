@@ -76,6 +76,11 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
     @ViewChild('defaultSettlementName', { static: false }) defaultSettlementName: ElementRef;
     @ViewChild('me', { static: false }) me: ElementRef;
 
+    public payerLabel: string;
+    @ViewChild('paidByLabel', { static: true }) paidByLabel: ElementRef;
+    @ViewChild('receivedByLabel', { static: false }) receivedByLabel: ElementRef;
+    @ViewChild('transferedByLabel', { static: false }) transferedByLabel: ElementRef;
+
     private isNotDestroyed = new Subject();
 
     constructor(
@@ -141,6 +146,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
                     });
             });
 
+        this.updatePayerLabel();
         this.loadConfiguration();
     }
 
@@ -388,6 +394,24 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
             const anyChecked = formArray.controls.some(x => x.value);
             return !anyChecked ? { noneChecked: true } : null;
         };
+    }
+
+    private updatePayerLabel(): void {
+
+        this.payerLabel = this.paidByLabel.nativeElement.innerText;
+
+        this.type.valueChanges
+            .pipe(takeUntil(this.isNotDestroyed))
+            .subscribe(value => {
+
+                if (value == ExpenseTypeEnum.Expense) {
+                    this.payerLabel = this.paidByLabel.nativeElement.innerText;
+                } else if (value == ExpenseTypeEnum.Income) {
+                    this.payerLabel = this.receivedByLabel.nativeElement.innerText;
+                } else if (value == ExpenseTypeEnum.Transfer) {
+                    this.payerLabel = this.transferedByLabel.nativeElement.innerText;
+                }
+            });
     }
 
     private loadConfiguration() {

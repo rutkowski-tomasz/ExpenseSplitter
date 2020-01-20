@@ -1,4 +1,4 @@
 export enum AddTripActionEnum {
-    JOIN = 1,
-    CREATE = 2,
+    Join = 1,
+    Create = 2,
 }

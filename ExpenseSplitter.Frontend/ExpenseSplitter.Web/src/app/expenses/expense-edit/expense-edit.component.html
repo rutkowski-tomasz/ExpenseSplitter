@@ -25,6 +25,11 @@
 
 <span #me hidden>(Ja)</span>
 <span #defaultSettlementName hidden>Zwrot kosztów</span>
+
+<span #paidByLabel hidden>Zapłacone przez</span>
+<span #receivedByLabel hidden>Otrzymane przez</span>
+<span #transferedByLabel hidden>Przelane przez</span>
+
 <div class="container">
     <es-loading *ngIf="loadingCount !== 0"></es-loading>
 
@@ -101,7 +106,7 @@
             <mat-form-field>
                 <input
                     type="text"
-                    placeholder="Zapłacone przez"
+                    placeholder="{{ payerLabel }}"
                     matInput
                     formControlName="payer"
                     [matAutocomplete]="auto"
