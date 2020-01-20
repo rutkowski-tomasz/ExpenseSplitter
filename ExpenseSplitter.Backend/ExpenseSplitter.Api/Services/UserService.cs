@@ -13,7 +13,9 @@ using ExpenseSplitter.Api.Models.Auth;
 using ExpenseSplitter.Api.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace ExpenseSplitter.Api.Services
 {
@@ -35,19 +37,22 @@ namespace ExpenseSplitter.Api.Services
         private readonly IPasswordHasher _passwordHasher;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserExtensions _userExtensions;
+        private readonly ILogger _logger;
 
         public UserService(
             IConfigProvider configProvider,
             Context context,
             IPasswordHasher passwordHasher,
             IHttpContextAccessor httpContextAccessor,
-            IUserExtensions userExtensions
+            IUserExtensions userExtensions,
+            ILogger<UserService> logger
         ) {
             _configProvider = configProvider;
             _context = context;
             _passwordHasher = passwordHasher;
             _httpContextAccessor = httpContextAccessor;
             _userExtensions = userExtensions;
+            _logger = logger;
         }
 
         public User AuthenticateUser(string email, string password)
@@ -55,9 +60,16 @@ namespace ExpenseSplitter.Api.Services
             var hashedPassword = _passwordHasher.Hash(password);
             var user = _context
                 .Users
-                .FirstOrDefault(x => x.Email == email.ToLowerInvariant());
+                .FirstOrDefault(x =>
+                    x.Email == email.ToLowerInvariant()
+                    && _passwordHasher.Check(x.Password, password)
+                );
 
-            return (user != null && _passwordHasher.Check(user.Password, password)) ? user : null;
+            if (user == null)
+                return null;
+
+            _logger.LogInformation("Authenticated user #{Id} with email: {Email}", user.Id, email);
+            return user;
         }
 
         public User RegisterUser(string email, string password, string nick)
@@ -77,6 +89,8 @@ namespace ExpenseSplitter.Api.Services
 
             _context.Users.Add(user);
             _context.SaveChanges();
+
+            _logger.LogInformation("Registered new user #{Id} with email: {Email}", user.Id, email);
 
             return user;
         }
@@ -131,6 +145,8 @@ namespace ExpenseSplitter.Api.Services
             user.Nick = model.Nick;
 
             _context.SaveChanges();
+
+            _logger.LogInformation("Updated user #{Id} with email: {Email}", user.Id, user.Email);
             return _userExtensions.ToUserModel(user);
         }
     }

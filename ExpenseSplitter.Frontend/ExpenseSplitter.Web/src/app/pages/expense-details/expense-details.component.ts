@@ -8,6 +8,7 @@ import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.mode
 import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 
 @Component({
     templateUrl: './expense-details.component.html',
@@ -23,6 +24,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
     public stickyHeader: boolean = false;
     public participants = new Array<ParticipantModel>();
     public payerNick: string;
+    public ExpenseTypeEnum = ExpenseTypeEnum;
 
     public summary: Array<{ id: number, nick: string, value: number }>;
 

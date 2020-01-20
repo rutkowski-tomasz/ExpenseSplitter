@@ -5,6 +5,7 @@ using ExpenseSplitter.Api.Data;
 using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Models.Expenses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseSplitter.Api.Services
 {
@@ -22,16 +23,19 @@ namespace ExpenseSplitter.Api.Services
         private readonly Context _context;
         private readonly IUserService _userService;
         private readonly IExpenseExtensions _expenseExtensions;
+        private readonly ILogger<ExpenseService> _logger;
 
         public ExpenseService(
             Context context,
             IUserService userService,
-            IExpenseExtensions expenseExtensions
+            IExpenseExtensions expenseExtensions,
+            ILogger<ExpenseService> logger
         )
         {
             _context = context;
             _userService = userService;
             _expenseExtensions = expenseExtensions;
+            _logger = logger;
         }
 
         public List<ExpenseListModel> GetExpenses(string uid)
@@ -106,6 +110,7 @@ namespace ExpenseSplitter.Api.Services
             _context.Expenses.Add(expense);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} added to trip #{Uid} expense {expenseId}", userId, uid, expense.Id);
             return expense.Id;
         }
 
@@ -130,6 +135,7 @@ namespace ExpenseSplitter.Api.Services
             expense = _expenseExtensions.Update(expense, model);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} updated trip #{Uid} expense {expenseId}", userId, uid, expense.Id);
             return true;
         }
 
@@ -152,6 +158,7 @@ namespace ExpenseSplitter.Api.Services
             _context.Expenses.Remove(expense);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} deleted trip #{Uid} expense {expenseId}", userId, uid, expense.Id);
             return true;
         }
     }

@@ -1,9 +1,12 @@
+using System.Linq;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Expenses;
 using ExpenseSplitter.Api.Models.Trips;
 using ExpenseSplitter.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ExpenseSplitter.Api.Controllers
 {
@@ -12,10 +15,14 @@ namespace ExpenseSplitter.Api.Controllers
     public class ExpensesController : Controller
     {
         private readonly IExpenseService _expenseService;
+        private readonly ILogger<ExpensesController> _logger;
 
-        public ExpensesController(IExpenseService expenseService)
-        {
+        public ExpensesController(
+            IExpenseService expenseService,
+            ILogger<ExpensesController> logger
+        ) {
             _expenseService = expenseService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -37,8 +44,14 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPost]
         public IActionResult CreateExpense(string uid, [FromBody] ExpenseUpdateModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+                _logger.LogWarning("Invalid model for creating expense | {model} {errors}",
+                    JsonConvert.SerializeObject(model),
+                    JsonConvert.SerializeObject(errors)
+                );
                 return UnprocessableEntity();
+            }
 
             var result = _expenseService.CreateExpense(uid, model);
 
@@ -51,8 +64,14 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPut]
         public IActionResult UpdateExpense(string uid, [FromBody] ExpenseUpdateModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+                _logger.LogWarning("Invalid model for updating expense | {model} {errors}",
+                    JsonConvert.SerializeObject(model),
+                    JsonConvert.SerializeObject(errors)
+                );
                 return UnprocessableEntity();
+            }
 
             var result = _expenseService.TryUpdateExpense(uid, model);
 

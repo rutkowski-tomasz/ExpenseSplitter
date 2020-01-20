@@ -4,6 +4,8 @@ using ExpenseSplitter.Api.Models.Trips;
 using ExpenseSplitter.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ExpenseSplitter.Api.Controllers
 {
@@ -12,10 +14,14 @@ namespace ExpenseSplitter.Api.Controllers
     public class TripsController : Controller
     {
         private readonly ITripService _tripService;
+        private readonly ILogger<TripsController> _logger;
 
-        public TripsController(ITripService tripService)
-        {
+        public TripsController(
+            ITripService tripService,
+            ILogger<TripsController> logger
+        ) {
             _tripService = tripService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -51,8 +57,14 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPost]
         public IActionResult CreateTrip([FromBody] TripCreateModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+                _logger.LogWarning("Invalid model for creating trip | {model} {errors}",
+                    JsonConvert.SerializeObject(model),
+                    JsonConvert.SerializeObject(errors)
+                );
                 return UnprocessableEntity();
+            }
 
             var trip = _tripService.CreateTrip(model);
 
@@ -62,8 +74,14 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPut]
         public IActionResult UpdateTrip([FromBody] TripUpdateModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+                _logger.LogWarning("Invalid model for updating trip | {model} {errors}",
+                    JsonConvert.SerializeObject(model),
+                    JsonConvert.SerializeObject(errors)
+                );
                 return UnprocessableEntity();
+            }
 
             if (model.Participants.GroupBy(x => x.Nick).Any(g => g.Count() > 1))
                 return UnprocessableEntity();

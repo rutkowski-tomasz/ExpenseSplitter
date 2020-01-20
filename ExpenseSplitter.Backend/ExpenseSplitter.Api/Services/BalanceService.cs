@@ -17,23 +17,19 @@ namespace ExpenseSplitter.Api.Services
     public class BalanceService : IBalanceService
     {
         private readonly Context _context;
-        private readonly ILogger _logger;
         private readonly IUserService _userService;
 
         public BalanceService(
             Context context,
-            ILogger<BalanceService> logger,
             IUserService userService
         ) {
             _context = context;
-            _logger = logger;
             _userService = userService;
         }
 
         public BalanceModel GetTripBalance(string uid)
         {
             var userId = _userService.GetCurrentUserId();
-            _logger.LogDebug($"User {userId} requested trip {uid} balance");
 
             var trip = _context
                 .Trips
@@ -121,9 +117,17 @@ namespace ExpenseSplitter.Api.Services
                         Value = x.Value,
                         IsPaidForMe = x.PartParticipants.Any(y => y.ParticipantId == participant.Id),
                         SplitCount = x.PartParticipants.Count,
+                        Type = x.Expense.Type,
                     })
                     .Select(x => 
-                        ((x.IsPaidByMe ? 1.0M : 0.0M) * x.Value) - ((x.IsPaidForMe ? 1.0M : 0.0M) * x.Value / x.SplitCount)
+
+                        (x.Type == ExpenseType.Expense) ?
+                            ((x.IsPaidByMe ? 1.0M : 0.0M) * x.Value) - ((x.IsPaidForMe ? 1.0M : 0.0M) * x.Value / x.SplitCount)
+                        : (x.Type == ExpenseType.Income) ?
+                            ((x.IsPaidByMe ? -1.0M : 0.0M) * x.Value) - ((x.IsPaidForMe ? -1.0M : 0.0M) * x.Value / x.SplitCount)
+                        : (x.Type == ExpenseType.Transfer) ?
+                            ((x.IsPaidByMe ? 1.0M : 0.0M) * x.Value) - ((x.IsPaidForMe ? 1.0M : 0.0M) * x.Value / x.SplitCount)
+                        : 0.0M
                     )
                     .Sum();
 

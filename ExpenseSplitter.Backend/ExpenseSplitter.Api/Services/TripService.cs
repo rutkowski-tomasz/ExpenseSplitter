@@ -6,6 +6,8 @@ using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Participant;
 using ExpenseSplitter.Api.Models.Trips;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ExpenseSplitter.Api.Services
 {
@@ -29,17 +31,20 @@ namespace ExpenseSplitter.Api.Services
         private readonly IUserService _userService;
         private readonly IParticipantExtensions _participantExtensions;
         private readonly ITripExtensions _tripExtensions;
+        private readonly ILogger<TripService> _logger;
 
         public TripService(
             Context context,
             IUserService userService,
             IParticipantExtensions participantExtensions,
-            ITripExtensions tripExtensions
+            ITripExtensions tripExtensions,
+            ILogger<TripService> logger
         ) {
             _context = context;
             _userService = userService;
             _participantExtensions = participantExtensions;
             _tripExtensions = tripExtensions;
+            _logger = logger;
         }
 
         public List<TripListModel> GetTrips()
@@ -92,11 +97,13 @@ namespace ExpenseSplitter.Api.Services
 
         public string CreateTrip(TripCreateModel model)
         {
-            var trip = _tripExtensions.Create(model, _userService.GetCurrentUserId());
+            var userId = _userService.GetCurrentUserId();
+            var trip = _tripExtensions.Create(model, userId);
 
             _context.Trips.Add(trip);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} created trip #{Uid}", userId, trip.Uid);
             return trip.Uid;
         }
 
@@ -117,6 +124,7 @@ namespace ExpenseSplitter.Api.Services
             _tripExtensions.Update(trip, model);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} updated trip #{Uid}", userId, trip.Uid);
             return true;
         }
 
@@ -134,6 +142,7 @@ namespace ExpenseSplitter.Api.Services
             _context.Trips.Remove(trip);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} deleted trip #{Uid}", userId, trip.Uid);
             return true;
         }
 
@@ -160,6 +169,7 @@ namespace ExpenseSplitter.Api.Services
 
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} joined trip #{Uid}", userId, trip.Uid);
             return true;
         }
 
@@ -177,6 +187,7 @@ namespace ExpenseSplitter.Api.Services
             _context.TripsUsers.Remove(tripUser);
             _context.SaveChanges();
 
+            _logger.LogInformation("User #{Id} left trip #{Uid}", userId, uid);
             return true;
         }
 
@@ -203,6 +214,8 @@ namespace ExpenseSplitter.Api.Services
             tripUser.ParticipantId = participant.Id;
 
             _context.SaveChanges();
+
+            _logger.LogInformation("User #{Id} claimed trip #{Uid} participant {participantId}", userId, uid, participant.Id);
             return true;
         }
 

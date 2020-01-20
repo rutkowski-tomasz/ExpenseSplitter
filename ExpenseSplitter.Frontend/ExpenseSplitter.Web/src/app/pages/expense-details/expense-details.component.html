@@ -32,7 +32,11 @@
             <div class="value">{{ value | currency: "PLN" }}</div>
             <div class="info">
                 <div class="paid-by">
-                    Zapłacił(a) {{ payerNick }}
+                    <span *ngIf="expense.type === ExpenseTypeEnum.Expense">Zapłacił(a) </span>
+                    <span *ngIf="expense.type === ExpenseTypeEnum.Income">Otrzymał(a) </span>
+                    <span *ngIf="expense.type === ExpenseTypeEnum.Transfer">Przelał(a) </span>
+
+                    {{ payerNick }}
                     <span *ngIf="isClaimedParticipant(expense.payerId)">(Ja)</span>
                 </div>
                 <div class="paid-at">{{ expense.paidAt | date }}</div>

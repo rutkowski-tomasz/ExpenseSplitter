@@ -1,9 +1,12 @@
+using System.Linq;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Auth;
 using ExpenseSplitter.Api.Models.User;
 using ExpenseSplitter.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ExpenseSplitter.Api.Controllers
 {
@@ -11,10 +14,14 @@ namespace ExpenseSplitter.Api.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService)
-        {
+        public UsersController(
+            IUserService userService,
+            ILogger<UsersController> logger
+        ) {
             _userService = userService;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -61,8 +68,14 @@ namespace ExpenseSplitter.Api.Controllers
         [HttpPut]
         public IActionResult UpdateUser([FromBody] UserUpdateModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+                _logger.LogWarning("Invalid model for updating user | {model} {errors}",
+                    JsonConvert.SerializeObject(model),
+                    JsonConvert.SerializeObject(errors)
+                );
                 return UnprocessableEntity();
+            }
 
             var user = _userService.UpdateUser(model);
             return new JsonResult(user);

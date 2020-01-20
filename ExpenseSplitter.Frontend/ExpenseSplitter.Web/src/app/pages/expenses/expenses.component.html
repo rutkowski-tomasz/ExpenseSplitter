@@ -35,7 +35,10 @@
                         {{ expense.name }}
                     </div>
                     <div class="paid-by">
-                        Zapłacone przez
+                        <span *ngIf="expense.type === ExpenseTypeEnum.Expense">Zapłacone przez </span>
+                        <span *ngIf="expense.type === ExpenseTypeEnum.Income">Otrzymane przez </span>
+                        <span *ngIf="expense.type === ExpenseTypeEnum.Transfer">Przelane przez </span>
+
                         <strong>
                             <span *ngIf="expense.isPaidByMe">mnie</span>
                             <span *ngIf="!expense.isPaidByMe">{{
@@ -46,7 +49,12 @@
                 </div>
                 <div class="summary">
                     <div class="value">
-                        {{ expense.value | currency:'PLN' }}
+                        <span *ngIf="expense.type !== ExpenseTypeEnum.Income">
+                            {{ expense.value | currency:'PLN' }}
+                        </span>
+                        <span *ngIf="expense.type === ExpenseTypeEnum.Income">
+                            {{ -expense.value | currency:'PLN' }}
+                        </span>
                     </div>
                     <div class="date">
                         {{ expense.paidAt | date }}
@@ -56,16 +64,30 @@
 
             <div class="detailed-calculations" *ngIf="detailedCalculations">
                 Wpływ na mój bilans: 
-                <span *ngIf="expense.isPaidByMe">
-                    ({{ expense.value | currency:'PLN' }} - {{ expense.iSpent | currency:'PLN' }})
-                    <span [class.positive]="expense.value - expense.iSpent > 0">
-                        +{{ expense.value - expense.iSpent | currency:'PLN' }}
+
+                <ng-container *ngIf="expense.type === ExpenseTypeEnum.Expense || expense.type === ExpenseTypeEnum.Transfer">
+                    <span *ngIf="expense.isPaidByMe">
+                        ({{ expense.value | currency:'PLN' }} - {{ expense.iSpent | currency:'PLN' }})
+                        <span [class.positive]="expense.value - expense.iSpent > 0">
+                            {{ expense.value - expense.iSpent | currency:'PLN' }}
+                        </span>
                     </span>
-                </span>
-                <span *ngIf="!expense.isPaidByMe" [class.negative]="expense.iSpent > 0">
-                    -{{ expense.iSpent | currency:'PLN' }}
-                </span>
+                    <span *ngIf="!expense.isPaidByMe" [class.negative]="expense.iSpent > 0">
+                        {{ -expense.iSpent | currency:'PLN' }}
+                    </span>
+                </ng-container>
                 
+                <ng-container *ngIf="expense.type === ExpenseTypeEnum.Income">
+                    <span *ngIf="expense.isPaidByMe">
+                        ({{ -expense.value | currency:'PLN' }} + {{ expense.iSpent | currency:'PLN' }})
+                        <span [class.negative]="-expense.value + expense.iSpent < 0">
+                            {{ -expense.value + expense.iSpent | currency:'PLN' }}
+                        </span>
+                    </span>
+                    <span *ngIf="!expense.isPaidByMe" [class.positive]="expense.iSpent > 0">
+                        {{ expense.iSpent | currency:'PLN' }}
+                    </span>
+                </ng-container>
             </div>
         </a>
     </section>
