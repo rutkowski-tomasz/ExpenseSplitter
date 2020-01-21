@@ -5,7 +5,10 @@ using ExpenseSplitter.Api.Extensions;
 using ExpenseSplitter.Api.Infrastructure;
 using ExpenseSplitter.Api.Models.Trips;
 using ExpenseSplitter.Api.Services;
+using ExpenseSplitter.Tests.Extensions;
 using ExpenseSplitter.Tests.Setup;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -26,9 +29,11 @@ namespace ExpenseSplitter.Tests.Services
             _userService = new Mock<IUserService>();
             var uidGenerator = new UidGenerator();
             var participantExtensions = new ParticipantExtensions();
-            var tripExtensions = new TripExtensions(_context, uidGenerator);
+            var tripExtensions = new TripExtensions(_context, uidGenerator, participantExtensions);
 
-            _tripService = new TripService(_context, _userService.Object, participantExtensions, tripExtensions);
+            var logger = Mock.Of<ILogger<TripService>>();
+
+            _tripService = new TripService(_context, _userService.Object, participantExtensions, tripExtensions, logger);
         }
 
         [Test]
@@ -36,7 +41,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Andrew");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
             var trips = _tripService.GetTrips();
@@ -51,7 +56,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Bryan");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
             var trip = _tripService.GetTrip("rome");
@@ -66,7 +71,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Diana");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
             var trip = _tripService.GetTrip("rome");
@@ -80,7 +85,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Carol");
-            _userService.Setup(x => x.GetCurrentUser()).Returns(user);
+            _userService.ImpersonateUser(user);
 
             var model = new TripCreateModel()
             {
@@ -90,9 +95,13 @@ namespace ExpenseSplitter.Tests.Services
             };
 
             // Act
-            var trip = _tripService.CreateTrip(model);
+            var result = _tripService.CreateTrip(model);
 
             // Assert
+            Assert.IsNotNull(result);
+
+            var trip = _context.Trips.SingleOrDefault(x => x.Uid == result);
+
             Assert.IsNotNull(trip);
             Assert.AreEqual(1, trip.Users.Count);
             Assert.AreEqual(user.Id, trip.Users.First().UserId);
@@ -106,7 +115,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Andrew");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
             
             var participation = _context
                 .TripsParticipants
@@ -135,14 +144,18 @@ namespace ExpenseSplitter.Tests.Services
             };
 
             // Act
-            var trip = _tripService.UpdateTrip(model);
+            var result = _tripService.TryUpdateTrip(model);
 
             // Assert
-            var newParticipant = trip.Participants.First(x => x.Name == "Ethan");
+            Assert.IsTrue(result);
+
+            var trip = _context.Trips.SingleOrDefault(x => x.Uid == model.Uid);
             Assert.NotNull(trip);
             Assert.AreEqual("It was not trip to Rome", trip.Name);
             Assert.AreEqual(2, trip.Participants.Count);
             Assert.AreEqual("Custom nickname", trip.Participants.First(x => x.Id == participation.Id).Name);
+
+            var newParticipant = trip.Participants.First(x => x.Name == "Ethan");
             Assert.True(_context.TripsUsers.All(x => x.ParticipantId != newParticipant.Id));
             Assert.AreEqual(2, trip.Users.Count);
         }
@@ -152,7 +165,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Diana");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             var model = new TripUpdateModel
             {
@@ -161,10 +174,10 @@ namespace ExpenseSplitter.Tests.Services
             };
 
             // Act
-            var trip = _tripService.UpdateTrip(model);
+            var result = _tripService.TryUpdateTrip(model);
 
             // Assert
-            Assert.IsNull(trip);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -172,12 +185,15 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Diana");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
-            var trip = _tripService.JoinTrip("rome");
+            var result = _tripService.TryJoinTrip("rome");
 
             // Assert
+            Assert.IsTrue(result);
+
+            var trip = _context.Trips.SingleOrDefault(x => x.Uid == "rome");
             Assert.NotNull(trip);
             Assert.AreEqual(2, trip.Participants.Count);
             Assert.AreEqual(3, trip.Users.Count);
@@ -188,12 +204,15 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Diana");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
-            var trip = _tripService.JoinTrip("berlin");
+            var result = _tripService.TryJoinTrip("berlin");
 
             // Assert
+            Assert.IsTrue(result);
+
+            var trip = _context.Trips.SingleOrDefault(x => x.Uid == "berlin");
             Assert.NotNull(trip);
             Assert.AreEqual(3, trip.Participants.Count);
             Assert.AreEqual(3, trip.Users.Count);
@@ -204,13 +223,13 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Carol");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
-            var trip = _tripService.JoinTrip("notexisting");
+            var result = _tripService.TryJoinTrip("notexisting");
 
             // Assert
-            Assert.Null(trip);
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -218,7 +237,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Bryan");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
             var trip = _tripService.TryLeaveTrip("rome");
@@ -233,7 +252,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Carol");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
             var trip = _tripService.TryLeaveTrip("rome");
@@ -247,7 +266,7 @@ namespace ExpenseSplitter.Tests.Services
         {
             // Arrange
             var user = _context.Users.First(x => x.Nick == "Carol");
-            _userService.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+            _userService.ImpersonateUser(user);
 
             // Act
             var trip = _tripService.TryLeaveTrip("notexisting");
