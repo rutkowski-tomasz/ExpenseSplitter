@@ -94,17 +94,6 @@ namespace ExpenseSplitter.Api.Controllers
             return new JsonResult(result);
         }
 
-        [HttpDelete("{uid}")]
-        public IActionResult DeleteTrip(string uid)
-        {
-            var result = _tripService.TryDeleteTrip(uid);
-
-            if (!result)
-                return NotFound();
-
-            return Ok();
-        }
-
         [HttpPost("{uid}/join")]
         public IActionResult JoinTrip(string uid)
         {

@@ -18,7 +18,6 @@ namespace ExpenseSplitter.Api.Services
         List<ParticipantModel> GetTripParticipants(string uid);
         string CreateTrip(TripCreateModel model);
         bool TryUpdateTrip(TripUpdateModel model);
-        bool TryDeleteTrip(string uid);
         bool TryJoinTrip(string uid);
         bool TryLeaveTrip(string uid);
         bool TryClaimTripParticipation(string uid, int id);
@@ -125,24 +124,6 @@ namespace ExpenseSplitter.Api.Services
             _context.SaveChanges();
 
             _logger.LogInformation("User #{Id} updated trip #{Uid}", userId, trip.Uid);
-            return true;
-        }
-
-        public bool TryDeleteTrip(string uid)
-        {
-            var userId = _userService.GetCurrentUserId();
-            var trip = _context.Trips.SingleOrDefault(
-                x => x.Uid == uid &&
-                x.Users.Any(y => y.User.Id == userId)
-            );
-
-            if (trip == null)
-                return false;
-
-            _context.Trips.Remove(trip);
-            _context.SaveChanges();
-
-            _logger.LogInformation("User #{Id} deleted trip #{Uid}", userId, trip.Uid);
             return true;
         }
 
