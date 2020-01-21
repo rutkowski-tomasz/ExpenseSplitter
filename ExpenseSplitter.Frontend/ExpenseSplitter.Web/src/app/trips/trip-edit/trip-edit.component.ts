@@ -152,7 +152,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
 
     public onDelete() {
 
-        this.tripService.DeleteTrip(this.uid)
+        this.tripService.LeaveTrip(this.uid)
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(_ => {
 

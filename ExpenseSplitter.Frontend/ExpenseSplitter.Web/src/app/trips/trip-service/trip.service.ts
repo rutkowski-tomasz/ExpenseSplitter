@@ -48,10 +48,6 @@ export class TripService {
             );
     }
 
-    public DeleteTrip(uid: string): Observable<boolean> {
-        return this.callService.delete(`${this.servicePrefix}/${uid}`);
-    }
-
     public JoinTrip(uid: string): Observable<boolean> {
         return this.callService.post(`${this.servicePrefix}/${uid}/join`, {});
     }
