@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PageErrorEnum } from './shared/components/page-error/page-error.enum';
-import { IsAliveService } from './shared/services/is-alive-service/is-alive.service';
+import { IsAliveService } from './services/is-alive-service/is-alive.service';
 
 @Component({
     selector: 'es-root',

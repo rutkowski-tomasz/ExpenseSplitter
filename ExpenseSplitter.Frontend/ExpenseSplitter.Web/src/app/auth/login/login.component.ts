@@ -3,8 +3,8 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../auth-service/auth.service';
-import { UserService } from '../user-service/user.service';
+import { AuthService } from '../../services/auth-service/auth.service';
+import { UserService } from '../../services/user-service/user.service';
 
 @Component({
     templateUrl: './login.component.html',

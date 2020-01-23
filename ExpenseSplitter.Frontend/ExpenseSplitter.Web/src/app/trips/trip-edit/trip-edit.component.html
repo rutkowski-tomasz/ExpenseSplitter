@@ -16,6 +16,10 @@
     </ng-container>
 </es-header>
 
+<span hidden #cantRemovePartipantInvolvedInExpenses>
+    Nie można usunąć tego uczestnika, ponieważ bierze on udział w przynajmniej jednym wydatku 💸
+</span>
+
 <div class="container">
     <es-loading *ngIf="isLoading"></es-loading>
 

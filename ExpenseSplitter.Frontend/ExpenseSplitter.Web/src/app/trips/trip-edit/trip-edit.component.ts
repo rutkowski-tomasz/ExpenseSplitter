@@ -1,15 +1,14 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { TripService } from 'src/app/trips/trip-service/trip.service';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
+import { TripService } from 'src/app/services/trip-service/trip.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm, FormArray, ValidationErrors } from '@angular/forms';
 import { TripUpdateModel } from 'src/app/models/trip/trip-update.model';
 import { TripParticipantModel } from 'src/app/models/trip/trip-participant.model';
 import { ConfirmDiscardChanges } from 'src/app/shared/components/discard-dialog/confirm-discard-changes.interface';
-import { ConfigService } from 'src/app/shared/services/config-service/config.service';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
-import { CantRemoveParticipantWithExpensesSnackBarComponent } from 'src/app/expenses/cant-remove-with-expenses-snack-bar/cant-remove-with-expenses-snack-bar.component';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
@@ -54,6 +53,8 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
     }
 
     public isSubmitting = false;
+
+    @ViewChild('cantRemovePartipantInvolvedInExpenses', { static: false }) cantRemovePartipantInvolvedInExpenses: ElementRef;
 
     private isNotDestroyed = new Subject();
 
@@ -143,7 +144,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         const hasExpenses = this.hasAnyExpenses(participantFormGroup);
 
         if (hasExpenses) {
-            this.snackBar.openFromComponent(CantRemoveParticipantWithExpensesSnackBarComponent);
+            this.snackBar.open(this.cantRemovePartipantInvolvedInExpenses.nativeElement.innerText);
             return;
         }
 

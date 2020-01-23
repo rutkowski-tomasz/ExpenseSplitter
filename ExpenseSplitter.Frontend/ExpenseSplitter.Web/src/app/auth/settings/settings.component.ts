@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';
 import { UserUpdateModel } from 'src/app/models/user/user-update.model';
-import { UserService } from 'src/app/auth/user-service/user.service';
-import { AuthService } from 'src/app/auth/auth-service/auth.service';
-import { ConfigService } from 'src/app/shared/services/config-service/config.service';
+import { UserService } from 'src/app/services/user-service/user.service';
+import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

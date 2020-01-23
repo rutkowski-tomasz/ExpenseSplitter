@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, NgForm } from '@angular/forms';
-import { TripService } from 'src/app/trips/trip-service/trip.service';
+import { TripService } from 'src/app/services/trip-service/trip.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

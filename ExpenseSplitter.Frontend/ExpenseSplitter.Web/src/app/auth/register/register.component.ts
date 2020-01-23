@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ConfigService } from 'src/app/shared/services/config-service/config.service';
+import { ConfigService } from 'src/app/services/config-service/config.service';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../auth-service/auth.service';
-import { UserService } from '../user-service/user.service';
+import { AuthService } from '../../services/auth-service/auth.service';
+import { UserService } from '../../services/user-service/user.service';
 
 @Component({
     templateUrl: './register.component.html',

@@ -2,7 +2,7 @@ import { HttpInterceptor, HttpHandler, HttpRequest, HttpEvent, HttpErrorResponse
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { IsAliveService } from '../services/is-alive-service/is-alive.service';
+import { IsAliveService } from '../../services/is-alive-service/is-alive.service';
 
 @Injectable()
 export class IsAliveInterceptor implements HttpInterceptor {
