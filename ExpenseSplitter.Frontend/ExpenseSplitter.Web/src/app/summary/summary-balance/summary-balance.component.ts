@@ -3,7 +3,7 @@ import { BalanceModel } from 'src/app/models/balance/balance.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { BalanceSettleModel } from 'src/app/models/balance/balance-settle.model';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BalanceService } from 'src/app/services/balance-service/balance.service';
 
@@ -32,7 +32,7 @@ export class SummaryBalanceComponent implements OnInit, OnDestroy {
     public ngOnInit() {
 
         this.userService.userExtract
-            .pipe(takeUntil(this.isNotDestroyed))
+            .pipe(takeUntil(this.isNotDestroyed), filter(x => x.id !== null), take(1))
             .subscribe(data => {
                 this.userId = data.id;
             });

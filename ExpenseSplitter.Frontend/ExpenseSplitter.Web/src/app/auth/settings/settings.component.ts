@@ -6,7 +6,7 @@ import { UserService } from 'src/app/services/user-service/user.service';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take, filter } from 'rxjs/operators';
 
 @Component({
     templateUrl: './settings.component.html',
@@ -42,13 +42,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         this.isLoading = true;
         this.userService.userExtract
-            .pipe(takeUntil(this.isNotDestroyed))
+            .pipe(takeUntil(this.isNotDestroyed), filter(x => x.id !== null), take(1))
             .subscribe(userExtract => {
 
-                if (userExtract.nick !== null) {
-                    this.isLoading = false;
-                }
-
+                this.isLoading = false;
                 this.nick.setValue(userExtract.nick);
             });
 

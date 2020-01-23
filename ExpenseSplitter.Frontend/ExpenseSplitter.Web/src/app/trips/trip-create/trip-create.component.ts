@@ -7,7 +7,7 @@ import { UserService } from 'src/app/services/user-service/user.service';
 import { ConfirmDiscardChanges } from 'src/app/shared/components/discard-dialog/confirm-discard-changes.interface';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter, take } from 'rxjs/operators';
 
 @Component({
     templateUrl: './trip-create.component.html',
@@ -62,13 +62,10 @@ export class TripCreateComponent implements OnInit, OnDestroy, ConfirmDiscardCha
         
         this.isLoading = true;
         this.userService.userExtract
-            .pipe(takeUntil(this.isNotDestroyed))
+            .pipe(takeUntil(this.isNotDestroyed), filter(x => x.id !== null), take(1))
             .subscribe(userExtract => {
 
-                if (userExtract.nick !== null) {
-                    this.isLoading = false;
-                }
-
+                this.isLoading = false;
                 this.organizerNick.setValue(userExtract.nick);
             });
 

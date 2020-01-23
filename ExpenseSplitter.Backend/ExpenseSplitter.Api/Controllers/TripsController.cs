@@ -137,5 +137,16 @@ namespace ExpenseSplitter.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{uid}/createWhoAmI")]
+        public IActionResult CreateWhoAmI(string uid, string nick)
+        {
+            var result = _tripService.TripCreateWhoAmI(uid, nick);
+
+            if (!result)
+                return NotFound();
+
+            return Ok();
+        }
     }
 }

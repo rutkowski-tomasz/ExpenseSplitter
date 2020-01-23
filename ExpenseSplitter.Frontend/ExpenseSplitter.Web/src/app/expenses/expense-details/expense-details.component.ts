@@ -6,7 +6,7 @@ import { TripService } from 'src/app/services/trip-service/trip.service';
 import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { ExpenseDetailsModel } from 'src/app/models/expense/expense-details.model';
 import { ExpensePartModel } from 'src/app/models/expense/expense-part.model';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ExpenseTypeEnum } from 'src/app/models/expense/expense-type.enum';
 
@@ -39,7 +39,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.userService.userExtract
-            .pipe(takeUntil(this.isNotDestroyed))
+            .pipe(takeUntil(this.isNotDestroyed), filter(x => x.id !== null), take(1))
             .subscribe(data => {
                 this.userId = data.id;
             });
@@ -81,8 +81,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const userId = this.userService.userExtract.value.id;
-        return participant.claimedUserIds.some(x => x == userId);
+        return participant.claimedUserIds.some(x => x == this.userId);
     }
 
     private calculateSummary() {

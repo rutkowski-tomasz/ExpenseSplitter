@@ -7,6 +7,8 @@ import { ParticipantModel } from 'src/app/models/participant/participant.model';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { UserModel } from 'src/app/models/user/user.model';
 import { ConfirmDiscardChanges } from 'src/app/shared/components/discard-dialog/confirm-discard-changes.interface';
+import { MatDialog } from '@angular/material';
+import { TripWhoAmIDialogComponent } from './trip-who-am-i-dialog.component';
 
 @Component({
     templateUrl: './trip-who-am-i.component.html',
@@ -29,6 +31,7 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
         private tripService: TripService,
         private userService: UserService,
         private router: Router,
+        private matDialog: MatDialog,
     ) { }
 
     public ngOnInit() {
@@ -79,6 +82,25 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
     }
 
     public isDirty = () => this.chosenParticipantId !== this.myParticipantId;
+
+    public addNewParticipant() {
+        
+        const dialogRef = this.matDialog.open(TripWhoAmIDialogComponent);
+        return dialogRef.afterClosed().subscribe(nick => {
+
+            this.isSubmitting = true;
+
+            this.tripService
+                .CreateWhoAmI(this.uid, nick)
+                .pipe(takeUntil(this.isNotDestroyed))
+                .subscribe(_ => {
+                    this.isSubmitting = false;
+    
+                    this.myParticipantId = this.chosenParticipantId;
+                    this.router.navigate(['/trips', this.uid, 'summary']);
+                });
+        });
+    }
 
     private prepareParticipantSelection() {
 

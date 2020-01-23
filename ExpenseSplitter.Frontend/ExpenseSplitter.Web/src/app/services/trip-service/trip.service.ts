@@ -63,4 +63,8 @@ export class TripService {
     public SetWhoAmI(uid: string, participantId: number) {
         return this.callService.postForm(`${this.servicePrefix}/${uid}/setWhoAmI`, { participantId });
     }
+
+    public CreateWhoAmI(uid: string, nick: string) {
+        return this.callService.postForm(`${this.servicePrefix}/${uid}/createWhoAmI`, { nick });
+    }
 }
