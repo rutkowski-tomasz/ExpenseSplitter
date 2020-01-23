@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  web:
+    build:
+      context: ./ExpenseSplitter.Web
+      args:
+        enviroment: development
+    image: registry.gitlab.com/tomejzen/expense-splitter/expense-splitter-web:latest
+    ports:
+      - published: 7000
+        target: 80
+    environment:
+      - ENVIRONMENT=development
