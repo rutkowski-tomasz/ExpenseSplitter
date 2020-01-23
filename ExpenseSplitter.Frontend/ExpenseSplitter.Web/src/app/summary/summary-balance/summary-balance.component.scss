@@ -8,7 +8,7 @@
 .settlement-done {
 	text-align: center;
 	margin: 24px 32px;
-	font-weight: 600;
+	font-weight: 500;
 	text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -36,7 +36,7 @@
 		}
 
 		&.my-balance {
-			font-weight: 600;
+			font-weight: 500;
 		}
 
 		.nick, .value {
@@ -64,13 +64,13 @@
 				height: 100%;
 				border-radius: 4px;
 
-				background-color: $primary;
+				background-color: $positive;
 				opacity: 0.3;
 			} 
 		}
 
 		&.negative .value .bar {
-			background-color: $warn;
+			background-color: $negative;
 			right: 0;
 			left: auto;
 		}
@@ -123,6 +123,10 @@
 				.my-participant {
 					font-weight: 500;
 				}
+			}
+
+			.value {
+				font-weight: 500;
 			}
 		}
 

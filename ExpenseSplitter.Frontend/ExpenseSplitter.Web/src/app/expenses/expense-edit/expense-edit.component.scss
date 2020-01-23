@@ -1,4 +1,5 @@
 @import "src/scss/_mixins";
+@import "src/scss/_colors";
 
 :host {
     @include is-animated-host;
@@ -23,7 +24,8 @@
             .value {
                 margin-top: 8px;
                 font-size: 18px;
-                font-weight: 600;
+                font-weight: 500;
+                color: mat-color($black-palette, 400);
             }
         }
     }

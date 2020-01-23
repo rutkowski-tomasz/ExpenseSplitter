@@ -11,7 +11,7 @@
 
     .expense {
         border-bottom: 1px solid mat-color($black-palette, 50);
-        background: mat-color($accent-palette, 50);
+        background: $backgroundSecondary;
         padding: 8px 24px;
         text-decoration: none;
         color: mat-color($black-palette, 400);
@@ -23,7 +23,7 @@
 
             .details {
                 .name {
-                    font-weight: 600;
+                    font-weight: 500;
                     color: $primary;
                     line-height: 24px;
                     margin-bottom: 4px;
@@ -36,6 +36,10 @@
                 .paid-by {
                     line-height: 16px;
                     font-size: 14px;
+
+                    strong {
+                        font-weight: 500;
+                    }
                 }
             }
 
@@ -52,14 +56,16 @@
         }
 
         .detailed-calculations {
+            margin-top: 8px;
+            line-height: 16px;
             font-size: 12px;
             text-align: right;
 
             .negative {
-                color: $warn;
+                color: $negative;
             }
             .positive {
-                color: mat-color($green-palette, 500);
+                color: $positive;
             }
         }
 

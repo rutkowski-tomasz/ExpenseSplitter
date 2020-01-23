@@ -366,7 +366,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         const array = new FormArray([], [this.atLeastOneChecked()]);
         for (let [i, participant] of this.participants.entries()) {
 
-            let checked = false;
+            let checked = true;
             if (participants) {
                 checked = participants.some(x => x == participant.id);
             }

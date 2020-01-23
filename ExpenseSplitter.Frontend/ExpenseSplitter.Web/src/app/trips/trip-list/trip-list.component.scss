@@ -11,7 +11,7 @@
 
     .trip {
         border-bottom: 1px solid mat-color($black-palette, 50);
-        background: mat-color($accent-palette, 50);
+        background: $backgroundSecondary;
         padding: 8px 24px;
         display: flex;
         align-items: center;
@@ -23,13 +23,14 @@
 
             .name {
                 line-height: 24px;
-                font-weight: 600;
+                font-weight: 500;
                 color: $primary;
                 margin-bottom: 4px;
             }
 
             .description {
                 line-height: 16px;
+                font-size: 14px;
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
