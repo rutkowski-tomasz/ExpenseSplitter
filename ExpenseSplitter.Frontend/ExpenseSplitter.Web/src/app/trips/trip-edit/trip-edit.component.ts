@@ -184,7 +184,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
                 .subscribe(
                     _ => {
                         this.formGroup.markAsPristine();
-                        this.router.navigate(['/trips', uid]);
+                        this.router.navigate(['/trips', uid, 'summary']);
                     },
                     () => {},
                     () => {

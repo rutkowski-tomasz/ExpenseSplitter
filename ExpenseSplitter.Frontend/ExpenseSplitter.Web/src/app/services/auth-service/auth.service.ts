@@ -55,7 +55,7 @@ export class AuthService {
     }
 
     public RedirectToLogin(): void {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth', 'login']);
     }
 
     public GetDecodedToken() {

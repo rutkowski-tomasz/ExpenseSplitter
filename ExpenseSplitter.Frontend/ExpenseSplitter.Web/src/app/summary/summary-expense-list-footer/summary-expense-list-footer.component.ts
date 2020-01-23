@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { BalanceService } from 'src/app/trips-summary/balance-service/balance.service';
 import { BalanceSimpleModel } from 'src/app/models/balance/balance-simple.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { BalanceService } from 'src/app/services/balance-service/balance.service';
 
 @Component({
     selector: 'es-summary-expense-list-footer',

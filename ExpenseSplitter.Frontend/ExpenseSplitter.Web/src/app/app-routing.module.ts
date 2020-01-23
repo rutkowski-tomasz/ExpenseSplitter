@@ -11,6 +11,14 @@ const routes: Routes = [
         data: { state: 'home' },
         children: [
             {
+                path: 'trips/:uid/expenses',
+                loadChildren: () => import('./expenses/expenses.module').then(m => m.ExpensesModule)
+            },
+            {
+                path: 'trips/:uid/summary',
+                loadChildren: () => import('./summary/summary.module').then(m => m.SummaryModule)
+            },
+            {
                 path: 'trips',
                 loadChildren: () => import('./trips/trips.module').then(m => m.TripsModule)
             },
@@ -22,7 +30,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: '',
+        path: 'auth',
         loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
     },
 ];

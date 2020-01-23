@@ -64,7 +64,7 @@
 </es-header>
 
 <mat-tab-group (selectedTabChange)="tabClicked($event)" [selectedIndex]="selectedIndex" #matTabGroup>
-    <mat-tab [label]="{link: '/trips/' + this.uid + '/expenses'}">
+    <mat-tab [label]="{link: '/trips/' + this.uid + '/summary/expenses'}">
         <ng-template mat-tab-label>
             <div class="tab-wrapper">
                 <div class="icon">
@@ -81,7 +81,7 @@
             </div>
         </ng-template>
     </mat-tab>
-    <mat-tab [label]="{link: '/trips/' + this.uid + '/balance'}">
+    <mat-tab [label]="{link: '/trips/' + this.uid + '/summary/balance'}">
         <ng-template mat-tab-label>
             <div class="tab-wrapper">
                 <div class="icon">

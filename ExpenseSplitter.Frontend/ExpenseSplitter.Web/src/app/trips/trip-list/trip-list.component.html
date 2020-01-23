@@ -12,7 +12,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item [routerLink]="['/settings']">
+            <button mat-menu-item [routerLink]="['/auth', 'settings']">
                 <mat-icon>person</mat-icon>
                 <span>Moje ustawienia</span>
             </button>
@@ -41,7 +41,7 @@
             class="trip"
             *ngFor="let trip of trips"
             [class.last-edited]="lastUpdatedTripUid && lastUpdatedTripUid === trip.uid"
-            [routerLink]="['/trips', trip.uid]"
+            [routerLink]="['/trips', trip.uid, 'summary']"
         >
             <div class="details">
                 <div class="name">

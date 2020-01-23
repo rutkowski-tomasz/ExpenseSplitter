@@ -10,56 +10,43 @@ import { TripJoinComponent } from './trip-join/trip-join.component';
 
 const routes: Routes = [
     {
+        path: 'new',
+        component: TripCreateComponent,
+        data: { state: 'tripCreate' },
+        canDeactivate: [ DiscardCanDeactivateGuard ],
+    },
+    {
         path: '',
+        component: TripListComponent,
+        data: { state: 'tripsList' },
+    },
+    {
+        path: 'join/:uid',
+        component: TripJoinComponent,
+        data: { state: 'tripJoin' },
+    },
+    {
+        path: 'join',
+        component: TripJoinComponent,
+        data: { state: 'tripJoin' },
+    },
+    {
+        path: ':uid',
         children: [
             {
-                path: 'new',
-                component: TripCreateComponent,
-                data: { state: 'tripCreate' },
+                path: 'edit',
+                component: TripEditComponent,
+                data: { state: 'tripEdit' },
                 canDeactivate: [ DiscardCanDeactivateGuard ],
             },
             {
-                path: '',
-                component: TripListComponent,
-                data: { state: 'tripsList' },
-            },
-            {
-                path: 'join/:uid',
-                component: TripJoinComponent,
-                data: { state: 'tripJoin' },
-            },
-            {
-                path: 'join',
-                component: TripJoinComponent,
-                data: { state: 'tripJoin' },
-            },
-            {
-                path: ':uid',
-                children: [
-                    {
-                        path: 'edit',
-                        component: TripEditComponent,
-                        data: { state: 'tripEdit' },
-                        canDeactivate: [ DiscardCanDeactivateGuard ],
-                    },
-                    {
-                        path: 'who-am-i',
-                        component: TripWhoAmIComponent,
-                        data: { state: 'tripWhoAmI' },
-                        canDeactivate: [ DiscardCanDeactivateGuard ],
-                    },
-                    {
-                        path: '',
-                        loadChildren: () => import('../summary/summary.module').then(m => m.SummaryModule)
-                    },
-                    {
-                        path: '',
-                        loadChildren: () => import('../expenses/expenses.module').then(m => m.ExpensesModule),
-                    },
-                ]
+                path: 'who-am-i',
+                component: TripWhoAmIComponent,
+                data: { state: 'tripWhoAmI' },
+                canDeactivate: [ DiscardCanDeactivateGuard ],
             },
         ]
-    }
+    },
 ];
 
 @NgModule({

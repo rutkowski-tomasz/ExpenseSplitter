@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BalanceService } from 'src/app/trips-summary/balance-service/balance.service';
 import { BalanceModel } from 'src/app/models/balance/balance.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user-service/user.service';
 import { BalanceSettleModel } from 'src/app/models/balance/balance-settle.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { BalanceService } from 'src/app/services/balance-service/balance.service';
 
 @Component({
     templateUrl: './summary-balance.component.html',
@@ -69,7 +69,7 @@ export class SummaryBalanceComponent implements OnInit, OnDestroy {
     public markAsPaid(settlement: BalanceSettleModel) {
 
         this.router.navigate(
-            ['../new-expense'],
+            ['/trips', this.uid, 'expenses', 'new'],
             {
                 relativeTo: this.activatedRoute,
                 queryParams: {

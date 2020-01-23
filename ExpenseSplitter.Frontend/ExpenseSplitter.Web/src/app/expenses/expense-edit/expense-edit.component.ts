@@ -241,7 +241,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
                     .subscribe(
                         _ => {
                             this.formGroup.markAsPristine();
-                            this.router.navigate(['/trips', this.uid]);
+                            this.router.navigate(['/trips', this.uid, 'summary']);
                         },
                         () => {},
                         () => {
@@ -330,7 +330,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         this.expenseService.DeleteExpense(this.uid, this.id)
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(_ => {
-                this.router.navigate(['/trips', this.uid]);
+                this.router.navigate(['/trips', this.uid, 'summary']);
             });
     }
 

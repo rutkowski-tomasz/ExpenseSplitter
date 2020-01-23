@@ -6,19 +6,19 @@ import { DiscardCanDeactivateGuard } from '../shared/components/discard-dialog/d
 
 const routes: Routes = [
     {
-        path: 'new-expense',
+        path: 'new',
         component: ExpenseEditComponent,
         data: { state: 'expenseCreate' },
         canDeactivate: [ DiscardCanDeactivateGuard ],
     },
     {
-        path: 'expenses/:id/edit',
+        path: ':id/edit',
         component: ExpenseEditComponent,
         data: { state: 'expenseEdit' },
         canDeactivate: [ DiscardCanDeactivateGuard ],
     },
     {
-        path: 'expenses/:id',
+        path: ':id',
         component: ExpenseDetailsComponent,
         data: { state: 'expenseDetails' },
     },

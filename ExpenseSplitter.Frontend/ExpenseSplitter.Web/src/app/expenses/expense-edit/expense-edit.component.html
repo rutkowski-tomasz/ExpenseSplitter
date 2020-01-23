@@ -5,13 +5,13 @@
     </ng-container>
 
     <ng-container left>
-        <a *ngIf="settlementQueryModel" [routerLink]="['/trips', uid, 'balance']">
+        <a *ngIf="settlementQueryModel" [routerLink]="['/trips', uid, 'summary', 'balance']">
             Anuluj
         </a>
         <a *ngIf="!settlementQueryModel && uid && id" [routerLink]="['/trips', uid, 'expenses', id]">
             Anuluj
         </a>
-        <a *ngIf="!settlementQueryModel && uid && !id" [routerLink]="['/trips', uid]">
+        <a *ngIf="!settlementQueryModel && uid && !id" [routerLink]="['/trips', uid, 'summary']">
             Anuluj
         </a>
     </ng-container>

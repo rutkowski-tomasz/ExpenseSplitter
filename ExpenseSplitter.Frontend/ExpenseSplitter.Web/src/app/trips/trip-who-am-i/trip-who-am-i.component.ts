@@ -74,7 +74,7 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
                 this.isSubmitting = false;
 
                 this.myParticipantId = this.chosenParticipantId;
-                this.router.navigate(['/trips', this.uid]);
+                this.router.navigate(['/trips', this.uid, 'summary']);
             });
     }
 

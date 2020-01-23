@@ -9,17 +9,17 @@ const routes: Routes = [
     {
         path: '',
         component: SummaryComponent,
-        data: { state: 'trip' },
+        data: { state: 'summary' },
         children: [
             {
                 path: 'expenses',
                 component: SummaryExpenseListComponent,
-                data: { state: 'expenses' },
+                data: { state: 'summaryExpenses' },
             },
             {
                 path: 'balance',
                 component: SummaryBalanceComponent,
-                data: { state: 'balance' },
+                data: { state: 'summaryBalance' },
             },
             {
                 path: '',
