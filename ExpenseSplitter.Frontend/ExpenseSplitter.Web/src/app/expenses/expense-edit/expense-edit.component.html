@@ -164,25 +164,32 @@
                             <mat-icon (click)="removePart(i)">close</mat-icon>
                         </div>
                     </div>
-                    <div class="participants">
-                        <label
-                            formArrayName="participants"
-                            *ngFor="
-                                let participant of GetParticipants(part).controls;
-                                let j = index
-                            "
-                        >
-                            <div
-                                class="participant"
-                                [class.my-participant]="isClaimedParticipant(participants[j].id)"
+                    <div class="part-data">
+                        <div class="participants">
+                            <label
+                                formArrayName="participants"
+                                *ngFor="
+                                    let participant of GetParticipants(part).controls;
+                                    let j = index
+                                "
                             >
-                                <mat-checkbox
-                                    color="primary"
-                                    [formControlName]="j"
-                                ></mat-checkbox>
-                                {{ participants[j].nick }}
-                            </div>
-                        </label>
+                                <div
+                                    class="participant"
+                                    [class.my-participant]="isClaimedParticipant(participants[j].id)"
+                                >
+                                    <mat-checkbox
+                                        color="primary"
+                                        [formControlName]="j"
+                                    ></mat-checkbox>
+                                    {{ participants[j].nick }}
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="value-per-participant">
+                            <span>Kwota/uczestnik</span>
+                            <div class="value">{{ getValuePerParticipant(part) | currency:'PLN' }}</div>
+                        </div>
                     </div>
 
                     <div class="error-wrapper">

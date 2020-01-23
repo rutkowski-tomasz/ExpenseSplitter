@@ -9,12 +9,27 @@
         display: flex;
         align-items: center;
     }
-    .participants {
-        margin-bottom: 8px;
+    .part-data {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .value-per-participant {
+            margin-right: 16px;
+            text-align: center;
+            span {
+                font-size: 13px;
+            }
+            .value {
+                margin-top: 8px;
+                font-size: 18px;
+                font-weight: 600;
+            }
+        }
     }
     .error-wrapper {
 		height: 13px;
-		margin-bottom: 16px;
+		margin: 4px 0 8px 0;
     }
 }
 

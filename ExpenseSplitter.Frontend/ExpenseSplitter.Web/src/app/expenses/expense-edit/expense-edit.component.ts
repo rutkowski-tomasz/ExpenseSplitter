@@ -348,6 +348,19 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
     public getPartParticipantErrors = (partGroup: FormGroup) => partGroup.controls.participants.errors;
 
+    public getValuePerParticipant(partGroup: FormGroup): number {
+        const valueControl = partGroup.controls.value as FormControl;
+        const value = parseFloat(valueControl.value);
+        if (isNaN(value)) {
+            return 0.0;
+        }
+
+        const participants = partGroup.controls.participants as FormArray;
+        const checkedParticipants = participants.controls.filter(x => x.value).length;
+
+        return value / checkedParticipants;
+    }
+
     private createParticipantsCheckboxes(participants?: number[]): FormArray {
 
         const array = new FormArray([], [this.atLeastOneChecked()]);
