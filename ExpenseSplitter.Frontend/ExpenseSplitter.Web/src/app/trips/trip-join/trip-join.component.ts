@@ -65,7 +65,7 @@ export class TripJoinComponent implements OnInit, OnDestroy, AfterViewInit {
 
             let uid = this.uid.value;
             uid = uid.replace(/.+\/join\/([a-zA-Z0-9]+)$/, '$1');
-            
+
             this.tripService.JoinTrip(uid)
                 .pipe(takeUntil(this.isNotDestroyed))
                 .subscribe(
@@ -76,8 +76,7 @@ export class TripJoinComponent implements OnInit, OnDestroy, AfterViewInit {
 
                         if (error.status === 429) {
                             this.uid.setErrors({ tooManyRequests: true });
-                        }
-                        else if (error.status === 404) {
+                        } else if (error.status === 404) {
                             this.uid.setErrors({ uidInvalid: true });
                         }
                     },

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from 'src/app/services/config-service/config.service';
@@ -16,9 +16,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
     public formGroup: FormGroup = new FormGroup({
         email: new FormControl('', [Validators.email, Validators.required]),
         password: new FormControl('', [Validators.required]),
-        repassword: new FormControl('', [Validators.required, this.matchingPasswords()]),
+        repassword: new FormControl('', [Validators.required]),
         nick: new FormControl('', [Validators.required]),
-    });
+    }, [this.matchingPasswords()]);
 
     public userEmailMaxLength = 0;
     public get email(): AbstractControl {
@@ -70,13 +70,20 @@ export class RegisterComponent implements OnInit, OnDestroy {
         }
     }
 
-    public matchingPasswords(): (AbstractControl) => ValidationErrors | null {
-        return (control: AbstractControl): ValidationErrors | null => {
-            return !!control.parent && !!control.parent.value && control.value === control.parent.controls['password'].value
-                ? null
-                : { mismatch: true };
+    public matchingPasswords(): ValidatorFn {
+
+        return (formGroup: AbstractControl): {[key: string]: any} | null => {
+            const password = formGroup.get('password').value;
+            const repassword = formGroup.get('repassword').value;
+    
+            if (password !== repassword) {
+                this.repassword.setErrors({ mismatch: true });
+            }
+    
+            return null;
         };
     }
+
 
     public ngOnDestroy() {
 
@@ -91,18 +98,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
             this.email.setValidators([
                 Validators.required,
-                Validators.maxLength(constants['UserEmailMaxLength']),
+                Validators.maxLength(constants.UserEmailMaxLength),
                 Validators.email,
             ]);
 
             this.nick.setValidators([
                 Validators.required,
-                Validators.minLength(constants['ParticipantNameMinLength']),
-                Validators.maxLength(constants['ParticipantNameMaxLength']),
+                Validators.minLength(constants.ParticipantNameMinLength),
+                Validators.maxLength(constants.ParticipantNameMaxLength),
             ]);
 
-            this.userEmailMaxLength = constants['UserEmailMaxLength'];
-            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+            this.userEmailMaxLength = constants.UserEmailMaxLength;
+            this.participantNameMaxLength = constants.ParticipantNameMaxLength;
         });
     }
 }

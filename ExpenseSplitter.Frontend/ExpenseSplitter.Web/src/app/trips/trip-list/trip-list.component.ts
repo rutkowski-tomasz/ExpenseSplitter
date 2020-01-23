@@ -58,7 +58,7 @@ export class TripListComponent implements OnInit, OnDestroy {
 
                 if (result === TripAddActionEnum.Join) {
                     this.router.navigate(['/trips', 'join']);
-                } else if(result === TripAddActionEnum.Create) {
+                } else if (result === TripAddActionEnum.Create) {
                     this.router.navigate(['/trips', 'new']);
                 }
             });

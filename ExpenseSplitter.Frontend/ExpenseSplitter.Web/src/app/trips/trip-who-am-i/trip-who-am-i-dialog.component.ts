@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ConfigService } from 'src/app/services/config-service/config.service';
 import { Validators, FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user-service/user.service';
@@ -17,7 +17,9 @@ import { MatDialogRef } from '@angular/material';
                     placeholder="Nick"
                     [formControl]="nick"
                 />
-                <mat-hint align="end" *ngIf="participantNameMaxLength">{{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}</mat-hint>
+                <mat-hint align="end" *ngIf="participantNameMaxLength">
+                    {{ nick.value?.length || 0 }}/{{ participantNameMaxLength }}
+                </mat-hint>
                 <mat-error *ngIf="nick.invalid && nick.errors.required">
                     Wprowadź nick
                 </mat-error>
@@ -36,7 +38,7 @@ import { MatDialogRef } from '@angular/material';
         </div>
     `,
 })
-export class TripWhoAmIDialogComponent implements OnInit {
+export class TripWhoAmIDialogComponent implements OnInit, OnDestroy {
 
     public participantNameMaxLength = 0;
     public nick = new FormControl('', [
@@ -53,7 +55,7 @@ export class TripWhoAmIDialogComponent implements OnInit {
 
     public ngOnInit(): void {
         this.loadConfiguration();
-        
+
         this.userService.userExtract
             .pipe(takeUntil(this.isNotDestroyed), filter(x => x.id !== null), take(1))
             .subscribe(userExtract => {
@@ -81,11 +83,11 @@ export class TripWhoAmIDialogComponent implements OnInit {
 
             this.nick.setValidators([
                 Validators.required,
-                Validators.minLength(constants['ParticipantNameMinLength']),
-                Validators.maxLength(constants['ParticipantNameMaxLength']),
+                Validators.minLength(constants.ParticipantNameMinLength),
+                Validators.maxLength(constants.ParticipantNameMaxLength),
             ]);
 
-            this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+            this.participantNameMaxLength = constants.ParticipantNameMaxLength;
         });
     }
 }

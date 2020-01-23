@@ -96,8 +96,8 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
         this.isNotDestroyed.complete();
     }
 
-    public addParticipant(id?: number, nick?: string)
-    {
+    public addParticipant(id?: number, nick?: string) {
+
         id = id ? id : 0;
         nick = nick ? nick : '';
 
@@ -124,7 +124,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
             for (const participantGroup of this.participants.controls) {
                 const nickControl = participantGroup.get('nick');
 
-                if (control == nickControl) {
+                if (control === nickControl) {
                     continue;
                 }
 
@@ -140,7 +140,7 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
     }
 
     public removeParticipant(index: number, participantFormGroup: FormGroup) {
-        
+
         const hasExpenses = this.hasAnyExpenses(participantFormGroup);
 
         if (hasExpenses) {
@@ -211,19 +211,19 @@ export class TripEditComponent implements OnInit, OnDestroy, ConfirmDiscardChang
 
                 this.name.setValidators([
                     Validators.required,
-                    Validators.minLength(constants['TripNameMinLength']),
-                    Validators.maxLength(constants['TripNameMaxLength']),
+                    Validators.minLength(constants.TripNameMinLength),
+                    Validators.maxLength(constants.TripNameMaxLength),
                 ]);
 
                 this.description.setValidators([
-                    Validators.minLength(constants['TripDescriptionMinLength']),
-                    Validators.maxLength(constants['TripDescriptionMaxLength']),
+                    Validators.minLength(constants.TripDescriptionMinLength),
+                    Validators.maxLength(constants.TripDescriptionMaxLength),
                 ]);
 
-                this.tripNameMaxLength = constants['TripNameMaxLength'];
-                this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
-                this.participantNameMinLength = constants['ParticipantNameMinLength'];
-                this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+                this.tripNameMaxLength = constants.TripNameMaxLength;
+                this.tripDescriptionMaxLength = constants.TripDescriptionMaxLength;
+                this.participantNameMinLength = constants.ParticipantNameMinLength;
+                this.participantNameMaxLength = constants.ParticipantNameMaxLength;
             });
     }
 }

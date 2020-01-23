@@ -5,7 +5,16 @@ import { SharedModule } from '../shared/shared.module';
 import { ExpenseDetailsComponent } from './expense-details/expense-details.component';
 import { ExpenseEditComponent } from './expense-edit/expense-edit.component';
 import { ExpenseTypeComponent } from './expense-type/expense-type.component';
-import { MatIconModule, MatFormFieldModule, MatDatepickerModule, MatAutocompleteModule, MatCheckboxModule, MatButtonModule, MatInputModule, MatNativeDateModule } from '@angular/material';
+import {
+    MatIconModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatInputModule,
+    MatNativeDateModule
+} from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const declarations = [

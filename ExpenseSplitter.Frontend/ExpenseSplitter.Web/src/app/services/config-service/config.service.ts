@@ -13,7 +13,7 @@ export class ConfigService {
 
     constructor(
         private callService: CallService,
-    ) { 
+    ) {
         this.LoadConstants();
     }
 

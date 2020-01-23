@@ -59,7 +59,7 @@ export class TripCreateComponent implements OnInit, OnDestroy, ConfirmDiscardCha
     ) { }
 
     public ngOnInit() {
-        
+
         this.isLoading = true;
         this.userService.userExtract
             .pipe(takeUntil(this.isNotDestroyed), filter(x => x.id !== null), take(1))
@@ -115,24 +115,24 @@ export class TripCreateComponent implements OnInit, OnDestroy, ConfirmDiscardCha
 
                 this.name.setValidators([
                     Validators.required,
-                    Validators.minLength(constants['TripNameMinLength']),
-                    Validators.maxLength(constants['TripNameMaxLength']),
+                    Validators.minLength(constants.TripNameMinLength),
+                    Validators.maxLength(constants.TripNameMaxLength),
                 ]);
 
                 this.description.setValidators([
-                    Validators.minLength(constants['TripDescriptionMinLength']),
-                    Validators.maxLength(constants['TripDescriptionMaxLength']),
+                    Validators.minLength(constants.TripDescriptionMinLength),
+                    Validators.maxLength(constants.TripDescriptionMaxLength),
                 ]);
 
                 this.organizerNick.setValidators([
                     Validators.required,
-                    Validators.minLength(constants['ParticipantNameMinLength']),
-                    Validators.maxLength(constants['ParticipantNameMaxLength']),
-                ])
+                    Validators.minLength(constants.ParticipantNameMinLength),
+                    Validators.maxLength(constants.ParticipantNameMaxLength),
+                ]);
 
-                this.tripNameMaxLength = constants['TripNameMaxLength'];
-                this.tripDescriptionMaxLength = constants['TripDescriptionMaxLength'];
-                this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+                this.tripNameMaxLength = constants.TripNameMaxLength;
+                this.tripDescriptionMaxLength = constants.TripDescriptionMaxLength;
+                this.participantNameMaxLength = constants.ParticipantNameMaxLength;
             });
     }
 }

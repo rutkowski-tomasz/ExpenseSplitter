@@ -46,8 +46,8 @@ export class UserService {
         return this.callService.put<UserModel>(`${this.servicePrefix}`, model);
     }
 
-    private initalizePreferences()
-    {
+    private initalizePreferences() {
+
         const preferences = { };
         preferences[this.appConfig.detailedCalculations] = this.getPreference(this.appConfig.detailedCalculations);
         preferences[this.appConfig.onlyMyExpenses] = this.getPreference(this.appConfig.onlyMyExpenses);

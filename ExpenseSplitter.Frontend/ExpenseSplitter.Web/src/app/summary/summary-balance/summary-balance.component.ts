@@ -60,8 +60,9 @@ export class SummaryBalanceComponent implements OnInit, OnDestroy {
 
     public calculateBarLength(value: number): number {
 
-        if (!this.maxBalance)
+        if (!this.maxBalance) {
             return 0;
+        }
 
         return Math.abs(value) * 100 / this.maxBalance;
     }

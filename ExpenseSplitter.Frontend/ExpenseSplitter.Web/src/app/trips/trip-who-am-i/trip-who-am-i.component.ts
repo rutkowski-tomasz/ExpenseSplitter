@@ -84,7 +84,7 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
     public isDirty = () => this.chosenParticipantId !== this.myParticipantId;
 
     public addNewParticipant() {
-        
+
         const dialogRef = this.matDialog.open(TripWhoAmIDialogComponent);
         return dialogRef.afterClosed().subscribe(nick => {
 
@@ -95,7 +95,7 @@ export class TripWhoAmIComponent implements OnInit, OnDestroy, ConfirmDiscardCha
                 .pipe(takeUntil(this.isNotDestroyed))
                 .subscribe(_ => {
                     this.isSubmitting = false;
-    
+
                     this.myParticipantId = this.chosenParticipantId;
                     this.router.navigate(['/trips', this.uid, 'summary']);
                 });

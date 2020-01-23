@@ -98,7 +98,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
         const query = this.activatedRoute.snapshot.queryParams;
 
         if ('settlementFrom' in query &&
-            'settlementTo' in query && 
+            'settlementTo' in query &&
             'value' in query) {
 
                 this.settlementQueryModel = new SettlementQueryModel(
@@ -158,11 +158,11 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
     public prepareDefaultFormValues() {
 
         if (this.participants && this.participants.length) {
-            
+
             this.SetDefaultPayer();
             this.InitAutocomplete();
             this.AddPart();
-            
+
             if (this.settlementQueryModel) {
                 this.SetSettlementDetails();
             }
@@ -173,10 +173,10 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
             this.name.setValue(this.expense.name);
             this.type.setValue(this.expense.type);
             this.paidAt.setValue(this.expense.paidAt);
-    
+
             if (this.participants) {
 
-                const payer = this.participants.find(x => x.id == this.expense.payerId);
+                const payer = this.participants.find(x => x.id === this.expense.payerId);
                 this.payer.setValue(payer);
 
                 this.removeAllParts();
@@ -209,10 +209,12 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
                 const participantIds = [];
                 for (let i = 0; i < participantControls.length; i++) {
-                    if (!participantControls[i].value)
-                        continue;
 
-                        participantIds.push(this.participants[i].id);
+                    if (!participantControls[i].value) {
+                        continue;
+                    }
+
+                    participantIds.push(this.participants[i].id);
                 }
 
                 model.parts.push({ value, participantIds });
@@ -307,7 +309,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
     public getPartValueErrors = (part: FormGroup) => {
         return part.controls.value.errors;
-    };
+    }
 
     public GetParticipants(part: FormGroup): FormArray {
         return part.get('participants') as FormArray;
@@ -315,7 +317,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
     public SetSettlementDetails() {
 
-        const payer = this.participants.find(x => x.id == this.settlementQueryModel.settlementFrom);
+        const payer = this.participants.find(x => x.id === this.settlementQueryModel.settlementFrom);
         this.payer.setValue(payer);
 
         this.removeAllParts();
@@ -337,13 +339,13 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
     public isDirty = () => this.formGroup.dirty;
 
     public isClaimedParticipant(participantId: number): boolean {
-        const participant = this.participants.find(x => x.id == participantId);
+        const participant = this.participants.find(x => x.id === participantId);
         if (participant == null) {
             return false;
         }
 
         const userId = this.userService.userExtract.value.id;
-        return participant.claimedUserIds.some(x => x == userId);
+        return participant.claimedUserIds.some(x => x === userId);
     }
 
     public getPartParticipantErrors = (partGroup: FormGroup) => partGroup.controls.participants.errors;
@@ -364,13 +366,12 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
     private createParticipantsCheckboxes(participants?: number[]): FormArray {
 
         const array = new FormArray([], [this.atLeastOneChecked()]);
-        for (let [i, participant] of this.participants.entries()) {
+        for (const [i, participant] of this.participants.entries()) {
 
             let checked = true;
             if (participants) {
-                checked = participants.some(x => x == participant.id);
-            }
-            else if (this.parts.controls.length) {
+                checked = participants.some(x => x === participant.id);
+            } else if (this.parts.controls.length) {
                 checked = this.parts.controls[this.parts.controls.length - 1].value.participants[i];
             }
 
@@ -417,11 +418,11 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(value => {
 
-                if (value == ExpenseTypeEnum.Expense) {
+                if (value === ExpenseTypeEnum.Expense) {
                     this.payerLabel = this.paidByLabel.nativeElement.innerText;
-                } else if (value == ExpenseTypeEnum.Income) {
+                } else if (value === ExpenseTypeEnum.Income) {
                     this.payerLabel = this.receivedByLabel.nativeElement.innerText;
-                } else if (value == ExpenseTypeEnum.Transfer) {
+                } else if (value === ExpenseTypeEnum.Transfer) {
                     this.payerLabel = this.transferedByLabel.nativeElement.innerText;
                 }
             });
@@ -435,12 +436,12 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
 
                 this.name.setValidators([
                     Validators.required,
-                    Validators.minLength(constants['ExpenseNameMinLength']),
-                    Validators.maxLength(constants['ExpenseNameMaxLength']),
+                    Validators.minLength(constants.ExpenseNameMinLength),
+                    Validators.maxLength(constants.ExpenseNameMaxLength),
                 ]);
 
-                this.expenseValueMin = constants['ExpenseValueMin'];
-                this.expenseValueMax = constants['ExpenseValueMax'];
+                this.expenseValueMin = constants.ExpenseValueMin;
+                this.expenseValueMax = constants.ExpenseValueMax;
 
                 for (const partGroup of this.parts.controls) {
                     const valueControl = (partGroup as FormGroup).controls.value;
@@ -451,7 +452,7 @@ export class ExpenseEditComponent implements OnInit, OnDestroy, ConfirmDiscardCh
                     ]);
                 }
 
-                this.expenseNameMaxLength = constants['ExpenseNameMaxLength'];
+                this.expenseNameMaxLength = constants.ExpenseNameMaxLength;
             });
     }
 }

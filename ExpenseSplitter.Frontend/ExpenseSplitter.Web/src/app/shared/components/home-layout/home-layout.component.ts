@@ -4,7 +4,6 @@ import { trigger, transition, useAnimation } from '@angular/animations';
 import { moveFromLeft, moveFromRight, moveFromBottom, moveFromTop } from 'ngx-router-animations';
 
 @Component({
-    selector: 'app-home-layout',
     templateUrl: './home-layout.component.html',
     styleUrls: ['./home-layout.component.scss'],
     animations: [

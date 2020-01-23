@@ -3,7 +3,7 @@ import { TripService } from 'src/app/services/trip-service/trip.service';
 import { ActivatedRoute, Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material';
 import { trigger, transition, useAnimation } from '@angular/animations';
-import { moveFromLeft, moveFromRight } from "ngx-router-animations";
+import { moveFromLeft, moveFromRight } from 'ngx-router-animations';
 import { TripDetailsModel } from 'src/app/models/trip/trip-details.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -120,7 +120,7 @@ export class SummaryComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             }
 
-            this.participants += trip.participants[i].nick + ', ';  
+            this.participants += trip.participants[i].nick + ', ';
         }
 
         this.participants = this.participants.substr(0, this.participants.length - 2);

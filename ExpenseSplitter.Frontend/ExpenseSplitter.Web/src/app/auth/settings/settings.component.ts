@@ -95,11 +95,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
                 this.nick.setValidators([
                     Validators.required,
-                    Validators.minLength(constants['ParticipantNameMinLength']),
-                    Validators.maxLength(constants['ParticipantNameMaxLength']),
-                ])
+                    Validators.minLength(constants.ParticipantNameMinLength),
+                    Validators.maxLength(constants.ParticipantNameMaxLength),
+                ]);
 
-                this.participantNameMaxLength = constants['ParticipantNameMaxLength'];
+                this.participantNameMaxLength = constants.ParticipantNameMaxLength;
             });
     }
 }

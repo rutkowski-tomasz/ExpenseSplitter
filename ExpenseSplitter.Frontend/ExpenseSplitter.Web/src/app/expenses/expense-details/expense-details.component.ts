@@ -21,7 +21,7 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
     public expense: ExpenseDetailsModel;
     public userId: number;
     public value: number;
-    public stickyHeader: boolean = false;
+    public stickyHeader = false;
     public participants = new Array<ParticipantModel>();
     public payerNick: string;
     public ExpenseTypeEnum = ExpenseTypeEnum;
@@ -76,12 +76,12 @@ export class ExpenseDetailsComponent implements OnInit, OnDestroy {
     }
 
     public isClaimedParticipant(participantId: number): boolean {
-        const participant = this.participants.find(x => x.id == participantId);
+        const participant = this.participants.find(x => x.id === participantId);
         if (participant == null) {
             return false;
         }
 
-        return participant.claimedUserIds.some(x => x == this.userId);
+        return participant.claimedUserIds.some(x => x === this.userId);
     }
 
     private calculateSummary() {
