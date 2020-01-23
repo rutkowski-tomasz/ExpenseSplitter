@@ -50,6 +50,7 @@ export class UserService {
     {
         const preferences = { };
         preferences[this.appConfig.detailedCalculations] = this.getPreference(this.appConfig.detailedCalculations);
+        preferences[this.appConfig.onlyMyExpenses] = this.getPreference(this.appConfig.onlyMyExpenses);
 
         this.preferences.next(preferences);
     }

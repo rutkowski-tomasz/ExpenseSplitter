@@ -36,6 +36,14 @@
                     <mat-icon class="toggle" *ngIf="detailedCalculations" color="primary">toggle_on</mat-icon>
                     <mat-icon class="toggle" *ngIf="!detailedCalculations">toggle_off</mat-icon>
                 </button>
+                <button mat-menu-item *ngIf="trip" (click)="toggleOnlyMyExpenses()">
+                    <mat-icon>star_border</mat-icon>
+                    <span>
+                        Pokaż tylko moje
+                    </span>
+                    <mat-icon class="toggle" *ngIf="onlyMyExpenses" color="primary">toggle_on</mat-icon>
+                    <mat-icon class="toggle" *ngIf="!onlyMyExpenses">toggle_off</mat-icon>
+                </button>
             </mat-menu>
         </ng-container>
 
@@ -63,7 +71,12 @@
                     <mat-icon class="example-tab-icon">attach_money</mat-icon>
                 </div>
                 <div class="text">
-                    Wydatki
+                    <span *ngIf="onlyMyExpenses">
+                        Moje wydatki
+                    </span>
+                    <span *ngIf="!onlyMyExpenses">
+                        Wydatki
+                    </span>
                 </div>
             </div>
         </ng-template>

@@ -14,11 +14,13 @@ import { AppConfig } from 'src/app/shared/app.config';
 })
 export class ExpensesComponent implements OnInit, OnDestroy {
 
+    public loadedExpenses: ExpenseListModel[];
     public expenses: ExpenseListModel[];
     public ExpenseTypeEnum = ExpenseTypeEnum;
     public uid: string;
     public lastUpdatedExpenseId: number;
     public detailedCalculations: boolean;
+    public onlyMyExpenses: boolean;
 
     private isNotDestroyed = new Subject();
 
@@ -35,6 +37,9 @@ export class ExpensesComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.isNotDestroyed))
             .subscribe(preferences => {
                 this.detailedCalculations = preferences[this.appConfig.detailedCalculations];
+                this.onlyMyExpenses = preferences[this.appConfig.onlyMyExpenses];
+
+                this.filterExpenses();
             });
 
         this.activatedRoute.parent.params
@@ -46,7 +51,8 @@ export class ExpensesComponent implements OnInit, OnDestroy {
                 this.expenseService.GetExpenses(this.uid)
                     .pipe(takeUntil(this.isNotDestroyed))
                     .subscribe(data => {
-                        this.expenses = data;
+                        this.loadedExpenses = data;
+                        this.filterExpenses();
                     });
             });
 
@@ -64,5 +70,19 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         this.isNotDestroyed.next();
         this.isNotDestroyed.complete();
+    }
+
+    private filterExpenses() {
+
+        if (!this.loadedExpenses) {
+            return;
+        }
+
+        if (!this.onlyMyExpenses) {
+            this.expenses = this.loadedExpenses;
+            return;
+        }
+
+        this.expenses = this.loadedExpenses.filter(x => x.isPaidByMe || x.iSpent !== 0);
     }
 }

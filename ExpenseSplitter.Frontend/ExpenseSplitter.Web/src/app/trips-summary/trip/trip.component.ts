@@ -29,6 +29,7 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
     public shareUrl = '';
     public uid: string;
     public detailedCalculations: boolean;
+    public onlyMyExpenses: boolean;
     public isExpenseListView: boolean;
 
     @ViewChild('matTabGroup', { static: false }) matTabGroup: MatTabGroup;
@@ -48,6 +49,7 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit() {
 
         this.detailedCalculations = this.userService.getPreference(this.appConfig.detailedCalculations);
+        this.onlyMyExpenses = this.userService.getPreference(this.appConfig.onlyMyExpenses);
 
         this.activatedRoute.params
             .pipe(takeUntil(this.isNotDestroyed))
@@ -94,6 +96,11 @@ export class TripComponent implements OnInit, OnDestroy, AfterViewInit {
     public toggleDetailedCalculations() {
         this.detailedCalculations = !this.detailedCalculations;
         this.userService.setPreference(this.appConfig.detailedCalculations, this.detailedCalculations);
+    }
+
+    public toggleOnlyMyExpenses() {
+        this.onlyMyExpenses = !this.onlyMyExpenses;
+        this.userService.setPreference(this.appConfig.onlyMyExpenses, this.onlyMyExpenses);
     }
 
     public tabClicked($event: MatTabChangeEvent) {
