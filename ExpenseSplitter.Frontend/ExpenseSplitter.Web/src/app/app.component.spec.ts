@@ -1,17 +1,34 @@
-import { TestBed, async } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { AppComponent } from './app.component';
-import { appTesting } from './app-testing';
+import { PageErrorComponent } from './shared/components/page-error/page-error.component';
+import { SharedModule } from './shared/shared.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
+    let component: AppComponent;
+    let fixture: ComponentFixture<AppComponent>;
+
     beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
+        TestBed.configureTestingModule({
+            declarations: [
+                AppComponent,
+            ],
+            imports: [
+                SharedModule,
+                RouterTestingModule,
+            ],
+        })
             .compileComponents();
     }));
 
-    it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.debugElement.componentInstance;
-        expect(app).toBeTruthy();
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
     });
 });

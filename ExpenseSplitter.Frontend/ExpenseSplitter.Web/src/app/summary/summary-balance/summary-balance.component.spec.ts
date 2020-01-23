@@ -1,16 +1,36 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SummaryBalanceComponent } from './summary-balance.component';
-import { appTesting } from 'src/app/app-testing';
+import { MatIconModule, MatMenuModule } from '@angular/material';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('SummaryBalanceComponent', () => {
     let component: SummaryBalanceComponent;
     let fixture: ComponentFixture<SummaryBalanceComponent>;
 
     beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [
+                SummaryBalanceComponent,
+            ],
+            imports: [
+                RouterTestingModule,
+                HttpClientTestingModule,
+                MatIconModule,
+                MatMenuModule,
+            ],
+            providers: [
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        parent: { params: of({ uid: 'test' }) }
+                    }
+                },
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

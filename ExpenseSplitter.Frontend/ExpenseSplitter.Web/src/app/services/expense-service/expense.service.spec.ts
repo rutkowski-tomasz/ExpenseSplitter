@@ -1,14 +1,13 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { ExpenseService } from './expense.service';
-import { appTesting } from 'src/app/app-testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ExpenseService', () => {
-
-    beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
-            .compileComponents();
+    beforeEach(() => TestBed.configureTestingModule({
+        imports: [
+            HttpClientTestingModule,
+        ],
     }));
 
     it('should be created', () => {

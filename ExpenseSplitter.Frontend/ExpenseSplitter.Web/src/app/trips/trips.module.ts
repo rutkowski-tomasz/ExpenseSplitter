@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { TripsRoutingModule } from './trips-routing.module';
 import { SharedModule } from '../shared/shared.module';
-import { TripAddSheetComponent } from './trip-add-sheet/add-trip-sheet.component';
+import { TripAddSheetComponent } from './trip-add-sheet/trip-add-sheet.component';
 import { TripEditComponent } from './trip-edit/trip-edit.component';
 import { TripJoinComponent } from './trip-join/trip-join.component';
 import { TripWhoAmIComponent } from './trip-who-am-i/trip-who-am-i.component';

@@ -1,16 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SummaryExpenseListFooterComponent } from './summary-expense-list-footer.component';
-import { appTesting } from 'src/app/app-testing';
+import { MatIconModule } from '@angular/material';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SummaryExpenseListFooterComponent', () => {
     let component: SummaryExpenseListFooterComponent;
     let fixture: ComponentFixture<SummaryExpenseListFooterComponent>;
 
     beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [
+                SummaryExpenseListFooterComponent,
+            ],
+            imports: [
+                RouterTestingModule,
+                HttpClientTestingModule,
+                MatIconModule,
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

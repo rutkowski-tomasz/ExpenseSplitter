@@ -1,16 +1,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TripWhoAmIDialogComponent } from './trip-who-am-i-dialog.component';
-import { appTesting } from 'src/app/app-testing';
+import { MatFormFieldModule, MatDialogModule, MatDialogRef, MatInputModule } from '@angular/material';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TripWhoAmIDialogComponent', () => {
     let component: TripWhoAmIDialogComponent;
     let fixture: ComponentFixture<TripWhoAmIDialogComponent>;
 
     beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [
+                TripWhoAmIDialogComponent,
+            ],
+            imports: [
+                ReactiveFormsModule,
+                RouterTestingModule,
+                HttpClientTestingModule,
+                NoopAnimationsModule,
+                MatFormFieldModule,
+                MatInputModule,
+                MatDialogModule,
+            ],
+            providers: [
+                { provide: MatDialogRef, useValue: {} },
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

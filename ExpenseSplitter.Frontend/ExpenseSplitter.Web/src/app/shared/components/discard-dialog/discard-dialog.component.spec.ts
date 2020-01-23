@@ -1,16 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DiscardDialogComponent } from './discard-dialog.component';
-import { appTesting } from 'src/app/app-testing';
+import { MatDialogModule } from '@angular/material';
 
 describe('DiscardDialogComponent', () => {
     let component: DiscardDialogComponent;
     let fixture: ComponentFixture<DiscardDialogComponent>;
 
     beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [
+                DiscardDialogComponent,
+            ],
+            imports: [
+                MatDialogModule,
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

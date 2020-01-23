@@ -1,16 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageErrorComponent } from './page-error.component';
-import { appTesting } from 'src/app/app-testing';
+import { MatIconModule } from '@angular/material';
 
 describe('PageErrorComponent', () => {
     let component: PageErrorComponent;
     let fixture: ComponentFixture<PageErrorComponent>;
 
     beforeEach(async(() => {
-        TestBed
-            .configureTestingModule(appTesting)
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [
+                PageErrorComponent,
+            ],
+            imports: [
+                MatIconModule,
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

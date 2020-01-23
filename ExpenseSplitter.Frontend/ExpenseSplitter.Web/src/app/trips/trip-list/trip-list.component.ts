@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TripListModel } from 'src/app/models/trip/trip-list.model';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
-import { TripAddSheetComponent } from '../trip-add-sheet/add-trip-sheet.component';
+import { TripAddSheetComponent } from '../trip-add-sheet/trip-add-sheet.component';
 import { TripAddActionEnum } from '../trip-add-sheet/trip-add-action.enum';
 
 @Component({

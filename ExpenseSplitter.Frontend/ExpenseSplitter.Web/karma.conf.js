@@ -24,9 +24,23 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false,
-    restartOnFileChange: true
+    autoWatch: false,
+    browsers: ['ChromeHeadlessNoSandbox'],
+    browserDisconnectTimeout: 10000,
+    browserDisconnectTolerance: 3,
+    browserNoActivityTimeout: 60000,
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',        
+        flags: [
+          '--no-sandbox',
+          '--headless',            
+          '--proxy-server="direct://"',
+          '--proxy-bypass-list=*',          
+          '--disable-dev-shm-usage'
+        ]
+      }
+    },
+    singleRun: true
   });
 };
