@@ -8,9 +8,9 @@ This project consits of both frontend and backend. To build the components Angul
 
 ## Starting the project
 
-These instructions will get you a copy of the project up and running. See [Development setup](#development_setup) for notes on how to prepare environment for development and testing purposes.
+These instructions will get you a copy of the project up and running. See [Development setup](#development-setup) for notes on how to prepare environment for development and testing purposes.
 
-The project components have been dockerized therefore the only prerequisite is installed **[Docker]**. To start simply run the below command:
+The project components have been dockerized therefore the only prerequisite is installed **[Docker](https://www.docker.com/)**. To start simply run the below command:
 
 Set environment variables to configure database (Run cmd as administrator, make sure terminal is restarted before building docker-compose)
 ```
