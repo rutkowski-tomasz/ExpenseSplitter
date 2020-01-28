@@ -1,0 +1,74 @@
+version: "3.7"
+services:
+  api:
+    image: registry.gitlab.com/tomejzen/expense-splitter/expense-splitter-api:production
+    depends_on:
+      - mysql
+    build:
+      context: .
+      dockerfile: ./ExpenseSplitter.Api/Dockerfile
+    ports:
+      - published: 7001
+        target: 7001
+    restart: on-failure
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - proxy_public
+    environment:
+      - ENVIRONMENT=Production
+      - ConnectionStrings__Context=${ConnectionStrings__Context}
+
+  web:
+    image: registry.gitlab.com/tomejzen/expense-splitter/expense-splitter-web:production
+    build:
+      context: ./ExpenseSplitter.Web
+      args:
+        enviroment: production
+    depends_on:
+      - api
+    ports:
+      - published: 7000
+        target: 7000
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - proxy_public
+    environment:
+      - ENVIRONMENT=production
+
+  mysql:
+    image: mariadb:10.1
+    restart: always
+    ports:
+      - published: 3306
+        target: 3306
+    volumes:
+      - mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    environment:
+      - MYSQL_DATABASE=${MySql_Database}
+      - MYSQL_USER=${MySql_User}
+      - MYSQL_PASSWORD=${MySql_Password}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
+networks:
+  proxy_public:
+    external: true
+
+volumes:
+  mariadb:

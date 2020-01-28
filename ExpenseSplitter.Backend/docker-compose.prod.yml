@@ -7,9 +7,14 @@ services:
       dockerfile: ./ExpenseSplitter.Api/Dockerfile
     ports:
       - published: 7001
-        target: 80
+        target: 7001
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     networks:
       - proxy_public
     environment:

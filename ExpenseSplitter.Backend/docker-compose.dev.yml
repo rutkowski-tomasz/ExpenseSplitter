@@ -1,13 +1,13 @@
 version: "3.7"
 services:
   api:
+    image: registry.gitlab.com/tomejzen/expense-splitter/expense-splitter-api:development
     build: 
       context: .
       dockerfile: ./ExpenseSplitter.Api/Dockerfile
-    image: registry.gitlab.com/tomejzen/expense-splitter/expense-splitter-api:latest
     ports:
       - published: 7001
-        target: 80
+        target: 7001
     environment:
       - ENVIRONMENT=Development
       - ConnectionStrings__Context=${ConnectionStrings__Context}

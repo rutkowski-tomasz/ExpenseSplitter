@@ -75,11 +75,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
         return (formGroup: AbstractControl): {[key: string]: any} | null => {
             const password = formGroup.get('password').value;
             const repassword = formGroup.get('repassword').value;
-    
+
             if (password !== repassword) {
                 this.repassword.setErrors({ mismatch: true });
             }
-    
+
             return null;
         };
     }

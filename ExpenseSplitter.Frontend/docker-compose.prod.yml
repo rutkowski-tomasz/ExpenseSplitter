@@ -8,9 +8,14 @@ services:
         enviroment: production
     ports:
       - published: 7000
-        target: 80
+        target: 7000
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     networks:
       - proxy_public
     environment:

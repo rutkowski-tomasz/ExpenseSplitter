@@ -15,6 +15,6 @@ RUN echo "Running for environment: $enviroment"
 RUN npm run build-$enviroment
 
 FROM library/nginx:alpine
-COPY --from=build /app/nginx-enved.conf /etc/nginx/nginx.conf
+COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist/out/ /usr/share/nginx/html
 RUN ln -sf /proc/self/fd /dev/

@@ -7,18 +7,19 @@ COPY ["ExpenseSplitter.Tests/*.csproj", "ExpenseSplitter.Tests/"]
 
 RUN dotnet restore "ExpenseSplitter.Tests/ExpenseSplitter.Tests.csproj"
 
-# copy other files
+# Copy other files
 COPY ./ExpenseSplitter.Api ./ExpenseSplitter.Api/
 COPY ./ExpenseSplitter.Tests ./ExpenseSplitter.Tests/
 
-# run unit tests
+# Run unit tests
 RUN dotnet test "ExpenseSplitter.Tests/ExpenseSplitter.Tests.csproj"
 
 WORKDIR "/app/ExpenseSplitter.Api"
-RUN dotnet publish "ExpenseSplitter.Api.csproj" -c Release -o /app
+RUN dotnet publish "ExpenseSplitter.Api.csproj" -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
 WORKDIR /app
-COPY --from=build-env /app .
+COPY --from=build-env /app/ExpenseSplitter.Api/out .
+ENV ASPNETCORE_URLS http://+:7001
 ENTRYPOINT ["dotnet", "ExpenseSplitter.Api.dll"]
