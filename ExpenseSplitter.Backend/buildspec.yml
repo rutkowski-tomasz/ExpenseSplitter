@@ -19,5 +19,5 @@ phases:
 artifacts:
     files:
         - '**/*'
-    base-directory: 'ExpenseSplitter.Backend/ExpenseSplitter.Api/out/*'
-    discard-paths: yes
+    base-directory: 'ExpenseSplitter.Backend/ExpenseSplitter.Api/out'
+    discard-paths: no
