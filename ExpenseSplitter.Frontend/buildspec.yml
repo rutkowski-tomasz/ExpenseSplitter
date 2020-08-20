@@ -1,0 +1,24 @@
+version: 0.2
+
+env:
+    variables:
+        CACHE_CONTROL: '86400'
+phases:
+    install:
+        runtime-versions:
+            nodejs: 10
+        commands:
+            - cd ExpenseSplitter.Frontend/ExpenseSplitter.Web
+            - npm install --silent --no-progress
+    pre_build:
+        commands:
+            - npm run lint
+            - npm run test
+    build:
+        commands:
+            - npm run build-production
+artifacts:
+    files:
+        - '**/*'
+    base-directory: 'ExpenseSplitter.Frontend/ExpenseSplitter.Web/dist/out/*'
+    discard-paths: yes

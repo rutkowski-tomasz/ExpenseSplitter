@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+    variables:
+        CACHE_CONTROL: '86400'
+phases:
+    install:
+        runtime-versions:
+            dotnet: 3.1
+        commands:
+            - cd ExpenseSplitter.Backend
+            - dotnet restore "ExpenseSplitter.Tests/ExpenseSplitter.Tests.csproj"
+    pre_build:
+        commands:
+            - dotnet test -c Release "ExpenseSplitter.Tests/ExpenseSplitter.Tests.csproj"
+    build:
+        commands:
+            - dotnet publish -c Release -o="ExpenseSplitter.Api/out" "ExpenseSplitter.Api/ExpenseSplitter.Api.csproj"
+artifacts:
+    files:
+        - '**/*'
+    base-directory: 'ExpenseSplitter.Backend/ExpenseSplitter.Api/out/*'
+    discard-paths: yes
