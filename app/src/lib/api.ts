@@ -8,6 +8,7 @@ export const removeAuthToken = () => localStorage.removeItem('authToken');
 // API client with auth header
 const apiCall = async (endpoint: string, options: RequestInit = {}) => {
   const token = getAuthToken();
+  
   const headers = {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),

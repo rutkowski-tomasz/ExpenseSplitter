@@ -30,11 +30,11 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
     try {
       if (isLogin) {
         const response = await authApi.login(formData.email, formData.password);
-        setAuthToken(response.token);
+        setAuthToken(response.accessToken);
       } else {
         await authApi.register(formData.email, formData.nickname, formData.password);
         const loginResponse = await authApi.login(formData.email, formData.password);
-        setAuthToken(loginResponse.token);
+        setAuthToken(loginResponse.accessToken);
         toast({
           title: "Account created!",
           description: "Welcome to ExpenseSplitter!",

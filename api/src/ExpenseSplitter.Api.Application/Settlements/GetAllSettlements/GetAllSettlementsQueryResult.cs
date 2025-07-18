@@ -6,5 +6,9 @@ public sealed record GetAllSettlementsQueryResult(
 
 public sealed record GetAllSettlementsQueryResultSettlement(
     Guid Id,
-    string Name
+    string Name,
+    int ParticipantCount,
+    decimal TotalExpenses,
+    DateTime LastActivity,
+    decimal UserBalance
 );

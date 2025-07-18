@@ -20,6 +20,7 @@ interface SettlementCardProps {
 export function SettlementCard({ settlement, onClick }: SettlementCardProps) {
   const isOwed = settlement.userBalance > 0;
   const isOwing = settlement.userBalance < 0;
+  const hasBalance = settlement.userBalance !== 0;
 
   return (
     <Card 
@@ -55,7 +56,7 @@ export function SettlementCard({ settlement, onClick }: SettlementCardProps) {
           <span className="font-medium">${settlement.totalExpenses.toFixed(2)}</span>
         </div>
         
-        {settlement.userBalance !== 0 && (
+        {hasBalance && (
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Your balance</span>
             <Badge 

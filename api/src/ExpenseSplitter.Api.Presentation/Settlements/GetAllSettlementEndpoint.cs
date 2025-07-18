@@ -11,7 +11,11 @@ public record GetAllSettlementsResponse(
 
 public record GetAllSettlementsResponseSettlement(
     Guid Id,
-    string Name
+    string Name,
+    int ParticipantCount,
+    decimal TotalExpenses,
+    DateTime LastActivity,
+    decimal UserBalance
 );
 
 public class GetAllSettlementsEndpoint() : Endpoint<GetAllSettlementsRequest, GetAllSettlementsQuery, GetAllSettlementsQueryResult, GetAllSettlementsResponse>(
@@ -20,7 +24,11 @@ public class GetAllSettlementsEndpoint() : Endpoint<GetAllSettlementsRequest, Ge
     result => new GetAllSettlementsResponse(
         result.Settlements.Select(settlement => new GetAllSettlementsResponseSettlement(
             settlement.Id,
-            settlement.Name
+            settlement.Name,
+            settlement.ParticipantCount,
+            settlement.TotalExpenses,
+            settlement.LastActivity,
+            settlement.UserBalance
         ))
     )
 );

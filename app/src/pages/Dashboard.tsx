@@ -1,57 +1,63 @@
-import { useState, useEffect } from 'react';
-import { Plus, Search, Bell, Menu, LogOutIcon, JoystickIcon } from 'lucide-react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Plus, Search, LogOutIcon, JoystickIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SettlementCard } from '@/components/SettlementCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { settlementsApi, removeAuthToken } from '@/lib/api';
+import { settlementsApi, removeAuthToken, getAuthToken } from '@/lib/api';
 
-// Mock data for development
-const mockSettlements = [
-  {
-    id: '1',
-    name: 'Weekend Trip',
-    participantCount: 4,
-    totalExpenses: 450.00,
-    lastActivity: '2 days ago',
-    userBalance: 75.50,
-  },
-  {
-    id: '2',
-    name: 'Dinner Split',
-    participantCount: 3,
-    totalExpenses: 120.00,
-    lastActivity: '1 week ago',
-    userBalance: -40.00,
-  },
-  {
-    id: '3',
-    name: 'House Expenses',
-    participantCount: 2,
-    totalExpenses: 800.00,
-    lastActivity: '3 days ago',
-    userBalance: 0,
-  },
-];
+interface Settlement {
+  id: string;
+  name: string;
+  participantCount: number;
+  totalExpenses: number;
+  lastActivity: string;
+  userBalance: number;
+}
 
 interface DashboardProps {
   onNavigate: (page: string, data?: any) => void;
   onLogout: () => void;
 }
 
+// Helper function to format date for display
+const formatLastActivity = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return 'Today';
+  if (diffInDays === 1) return 'Yesterday';
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+  return date.toLocaleDateString();
+};
+
 export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
-  const [settlements, setSettlements] = useState(mockSettlements);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  const { data: settlementsData, isLoading, error } = useQuery({
+    queryKey: ['settlements', 1, 50], // page=1, pageSize=50
+    queryFn: async () => {
+      const token = getAuthToken();
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      return settlementsApi.getAll(1, 50);
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !!getAuthToken(), // Only run query if user is authenticated
+  });
+
+  const settlements = settlementsData?.settlements || [];
 
   const filteredSettlements = settlements.filter(settlement =>
     settlement.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const totalOwed = settlements.reduce((sum, s) => sum + Math.max(0, s.userBalance), 0);
-  const totalOwing = Math.abs(settlements.reduce((sum, s) => sum + Math.min(0, s.userBalance), 0));
 
   const handleLogout = () => {
     removeAuthToken();
@@ -61,6 +67,22 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
       description: "See you next time!",
     });
   };
+
+  // Handle error state
+  if (error) {
+    // Check if it's an authentication error
+    if (error instanceof Error && error.message.includes('401')) {
+      removeAuthToken();
+      onLogout();
+      return null; // Don't render anything as we're redirecting
+    }
+    
+    toast({
+      title: "Error loading settlements",
+      description: error instanceof Error ? error.message : "Failed to load settlements",
+      variant: "destructive",
+    });
+  }
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -105,24 +127,40 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
           </Button>
         </div>
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search settlements..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-12 rounded-xl border-border"
-          />
-        </div>
-
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-foreground">Your Settlements</h2>
-            <span className="text-sm text-muted-foreground">{filteredSettlements.length} settlements</span>
+            <span className="text-sm text-muted-foreground">
+              {isLoading ? '...' : `${filteredSettlements.length} settlements`}
+            </span>
           </div>
           
-          {filteredSettlements.length === 0 ? (
+          {isLoading ? (
+            <Card className="shadow-card border-0">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
+                </div>
+                <h3 className="font-semibold mb-2">Loading settlements...</h3>
+                <p className="text-sm text-muted-foreground">Please wait while we fetch your data</p>
+              </CardContent>
+            </Card>
+          ) : error ? (
+            <Card className="shadow-card border-0">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-8 h-8 text-red-600" />
+                </div>
+                <h3 className="font-semibold mb-2">Failed to load settlements</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {error instanceof Error ? error.message : "Something went wrong"}
+                </p>
+                <Button onClick={() => window.location.reload()} variant="outline">
+                  Try Again
+                </Button>
+              </CardContent>
+            </Card>
+          ) : filteredSettlements.length === 0 ? (
             <Card className="shadow-card border-0">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
@@ -144,7 +182,14 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
             filteredSettlements.map(settlement => (
               <SettlementCard
                 key={settlement.id}
-                settlement={settlement}
+                settlement={{
+                  id: settlement.id,
+                  name: settlement.name,
+                  participantCount: settlement.participantCount,
+                  totalExpenses: settlement.totalExpenses,
+                  lastActivity: formatLastActivity(settlement.lastActivity),
+                  userBalance: settlement.userBalance,
+                }}
                 onClick={() => onNavigate('settlement', { id: settlement.id })}
               />
             ))
