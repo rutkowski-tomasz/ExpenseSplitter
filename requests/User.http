@@ -3,9 +3,9 @@ POST {{baseUrl}}/api/v1/users/register
 Content-Type: application/json
 
 {
-    "email": "testa@example.com",
+    "email": "user1@example.com",
     "password": "password",
-    "nickname": "Tomasqz"
+    "nickname": "Tomek"
 }
 
 ### 

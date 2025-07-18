@@ -62,19 +62,25 @@ The application uses environment variables for configuration. Copy the example e
 cp api/.env.example api/.env
 ```
 
-## Run API
+## Run API (backend)
 
 ```sh
 dotnet run --project api/src/ExpenseSplitter.Api.Presentation/ExpenseSplitter.Api.Presentation.csproj
 ```
 
-## Start API dependencies
+## Run App (frontend)
+
+```sh
+cd app && npm run dev
+```
+
+## Start dependencies
 
 ```sh
 docker-compose up -d expensesplitter-db expensesplitter-idp expensesplitter-cache
 ```
 
-## Create migration
+## Create db migration
 
 ```sh
 dotnet ef migrations add --startup-project api/src/ExpenseSplitter.Api.Presentation --project api/src/ExpenseSplitter.Api.Infrastructure ...
