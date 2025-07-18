@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Bell, Menu } from 'lucide-react';
+import { Plus, Search, Bell, Menu, LogOutIcon, JoystickIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SettlementCard } from '@/components/SettlementCard';
@@ -78,40 +78,14 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="w-5 h-5" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full" />
-            </Button>
             <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <Menu className="w-5 h-5" />
+              <LogOutIcon className="w-5 h-5" />
             </Button>
           </div>
         </div>
       </div>
 
       <div className="p-4 space-y-6">
-        {/* Balance Summary */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="shadow-card border-0">
-            <CardContent className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">+${totalOwed.toFixed(2)}</div>
-                <div className="text-sm text-muted-foreground">You are owed</div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-card border-0">
-            <CardContent className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-red-600">${totalOwing.toFixed(2)}</div>
-                <div className="text-sm text-muted-foreground">You owe</div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">
           <Button 
             onClick={() => onNavigate('createSettlement')}
@@ -126,12 +100,11 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
             onClick={() => onNavigate('joinSettlement')}
             className="h-16 flex-col gap-2"
           >
-            <Search className="w-6 h-6" />
+            <JoystickIcon className="w-6 h-6" />
             <span>Join Settlement</span>
           </Button>
         </div>
 
-        {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <Input
@@ -143,7 +116,6 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
           />
         </div>
 
-        {/* Settlements List */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-foreground">Your Settlements</h2>

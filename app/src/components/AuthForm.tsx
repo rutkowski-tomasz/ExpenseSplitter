@@ -31,10 +31,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       if (isLogin) {
         const response = await authApi.login(formData.email, formData.password);
         setAuthToken(response.token);
-        toast({
-          title: "Welcome back!",
-          description: "You've been logged in successfully.",
-        });
       } else {
         await authApi.register(formData.email, formData.nickname, formData.password);
         const loginResponse = await authApi.login(formData.email, formData.password);
