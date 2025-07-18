@@ -20,7 +20,19 @@ const apiCall = async (endpoint: string, options: RequestInit = {}) => {
   });
 
   if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    // Try to extract error message from response body
+    let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+    try {
+      const errorData = await response.json();
+      if (errorData.detail) {
+        errorMessage = errorData.detail;
+      } else if (errorData.title) {
+        errorMessage = errorData.title;
+      }
+    } catch {
+      // If we can't parse the response, use the default error message
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();

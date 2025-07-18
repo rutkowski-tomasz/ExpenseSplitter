@@ -50,7 +50,7 @@ public abstract class EndpointBase(
             ErrorType.PreConditionFailed => Results.Problem(appError.Description, statusCode: StatusCodes.Status412PreconditionFailed),
             ErrorType.Conflict => Results.Conflict(appError.Description),
             ErrorType.BadGateway => Results.Problem(appError.Description, statusCode: StatusCodes.Status502BadGateway),
-            ErrorType.Unauthorized => Results.Unauthorized(),
+            ErrorType.Unauthorized => Results.Problem(appError.Description, statusCode: StatusCodes.Status401Unauthorized),
             ErrorType.NotModified => Results.StatusCode(StatusCodes.Status304NotModified),
             ErrorType.None => throw new NotImplementedException(),
             ErrorType.ServerInternalError => throw new NotImplementedException(),

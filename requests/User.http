@@ -24,3 +24,14 @@ Content-Type: application/json
 # @name me
 GET {{baseUrl}}/api/v1/users/me
 Authorization: Bearer {{login.response.body.accessToken}}
+
+###
+
+# @name loginWrongPassword
+POST {{baseUrl}}/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "testa@example.com",
+    "password": "wrongpassword"
+}

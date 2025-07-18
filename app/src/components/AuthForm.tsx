@@ -14,6 +14,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: '',
     nickname: '',
@@ -24,6 +25,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
       if (isLogin) {
@@ -44,11 +46,16 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       }
       onSuccess();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Something went wrong",
-        variant: "destructive",
-      });
+      const errorMessage = error instanceof Error ? error.message : "Something went wrong";
+      if (isLogin) {
+        setError(errorMessage);
+      } else {
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -75,7 +82,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                 type="email"
                 placeholder="Email address"
                 value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                onChange={(e) => {
+                  setFormData(prev => ({ ...prev, email: e.target.value }));
+                  setError(null);
+                }}
                 required
                 className="h-12 rounded-xl border-border focus:border-primary"
               />
@@ -85,7 +95,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                   type="text"
                   placeholder="Nickname"
                   value={formData.nickname}
-                  onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
+                  onChange={(e) => {
+                    setFormData(prev => ({ ...prev, nickname: e.target.value }));
+                    setError(null);
+                  }}
                   required
                   className="h-12 rounded-xl border-border focus:border-primary"
                 />
@@ -96,7 +109,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   value={formData.password}
-                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  onChange={(e) => {
+                    setFormData(prev => ({ ...prev, password: e.target.value }));
+                    setError(null);
+                  }}
                   required
                   className="h-12 rounded-xl border-border focus:border-primary pr-12"
                 />
@@ -110,6 +126,9 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </Button>
               </div>
+            </div>
+            <div className="text-sm text-red-600 min-h-[20px]">
+              {error}
             </div>
 
             <Button
@@ -132,7 +151,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
             <button
               type="button"
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setError(null);
+              }}
             >
               {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
             </button>
