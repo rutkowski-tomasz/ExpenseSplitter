@@ -20,6 +20,9 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.Property(expense => expense.Id)
             .HasConversion(expenseId => expenseId.Value, value => new ExpenseId(value));
 
+        builder.Property(expense => expense.SettlementId)
+            .HasConversion(settlementId => settlementId.Value, value => new SettlementId(value));
+
         builder
             .HasOne<Settlement>()
             .WithMany()

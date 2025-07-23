@@ -3,8 +3,8 @@ POST {{baseUrl}}/api/v1/users/login
 Content-Type: application/json
 
 {
-    "email": "user1@example.com",
-    "password": "password"
+    "email": "user2@example.com",
+    "password": "user2"
 }
 
 ###
@@ -23,7 +23,7 @@ Authorization: Bearer {{login.response.body.accessToken}}
 Content-Type: application/json
 
 {
-    "name": "Weekend trip",
+    "name": "Weekend tripos",
     "participantNames": [
         "Agata",
         "Blazej"
@@ -98,14 +98,38 @@ Authorization: Bearer {{login.response.body.accessToken}}
 PATCH {{baseUrl}}/api/v1/settlements/{{createSettlement.response.body.$}}/participants/{{getSettlement.response.body.participants[0].id}}/claim
 Authorization: Bearer {{login.response.body.accessToken}}
 
+###
+
+# @name createExpense
+POST {{baseUrl}}/api/v1/expenses
+Authorization: Bearer {{login.response.body.accessToken}}
+Content-Type: application/json
+
+{
+    "name": "Postman expense xy",
+    "paymentDate": "2021-10-01",
+    "settlementId": "{{getSettlement.response.body.id}}",
+    "payingParticipantId": "{{getSettlement.response.body.participants[0].id}}",
+    "allocations": [
+        {
+            "participantId": "{{getSettlement.response.body.participants[0].id}}",
+            "value": 100
+        },
+        {
+            "participantId": "{{getSettlement.response.body.participants[1].id}}",
+            "value": 50
+        }
+    ]
+}
+
 ### 
 
 # @name getExpenses
-GET {{baseUrl}}/api/v1/settlements/{{createSettlement.response.body.$}}/expenses
+GET {{baseUrl}}/api/v1/settlements/{{getSettlement.response.body.id}}/expenses
 Authorization: Bearer {{login.response.body.accessToken}}
 
 ###
 
 # @name reimbursement
-GET {{baseUrl}}/api/v1/settlements/{{createSettlement.response.body.$}}/reimbursement
+GET {{baseUrl}}/api/v1/settlements/{{getSettlement.response.body.id}}/reimbursement
 Authorization: Bearer {{login.response.body.accessToken}}
