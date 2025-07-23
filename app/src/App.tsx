@@ -4,15 +4,15 @@ import { TooltipProvider } from "~/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
-import Index from "./pages/Index";
-import { DashboardPage } from "./pages/DashboardPage";
-import { SettlementDetailWrapper } from "./pages/SettlementDetailWrapper";
-import { CreateExpenseWrapper } from "./pages/CreateExpenseWrapper";
-import { ExpenseDetail } from "./pages/ExpenseDetail";
-import { JoinSettlement } from "./pages/JoinSettlement";
-import { CreateSettlement } from "./pages/CreateSettlement";
-import NotFound from "./pages/NotFound";
-import { useAuthStore } from "./stores/authStore";
+import Index from "~/pages/Index";
+import { DashboardPage } from "~/pages/DashboardPage";
+import { SettlementDetailWrapper } from "~/pages/SettlementDetailWrapper";
+import { CreateExpenseWrapper } from "~/pages/CreateExpenseWrapper";
+import { ExpenseDetail } from "~/pages/ExpenseDetail";
+import { JoinSettlement } from "~/pages/JoinSettlement";
+import NotFound from "~/pages/NotFound";
+import { useAuthStore } from "~/stores/authStore";
+import { SettlementCreatePage } from "~/pages/SettlementCreatePage";
 
 const queryClient = new QueryClient();
 
@@ -52,11 +52,11 @@ function AppContent() {
         <Route index element={<Index />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/settlement/:settlementId" element={<SettlementDetailWrapper />} />
-          <Route path="/settlement/:settlementId/add-expense" element={<CreateExpenseWrapper />} />
-          <Route path="/expense/:expenseId" element={<ExpenseDetail />} />
+          <Route path="/settlements/:settlementId" element={<SettlementDetailWrapper />} />
+          <Route path="/settlements/:settlementId/add-expense" element={<CreateExpenseWrapper />} />
+          <Route path="/expenses/:expenseId" element={<ExpenseDetail />} />
           <Route path="/join-settlement" element={<JoinSettlement />} />
-          <Route path="/create-settlement" element={<CreateSettlement />} />
+          <Route path="/create-settlement" element={<SettlementCreatePage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

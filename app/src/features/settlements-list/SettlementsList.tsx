@@ -110,7 +110,7 @@ export function SettlementsList({ }: SettlementsListProps) {
             lastActivity: formatLastActivity(settlement.lastActivity),
             userBalance: settlement.userBalance,
           }}
-          onClick={() => navigate(`/settlement/${settlement.id}`)}
+          onClick={() => navigate(`/settlements/${settlement.id}`)}
         />
       ))}
     </div>
