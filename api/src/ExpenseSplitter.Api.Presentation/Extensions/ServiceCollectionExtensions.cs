@@ -1,4 +1,5 @@
 ﻿using ExpenseSplitter.Api.Presentation.MediatrEndpoints;
+using ExpenseSplitter.Api.Presentation.Middleware;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 
@@ -16,5 +17,11 @@ public static class ServiceCollectionExtensions
             .ToArray();
 
         services.TryAddEnumerable(serviceDescriptors);
+    }
+
+    public static void AddExceptionHandlers(this IServiceCollection services)
+    {
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
     }
 }

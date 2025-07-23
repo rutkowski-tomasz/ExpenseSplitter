@@ -21,7 +21,7 @@ public static class ApplicationBuilderExtensions
 
     public static void UseCustomExceptionHandler(this IApplicationBuilder app)
     {
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.UseExceptionHandler();
     }
 
     public static void UseTraceIdMiddleware(this IApplicationBuilder app)

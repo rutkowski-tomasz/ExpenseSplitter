@@ -32,6 +32,7 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddRateLimiting();
 builder.Services.AddCorsPolicy();
+builder.Services.AddExceptionHandlers();
 
 var app = builder.Build();
 
