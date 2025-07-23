@@ -7,7 +7,7 @@ using Serilog;
 using DotNetEnv;
 using OpenTelemetry.Logs;
 
-Env.Load("../../.env");
+Env.Load("../../../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +19,7 @@ builder.Services.AddSerilog(config => config
 
 builder.Logging.AddOpenTelemetry(logging => logging.AddOtlpExporter());
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 
 builder.Services.AddApplication();

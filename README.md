@@ -59,7 +59,7 @@ To let you quickly understand the domain and relationships of the project entiti
 The application uses environment variables for configuration. Copy the example environment file and configure it with your values:
 
 ```sh
-cp api/.env.example api/.env
+cp .env.example .env
 ```
 
 ## Run API (backend)
