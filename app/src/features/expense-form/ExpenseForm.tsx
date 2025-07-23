@@ -72,17 +72,20 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
       if (!form.getValues('payingParticipantId')) {
         form.setValue('payingParticipantId', settlement.participants[0].id);
       }
-      
-      if (watchedAllocations.length === 0) {
-        const initialAllocations = settlement.participants.map(participant => ({
-          participantId: participant.id,
-          value: 0,
-        }));
-        form.setValue('allocations', initialAllocations);
-      }
       formInitialized.current = true;
     }
-  }, [settlement, existingExpense, isEditMode, form, watchedAllocations]);
+  }, [settlement, existingExpense, isEditMode, form]);
+
+  // Separate effect for initializing allocations in new expense mode
+  useEffect(() => {
+    if (!isEditMode && settlement && settlement.participants.length > 0 && watchedAllocations.length === 0) {
+      const initialAllocations = settlement.participants.map(participant => ({
+        participantId: participant.id,
+        value: 0,
+      }));
+      form.setValue('allocations', initialAllocations);
+    }
+  }, [settlement, isEditMode, watchedAllocations.length, form]);
 
   const handleSplitEquallyClick = () => {
     if (!settlement || totalAmount === 0) return;
