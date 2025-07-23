@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthForm } from '@/components/AuthForm';
-import { getAuthToken } from '@/lib/api';
+import { AuthForm } from '~/components/AuthForm';
+import { useAuthStore } from '~/stores/authStore';
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,7 +9,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getAuthToken();
+    const { token } = useAuthStore.getState();
     setIsAuthenticated(!!token);
     setLoading(false);
     

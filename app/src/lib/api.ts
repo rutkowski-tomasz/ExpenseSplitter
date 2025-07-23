@@ -1,60 +1,23 @@
-const API_BASE_URL = 'https://localhost:5001/api/v1';
+import { API_BASE_URL } from '~/config';
+import { useAuthStore } from '~/stores/authStore';
 
-// Auth storage helpers
-export const getAuthToken = () => localStorage.getItem('authToken');
-export const setAuthToken = (token: string) => localStorage.setItem('authToken', token);
-export const removeAuthToken = () => localStorage.removeItem('authToken');
-
-// API client with auth header
-const apiCall = async (endpoint: string, options: RequestInit = {}) => {
-  const token = getAuthToken();
-  
+export async function apiCall(path: string, options: RequestInit = {}) {
+  const token = useAuthStore.getState().token;
   const headers = {
-    'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` }),
     ...options.headers,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    'Content-Type': 'application/json',
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
-
-  if (!response.ok) {
-    // Try to extract error message from response body
-    let errorMessage = `API Error: ${response.status} ${response.statusText}`;
-    try {
-      const errorData = await response.json();
-      if (errorData.detail) {
-        errorMessage = errorData.detail;
-      } else if (errorData.title) {
-        errorMessage = errorData.title;
-      }
-    } catch {
-      // If we can't parse the response, use the default error message
-    }
-    throw new Error(errorMessage);
+  const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
+  
+  if (response.status === 401) {
+    useAuthStore.getState().logout();
+    throw new Error('Authentication failed');
   }
-
-  return response.json();
-};
-
-// Auth API
-export const authApi = {
-  login: async (email: string, password: string) => 
-    apiCall('/Users/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    }),
   
-  register: async (email: string, nickname: string, password: string) =>
-    apiCall('/Users/register', {
-      method: 'POST',
-      body: JSON.stringify({ email, nickname, password }),
-    }),
-  
-  getMe: async () => apiCall('/Users/me'),
-};
+  return response;
+}
 
 // Settlements API
 export const settlementsApi = {

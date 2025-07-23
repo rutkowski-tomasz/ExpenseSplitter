@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { authApi, setAuthToken } from '@/lib/api';
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import { useToast } from '~/hooks/use-toast';
+import { useAuthStore } from '~/stores/authStore';
 import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 
 interface AuthFormProps {
@@ -29,12 +29,9 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
 
     try {
       if (isLogin) {
-        const response = await authApi.login(formData.email, formData.password);
-        setAuthToken(response.accessToken);
+        await useAuthStore.getState().login(formData.email, formData.password);
       } else {
-        await authApi.register(formData.email, formData.nickname, formData.password);
-        const loginResponse = await authApi.login(formData.email, formData.password);
-        setAuthToken(loginResponse.accessToken);
+        await useAuthStore.getState().register(formData.email, formData.nickname, formData.password);
         toast({
           title: "Account created!",
           description: "Welcome to ExpenseSplitter!",

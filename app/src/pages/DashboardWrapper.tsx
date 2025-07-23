@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Dashboard } from './Dashboard';
-import { removeAuthToken } from '@/lib/api';
+import { useAuthStore } from '~/stores/authStore';
 
 export function DashboardWrapper() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export function DashboardWrapper() {
   };
 
   const handleLogout = () => {
-    removeAuthToken();
+    useAuthStore.getState().logout();
     navigate('/');
   };
 

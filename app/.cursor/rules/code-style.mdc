@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+When producing code
+- never add comments
+- for typescript, always use `;` at the end of the line

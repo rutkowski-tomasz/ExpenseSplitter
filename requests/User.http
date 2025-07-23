@@ -3,9 +3,9 @@ POST {{baseUrl}}/api/v1/users/register
 Content-Type: application/json
 
 {
-    "email": "user1@example.com",
-    "password": "password",
-    "nickname": "Tomek"
+    "email": "user2@example.com",
+    "password": "user2",
+    "nickname": "User2"
 }
 
 ### 
@@ -15,8 +15,8 @@ POST {{baseUrl}}/api/v1/users/login
 Content-Type: application/json
 
 {
-    "email": "testa@example.com",
-    "password": "password"
+    "email": "user2@example.com",
+    "password": "user2"
 }
 
 ###

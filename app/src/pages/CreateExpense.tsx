@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { ArrowLeft, Plus, Minus, Calculator } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
+import { Avatar, AvatarFallback } from '~/components/ui/avatar';
+import { Checkbox } from '~/components/ui/checkbox';
+import { useToast } from '~/hooks/use-toast';
 
 // Mock participants for development
 const mockParticipants = [
