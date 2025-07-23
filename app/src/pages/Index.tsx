@@ -4,27 +4,30 @@ import { AuthForm } from '~/components/AuthForm';
 import { useAuthStore } from '~/stores/authStore';
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { token, isAuthenticated, isInitialized } = useAuthStore();
 
   useEffect(() => {
-    const { token } = useAuthStore.getState();
-    setIsAuthenticated(!!token);
+    // Only proceed once auth is initialized
+    if (!isInitialized) {
+      return;
+    }
+
     setLoading(false);
     
     // Redirect to dashboard if authenticated
-    if (token) {
+    if (token && isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [navigate]);
+  }, [token, isAuthenticated, isInitialized, navigate]);
 
   const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-    navigate('/dashboard');
+    // The redirect will happen automatically via the useEffect above
+    // when the auth store state changes
   };
 
-  if (loading) {
+  if (loading || !isInitialized) {
     return (
       <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
         <div className="text-center space-y-4">

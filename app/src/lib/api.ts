@@ -13,6 +13,7 @@ export async function apiCall(path: string, options: RequestInit = {}) {
   
   if (response.status === 401) {
     useAuthStore.getState().logout();
+    window.location.href = '/';
     throw new Error('Authentication failed');
   }
   
