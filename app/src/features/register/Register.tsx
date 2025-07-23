@@ -11,6 +11,7 @@ import { LogIn } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { Result } from 'neverthrow';
 import { registerFormSchema, type RegisterFormData } from './register-models';
+import { Helmet } from 'react-helmet';
 
 export function Register() {
   const [formError, setFormError] = useState<string | null>(null);
@@ -52,6 +53,9 @@ export function Register() {
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
       <Card className="w-full max-w-md shadow-card border-0">
         <CardHeader className="text-center space-y-2">
           <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">

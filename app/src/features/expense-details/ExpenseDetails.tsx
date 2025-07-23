@@ -7,13 +7,14 @@ import { Avatar, AvatarFallback } from '~/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog';
 import { toast } from '~/hooks/use-toast';
-import { useGetExpenseDetailsWithSettlementQuery, useDeleteExpenseMutation } from './expense-details-api';
+import { useGetExpenseAndSettlementQuery, useDeleteExpenseMutation } from './expense-details-api';
+import { Helmet } from 'react-helmet';
 
 export function ExpenseDetails() {
   const { settlementId, expenseId } = useParams<{ settlementId: string; expenseId: string }>();
   const navigate = useNavigate();
   
-  const { data: expense, isLoading, error } = useGetExpenseDetailsWithSettlementQuery(expenseId || '');
+  const { data: expense, isLoading, error } = useGetExpenseAndSettlementQuery(expenseId || '', settlementId || '');
   const deleteExpenseMutation = useDeleteExpenseMutation();
 
   const handleEdit = () => {
@@ -126,6 +127,9 @@ export function ExpenseDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <Helmet>
+        <title>{expense.title}</title>
+      </Helmet>
       {/* Header */}
       <div className="bg-white border-b border-border p-4">
         <div className="flex items-center gap-3">

@@ -3,31 +3,32 @@ import { ExpenseDetailsResponse, ExpenseDetailsWithNamesResponse, DeleteExpenseR
 import { GetSettlementResponse } from '~/features/settlement-details/settlement-details-models';
 import { apiCall } from '~/lib/api';
 
-const fetchExpenseDetails = async (expenseId: string): Promise<ExpenseDetailsResponse> => {
+const getExpense = async (expenseId: string): Promise<ExpenseDetailsResponse> => {
   const response = await apiCall(`/api/v1/Expenses/${expenseId}`);
   return await response.json();
 };
 
-const fetchSettlement = async (settlementId: string): Promise<GetSettlementResponse> => {
+const getSettlement = async (settlementId: string): Promise<GetSettlementResponse> => {
   const response = await apiCall(`/api/v1/Settlements/${settlementId}`);
   return await response.json();
 };
 
-const fetchExpenseWithSettlement = async (expenseId: string): Promise<ExpenseDetailsWithNamesResponse> => {
-  const expenseData = await fetchExpenseDetails(expenseId);
-  const settlementData = await fetchSettlement(expenseData.settlementId);
+const getExpenseAndSettlement = async (expenseId: string, settlementId: string): Promise<ExpenseDetailsWithNamesResponse> => {
+  const expensePromise = getExpense(expenseId);
+  const settlementPromise = getSettlement(settlementId);
   
-  const payingParticipantName = settlementData.participants.find(p => p.id === expenseData.payingParticipantId)?.nickname || 'Unknown User';
+  const [expense, settlement] = await Promise.all([expensePromise, settlementPromise]);
   
-  const allocationsWithNames = expenseData.allocations.map(allocation => ({
+  const payingParticipantName = settlement.participants.find(p => p.id === expense.payingParticipantId)?.nickname || 'Unknown User';
+  const allocationsWithNames = expense.allocations.map(allocation => ({
     ...allocation,
-    participantName: settlementData.participants.find(p => p.id === allocation.participantId)?.nickname || 'Unknown User',
+    participantName: settlement.participants.find(p => p.id === allocation.participantId)?.nickname || 'Unknown User',
   }));
 
   return {
-    ...expenseData,
+    ...expense,
     payingParticipantName,
-    settlementName: settlementData.name,
+    settlementName: settlement.name,
     allocations: allocationsWithNames,
   };
 };
@@ -38,13 +39,14 @@ const deleteExpense = async (request: DeleteExpenseRequest): Promise<void> => {
   });
 };
 
-export const useGetExpenseDetailsWithSettlementQuery = (
+export const useGetExpenseAndSettlementQuery = (
   expenseId: string,
+  settlementId: string,
   options?: Partial<UseQueryOptions<ExpenseDetailsWithNamesResponse>>
 ) => {
   return useQuery({
     queryKey: ['expense', expenseId, 'details'],
-    queryFn: () => fetchExpenseWithSettlement(expenseId),
+    queryFn: () => getExpenseAndSettlement(expenseId, settlementId),
     enabled: !!expenseId,
     ...options,
   });

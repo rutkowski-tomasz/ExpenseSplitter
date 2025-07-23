@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { GetExpensesForSettlementResponse } from './expenses-list-models';
 import { apiCall } from '~/lib/api';
 
-const fetchExpensesForSettlement = async (settlementId: string): Promise<GetExpensesForSettlementResponse> => {
+const getExpensesForSettlement = async (settlementId: string): Promise<GetExpensesForSettlementResponse> => {
   const response = await apiCall(`/api/v1/Settlements/${settlementId}/expenses`);
   return await response.json();
 };
@@ -10,7 +10,7 @@ const fetchExpensesForSettlement = async (settlementId: string): Promise<GetExpe
 export const useGetExpensesForSettlementQuery = (settlementId: string) => {
   return useQuery({
     queryKey: ['expenses', settlementId],
-    queryFn: () => fetchExpensesForSettlement(settlementId),
+    queryFn: () => getExpensesForSettlement(settlementId),
     enabled: !!settlementId,
   });
 }; 

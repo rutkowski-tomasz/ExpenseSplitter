@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/ui/button';
 import { useAuthStore } from '~/stores/authStore';
 import { SettlementsList } from '~/features/settlements-list/SettlementsList';
+import { Helmet } from 'react-helmet';
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -10,7 +11,9 @@ export function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
-      {/* Header */}
+      <Helmet>
+        <title>Dashboard - ExpenseSplitter</title>
+      </Helmet>
       <div className="bg-white border-b border-border p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

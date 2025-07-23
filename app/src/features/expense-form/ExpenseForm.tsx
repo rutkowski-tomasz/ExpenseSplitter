@@ -11,9 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { useCreateExpenseMutation, useUpdateExpenseMutation } from './expense-form-api';
 import { useGetSettlementQuery } from '~/features/settlement-details/settlement-details-api';
-import { useGetExpenseDetailsWithSettlementQuery } from '~/features/expense-details/expense-details-api';
+import { useGetExpenseAndSettlementQuery } from '~/features/expense-details/expense-details-api';
 import { expenseFormSchema, type ExpenseFormData } from './expense-form-models';
 import { toast } from '~/hooks/use-toast';
+import { Helmet } from 'react-helmet';
 
 interface ExpenseFormProps {
   expenseId?: string;
@@ -35,7 +36,7 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
   );
   
   // Fetch existing expense data when in edit mode
-  const { data: existingExpense, isLoading: isLoadingExpense } = useGetExpenseDetailsWithSettlementQuery(
+  const { data: existingExpense, isLoading: isLoadingExpense } = useGetExpenseAndSettlementQuery(
     expenseId || '',
     { enabled: isEditMode && !!expenseId }
   );
@@ -224,6 +225,9 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <Helmet>
+        <title>{isEditMode ? 'Edit Expense' : 'Add Expense'}</title>
+      </Helmet>
       <div className="bg-white border-b border-border p-4">
         <div className="flex items-center gap-3">
           <Button 

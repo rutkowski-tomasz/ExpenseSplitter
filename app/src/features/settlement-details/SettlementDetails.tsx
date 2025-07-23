@@ -11,6 +11,7 @@ import { useGetSettlementQuery, useDeleteSettlementMutation } from './settlement
 import { SettlementBalances } from '~/features/settlement-balances/SettlementBalances';
 import { ExpensesList } from '~/features/expenses-list/ExpensesList';
 import { useGetExpensesForSettlementQuery } from '~/features/expenses-list/expenses-list-api';
+import { Helmet } from 'react-helmet';
 
 export function SettlementDetails() {
   const { settlementId } = useParams<{ settlementId: string }>();
@@ -140,6 +141,9 @@ export function SettlementDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <Helmet>
+        <title>{settlement.name}</title>
+      </Helmet>
       <div className="bg-white border-b border-border p-4">
         <div className="flex items-center gap-3">
           <Button 

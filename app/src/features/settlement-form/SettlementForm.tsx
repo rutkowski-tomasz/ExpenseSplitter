@@ -11,6 +11,7 @@ import { useCreateSettlementMutation, useUpdateSettlementMutation } from './sett
 import { useGetSettlementQuery } from '~/features/settlement-details/settlement-details-api';
 import { settlementFormSchema, type SettlementFormData } from './settlement-form-models';
 import { GetSettlementResponseParticipant } from '~/features/settlement-details/settlement-details-models';
+import { Helmet } from 'react-helmet';
 
 export function SettlementForm() {
   const { settlementId } = useParams<{ settlementId: string }>();
@@ -133,6 +134,9 @@ export function SettlementForm() {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <Helmet>
+        <title>{isEditMode ? 'Edit Settlement' : 'Create Settlement'}</title>
+      </Helmet>
       <div className="bg-white border-b border-border p-4">
         <div className="flex items-center gap-3">
           <Button 
