@@ -1,7 +1,18 @@
 import { create } from 'zustand';
 import { API_BASE_URL } from '~/config';
+import { ok, err, Result } from 'neverthrow';
 
 const AUTH_STORAGE_KEY = 'auth-storage';
+
+export interface LoginResponse {
+  accessToken: string;
+}
+
+export interface ApiError {
+  title: string;
+  status: number;
+  detail: string;
+}
 
 type AuthState = {
   username: string | null;
@@ -9,36 +20,31 @@ type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean;
   isInitialized: boolean;
-  error: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, nickname: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<Result<boolean, ApiError>>;
+  register: (email: string, nickname: string, password: string) => Promise<Result<boolean, ApiError>>;
   logout: () => void;
   initializeAuth: () => void;
 }
 
 const getStoredAuth = () => {
-  try {
-    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : null;
-  } catch {
-    return null;
-  }
+  const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : null;
 };
 
 const setStoredAuth = (auth: { username: string | null; token: string | null; isAuthenticated: boolean }) => {
-  try {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
-  } catch {
-    // Handle localStorage being unavailable
-  }
+  localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
 };
 
 const clearStoredAuth = () => {
-  try {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-  } catch {
-    // Handle localStorage being unavailable
-  }
+  localStorage.removeItem(AUTH_STORAGE_KEY);
+};
+
+const authCall = async (path: string, body: any) => {
+  return await fetch(`${API_BASE_URL}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -47,7 +53,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
   isLoading: false,
   isInitialized: false,
-  error: null,
 
   initializeAuth: () => {
     const storedAuth = getStoredAuth();
@@ -63,69 +68,52 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  login: async (email, password) => {
-    set({ isLoading: true, error: null });
+  login: async (email, password): Promise<Result<boolean, ApiError>> => {
+    set({ isLoading: true });
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/Users/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!response.ok) throw new Error('Login failed');
+      const response = await authCall('/api/v1/Users/login', { email, password });
+      if (!response.ok) {
+        set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+        clearStoredAuth();
+        return err(await response.json());
+      }
       const data = await response.json();
-      
       const authData = {
         username: JSON.parse(atob(data.accessToken.split('.')[1])).preferred_username,
         token: data.accessToken,
         isAuthenticated: true,
       };
-      
-      set({
-        ...authData,
-        isLoading: false,
-        error: null,
-      });
-      
+      set({ ...authData, isLoading: false });
       setStoredAuth(authData);
+      return ok(true);
     } catch (e: any) {
-      set({ error: e.message, isLoading: false, isAuthenticated: false, token: null, username: null });
+      set({ isLoading: false, isAuthenticated: false, token: null, username: null });
       clearStoredAuth();
+      return err({ title: 'Network error', detail: e.message, status: undefined });
     }
   },
 
-  register: async (email, nickname, password) => {
-    set({ isLoading: true, error: null });
+  register: async (email, nickname, password): Promise<Result<boolean, ApiError>> => {
+    set({ isLoading: true });
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/Users/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, nickname, password }),
-      });
-      if (!response.ok) throw new Error('Registration failed');
-      const data = await response.json();
-      
-      const authData = {
-        username: data.username,
-        token: data.token,
-        isAuthenticated: true,
-      };
-      
-      set({
-        ...authData,
-        isLoading: false,
-        error: null,
-      });
-      
-      setStoredAuth(authData);
+      const response = await authCall('/api/v1/Users/register', { email, nickname, password });
+      if (!response.ok) {
+        set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+        clearStoredAuth();
+        return err(await response.json());
+      }
+      set({ isLoading: false });
+      return ok(true);
     } catch (e: any) {
-      set({ error: e.message, isLoading: false, isAuthenticated: false, token: null, username: null });
+      set({ isLoading: false, isAuthenticated: false, token: null, username: null });
       clearStoredAuth();
+      return err({ title: 'Network error', detail: e.message, status: undefined });
     }
   },
 
   logout: () => {
-    set({ username: null, token: null, isAuthenticated: false, error: null });
+    set({ username: null, token: null, isAuthenticated: false });
     clearStoredAuth();
-    window.location.href = '/';
+    window.location.href = '/login';
   },
 }));

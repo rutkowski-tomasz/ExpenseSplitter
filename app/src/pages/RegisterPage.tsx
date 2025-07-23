@@ -1,0 +1,1 @@
+export { Register as RegisterPage } from '~/features/register/Register'; 

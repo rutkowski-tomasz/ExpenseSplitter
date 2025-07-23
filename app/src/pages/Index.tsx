@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthForm } from '~/components/AuthForm';
 import { useAuthStore } from '~/stores/authStore';
 
 const Index = () => {
@@ -9,23 +8,18 @@ const Index = () => {
   const { token, isAuthenticated, isInitialized } = useAuthStore();
 
   useEffect(() => {
-    // Only proceed once auth is initialized
     if (!isInitialized) {
       return;
     }
 
     setLoading(false);
     
-    // Redirect to dashboard if authenticated
     if (token && isAuthenticated) {
       navigate('/dashboard');
+    } else {
+      navigate('/login');
     }
   }, [token, isAuthenticated, isInitialized, navigate]);
-
-  const handleAuthSuccess = () => {
-    // The redirect will happen automatically via the useEffect above
-    // when the auth store state changes
-  };
 
   if (loading || !isInitialized) {
     return (
@@ -40,7 +34,7 @@ const Index = () => {
     );
   }
 
-  return <AuthForm onSuccess={handleAuthSuccess} />;
+  return null;
 };
 
 export default Index;

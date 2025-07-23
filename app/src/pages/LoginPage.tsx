@@ -1,0 +1,1 @@
+export { Login as LoginPage } from '~/features/login/Login'; 
