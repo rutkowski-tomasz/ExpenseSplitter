@@ -9,40 +9,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from '~/hooks/use-toast';
 import { useGetSettlementQuery, useDeleteSettlementMutation } from './settlement-details-api';
 import { SettlementBalances } from '~/features/settlement-balances/SettlementBalances';
-
-// Mock data for development (to be replaced with API data)
-const mockExpenses = [
-  {
-    id: '1',
-    name: 'Hotel Booking',
-    amount: 240.00,
-    paidBy: '1',
-    paidByName: 'You',
-    date: 'Mar 15, 2024',
-    participantCount: 4,
-    userShare: 60.00,
-  },
-  {
-    id: '2',
-    name: 'Gas Station',
-    amount: 80.00,
-    paidBy: '2',
-    paidByName: 'Alice',
-    date: 'Mar 14, 2024',
-    participantCount: 4,
-    userShare: 20.00,
-  },
-  {
-    id: '3',
-    name: 'Restaurant Dinner',
-    amount: 130.00,
-    paidBy: '3',
-    paidByName: 'Bob',
-    date: 'Mar 14, 2024',
-    participantCount: 4,
-    userShare: 32.50,
-  },
-];
+import { ExpensesList } from '~/features/expenses-list/ExpensesList';
+import { useGetExpensesForSettlementQuery } from '~/features/expenses-list/expenses-list-api';
 
 export function SettlementDetails() {
   const { settlementId } = useParams<{ settlementId: string }>();
@@ -50,6 +18,7 @@ export function SettlementDetails() {
   const [activeTab, setActiveTab] = useState('expenses');
   
   const { data: settlement, isLoading, error } = useGetSettlementQuery(settlementId || '');
+  const { data: expensesData } = useGetExpensesForSettlementQuery(settlementId || '');
   const deleteSettlementMutation = useDeleteSettlementMutation();
 
   const handleShare = async () => {
@@ -169,8 +138,6 @@ export function SettlementDetails() {
     return null;
   }
 
-  const totalExpenses = mockExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="bg-white border-b border-border p-4">
@@ -253,7 +220,9 @@ export function SettlementDetails() {
                 </div>
                 <div className="w-px h-8 bg-border" />
                 <div className="text-center">
-                  <div className="text-lg font-semibold text-foreground">0</div>
+                  <div className="text-lg font-semibold text-foreground">
+                    {expensesData?.expenses?.length || 0}
+                  </div>
                   <div className="text-xs text-muted-foreground">Expenses</div>
                 </div>
               </div>
@@ -262,7 +231,7 @@ export function SettlementDetails() {
         </Card>
 
         <Button 
-          onClick={() => navigate(`/settlement/${settlementId}/add-expense`)}
+          onClick={() => navigate(`/settlements/${settlementId}/add-expense`)}
           className="w-full h-14"
         >
           <Plus className="mr-2 w-5 h-5" />
@@ -276,6 +245,10 @@ export function SettlementDetails() {
           </TabsList>
 
           <TabsContent value="expenses" className="space-y-4">
+            <ExpensesList 
+              settlementId={settlementId || ''} 
+              participants={settlement.participants} 
+            />
           </TabsContent>
 
           <TabsContent value="balances" className="space-y-4">

@@ -7,13 +7,13 @@ import { useEffect } from "react";
 import Index from "~/pages/Index";
 import { DashboardPage } from "~/pages/DashboardPage";
 import { SettlementDetailsPage } from "~/pages/SettlementDetailsPage";
-import { CreateExpenseWrapper } from "~/pages/CreateExpenseWrapper";
 import { ExpenseDetail } from "~/pages/ExpenseDetail";
 import { JoinSettlement } from "~/pages/JoinSettlement";
 import NotFoundPage from "~/pages/NotFoundPage";
 import { useAuthStore } from "~/stores/authStore";
 import { SettlementCreatePage } from "~/pages/SettlementCreatePage";
 import { SettlementEditPage } from "~/pages/SettlementEditPage";
+import { ExpenseCreatePage } from "./pages/ExpenseCreatePage";
 
 const queryClient = new QueryClient();
 
@@ -54,7 +54,7 @@ function AppContent() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settlements/:settlementId" element={<SettlementDetailsPage />} />
-          <Route path="/settlements/:settlementId/add-expense" element={<CreateExpenseWrapper />} />
+          <Route path="/settlements/:settlementId/add-expense" element={<ExpenseCreatePage />} />
           <Route path="/expenses/:expenseId" element={<ExpenseDetail />} />
           <Route path="/join-settlement" element={<JoinSettlement />} />
           <Route path="/create-settlement" element={<SettlementCreatePage />} />
