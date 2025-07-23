@@ -50,6 +50,7 @@ export type UpdateExpenseRequestBody = {
 
 export type UpdateExpenseRequest = {
   expenseId: string;
+  settlementId: string;
   body: UpdateExpenseRequestBody;
 };
 

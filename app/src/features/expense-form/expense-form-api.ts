@@ -41,6 +41,7 @@ export function useUpdateExpenseMutation() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['expense', variables.expenseId, 'details'] });
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['settlement', variables.settlementId, 'details'] });
     },
   });
 } 

@@ -25,7 +25,6 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
   const expenseId = propExpenseId || paramExpenseId;
   const navigate = useNavigate();
   const isEditMode = !!expenseId;
-  const [splitMethod, setSplitMethod] = useState<'equal' | 'custom'>('equal');
   const formInitialized = useRef(false);
   
   const createMutation = useCreateExpenseMutation();
@@ -35,10 +34,10 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
     settlementId || ''
   );
   
-  // Fetch existing expense data when in edit mode
   const { data: existingExpense, isLoading: isLoadingExpense } = useGetExpenseAndSettlementQuery(
     expenseId || '',
-    { enabled: isEditMode && !!expenseId }
+    settlementId || '',
+    { enabled: isEditMode && !!expenseId && !!settlementId }
   );
 
   const form = useForm<ExpenseFormData>({
@@ -117,6 +116,7 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
     if (isEditMode && expenseId) {
       const payload = {
         expenseId,
+        settlementId,
         body: {
           title: data.name.trim(),
           paymentDate: data.paymentDate,
