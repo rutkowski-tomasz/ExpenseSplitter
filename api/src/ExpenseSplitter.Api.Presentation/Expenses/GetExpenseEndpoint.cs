@@ -8,6 +8,7 @@ public record GetExpenseRequest([FromRoute] Guid ExpenseId);
 
 public record GetExpenseResponse(
     Guid Id,
+    Guid SettlementId,
     string Title,
     Guid PayingParticipantId,
     DateOnly PaymentDate,
@@ -29,6 +30,7 @@ public class GetExpenseEndpoint() : Endpoint<GetExpenseRequest, GetExpenseQuery,
     request => new GetExpenseQuery(request.ExpenseId),
     result => new GetExpenseResponse(
         result.Id,
+        result.SettlementId,
         result.Title,
         result.PayingParticipantId,
         result.PaymentDate,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, X, Loader2, Calculator, DollarSign } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { useCreateExpenseMutation, useUpdateExpenseMutation } from './expense-form-api';
 import { useGetSettlementQuery } from '~/features/settlement-details/settlement-details-api';
+import { useGetExpenseDetailsWithSettlementQuery } from '~/features/expense-details/expense-details-api';
 import { expenseFormSchema, type ExpenseFormData } from './expense-form-models';
 import { toast } from '~/hooks/use-toast';
 
@@ -18,17 +19,25 @@ interface ExpenseFormProps {
   expenseId?: string;
 }
 
-export function ExpenseForm({ expenseId }: ExpenseFormProps) {
-  const { settlementId } = useParams<{ settlementId: string }>();
+export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
+  const { settlementId, expenseId: paramExpenseId } = useParams<{ settlementId: string; expenseId: string }>();
+  const expenseId = propExpenseId || paramExpenseId;
   const navigate = useNavigate();
   const isEditMode = !!expenseId;
   const [splitMethod, setSplitMethod] = useState<'equal' | 'custom'>('equal');
+  const formInitialized = useRef(false);
   
   const createMutation = useCreateExpenseMutation();
   const updateMutation = useUpdateExpenseMutation();
   
   const { data: settlement, isLoading: isLoadingSettlement } = useGetSettlementQuery(
     settlementId || ''
+  );
+  
+  // Fetch existing expense data when in edit mode
+  const { data: existingExpense, isLoading: isLoadingExpense } = useGetExpenseDetailsWithSettlementQuery(
+    expenseId || '',
+    { enabled: isEditMode && !!expenseId }
   );
 
   const form = useForm<ExpenseFormData>({
@@ -45,7 +54,21 @@ export function ExpenseForm({ expenseId }: ExpenseFormProps) {
   const totalAmount = watchedAllocations.reduce((sum, allocation) => sum + allocation.value, 0);
 
   useEffect(() => {
-    if (settlement && settlement.participants.length > 0) {
+    // Only initialize form once to prevent overriding user changes
+    if (formInitialized.current) return;
+
+    if (isEditMode && existingExpense) {
+      // Populate form with existing expense data
+      form.setValue('name', existingExpense.title);
+      form.setValue('paymentDate', existingExpense.paymentDate);
+      form.setValue('payingParticipantId', existingExpense.payingParticipantId);
+      form.setValue('allocations', existingExpense.allocations.map(allocation => ({
+        participantId: allocation.participantId,
+        value: allocation.amount,
+      })));
+      formInitialized.current = true;
+    } else if (settlement && settlement.participants.length > 0 && !isEditMode) {
+      // Initialize form for new expense
       if (!form.getValues('payingParticipantId')) {
         form.setValue('payingParticipantId', settlement.participants[0].id);
       }
@@ -57,8 +80,9 @@ export function ExpenseForm({ expenseId }: ExpenseFormProps) {
         }));
         form.setValue('allocations', initialAllocations);
       }
+      formInitialized.current = true;
     }
-  }, [settlement, form, watchedAllocations]);
+  }, [settlement, existingExpense, isEditMode, form, watchedAllocations]);
 
   const handleSplitEquallyClick = () => {
     if (!settlement || totalAmount === 0) return;
@@ -150,7 +174,7 @@ export function ExpenseForm({ expenseId }: ExpenseFormProps) {
   };
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
-  const isLoading = isLoadingSettlement;
+  const isLoading = isLoadingSettlement || (isEditMode && isLoadingExpense);
 
   if (isLoading) {
     return (

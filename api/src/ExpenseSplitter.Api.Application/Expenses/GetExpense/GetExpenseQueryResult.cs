@@ -2,6 +2,7 @@ namespace ExpenseSplitter.Api.Application.Expenses.GetExpense;
 
 public sealed record GetExpenseQueryResult(
     Guid Id,
+    Guid SettlementId,
     string Title,
     Guid PayingParticipantId,
     DateOnly PaymentDate,

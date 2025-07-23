@@ -1,5 +1,6 @@
 import { Loader2, Receipt, Calendar, User } from 'lucide-react';
 import { Card, CardContent } from '~/components/ui/card';
+import { useNavigate } from 'react-router-dom';
 import { useGetExpensesForSettlementQuery } from './expenses-list-api';
 import { ExpenseListItem } from './expenses-list-models';
 
@@ -9,6 +10,7 @@ interface ExpensesListProps {
 }
 
 export function ExpensesList({ settlementId, participants }: ExpensesListProps) {
+  const navigate = useNavigate();
   const { data, isLoading, error } = useGetExpensesForSettlementQuery(settlementId);
 
   if (isLoading) {
@@ -75,7 +77,11 @@ export function ExpensesList({ settlementId, participants }: ExpensesListProps) 
   return (
     <div className="space-y-3">
       {expensesWithParticipantNames.map((expense) => (
-        <Card key={expense.id} className="shadow-card border-0">
+        <Card 
+          key={expense.id} 
+          className="shadow-card border-0 cursor-pointer hover:shadow-lg transition-shadow"
+          onClick={() => navigate(`/expenses/${expense.id}`)}
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex-1">

@@ -36,6 +36,7 @@ internal sealed class GetExpenseQueryHandler : IQueryHandler<GetExpenseQuery, Ge
 
         var response = new GetExpenseQueryResult(
             expense.Id.Value,
+            expense.SettlementId.Value,
             expense.Title,
             expense.PayingParticipantId.Value,
             expense.PaymentDate,

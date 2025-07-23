@@ -1,0 +1,1 @@
+export { ExpenseDetails as ExpenseDetailsPage } from '~/features/expense-details/ExpenseDetails'; 
