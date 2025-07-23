@@ -43,7 +43,7 @@ export const useGetExpenseDetailsWithSettlementQuery = (
   options?: Partial<UseQueryOptions<ExpenseDetailsWithNamesResponse>>
 ) => {
   return useQuery({
-    queryKey: ['expense-details-with-settlement', expenseId],
+    queryKey: ['expense', expenseId, 'details'],
     queryFn: () => fetchExpenseWithSettlement(expenseId),
     enabled: !!expenseId,
     ...options,
@@ -56,7 +56,7 @@ export const useDeleteExpenseMutation = () => {
   return useMutation({
     mutationFn: deleteExpense,
     onSuccess: (_, variables) => {
-      queryClient.removeQueries({ queryKey: ['expense-details-with-settlement', variables.expenseId] });
+      queryClient.removeQueries({ queryKey: ['expense', variables.expenseId, 'details'] });
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
       queryClient.invalidateQueries({ queryKey: ['settlement'] });
     },

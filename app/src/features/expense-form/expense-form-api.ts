@@ -29,7 +29,7 @@ export function useCreateExpenseMutation() {
     mutationFn: createExpense,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['expenses', variables.body.settlementId] });
-      queryClient.invalidateQueries({ queryKey: ['settlement', variables.body.settlementId] });
+      queryClient.invalidateQueries({ queryKey: ['settlement', variables.body.settlementId, 'details'] });
     },
   });
 }
@@ -39,7 +39,7 @@ export function useUpdateExpenseMutation() {
   return useMutation({
     mutationFn: updateExpense,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['expense', variables.expenseId] });
+      queryClient.invalidateQueries({ queryKey: ['expense', variables.expenseId, 'details'] });
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
     },
   });

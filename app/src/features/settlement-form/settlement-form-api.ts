@@ -38,7 +38,7 @@ export function useUpdateSettlementMutation() {
   return useMutation({
     mutationFn: updateSettlement,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['settlement', variables.settlementId] });
+      queryClient.invalidateQueries({ queryKey: ['settlement', variables.settlementId, 'details'] });
       queryClient.invalidateQueries({ queryKey: ['settlements'] });
     },
   });

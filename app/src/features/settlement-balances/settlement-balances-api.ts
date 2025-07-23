@@ -9,7 +9,7 @@ async function getSettlementBalances(settlementId: string): Promise<SettlementRe
 
 export function useGetSettlementBalancesQuery(settlementId: string) {
   return useQuery({
-    queryKey: ['settlements', 'balances', settlementId],
+    queryKey: ['settlement', settlementId, 'reimbursements'],
     queryFn: async () => {
       return await getSettlementBalances(settlementId);
     },

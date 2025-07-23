@@ -9,7 +9,7 @@ async function getAllSettlements(page: number, pageSize: number): Promise<GetAll
 
 export function getAllSettlementsQuery(page: number = 1, pageSize: number = 10) {
   return useQuery({
-    queryKey: ['settlements', 'list', page, pageSize],
+    queryKey: ['settlements', page, pageSize],
     queryFn: async () => {
       return await getAllSettlements(page, pageSize);
     },

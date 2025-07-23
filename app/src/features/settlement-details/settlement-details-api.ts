@@ -18,7 +18,7 @@ export function useGetSettlementQuery(
   options?: Partial<UseQueryOptions<GetSettlementResponse>>
 ) {
   return useQuery({
-    queryKey: ['settlement', settlementId],
+    queryKey: ['settlement', settlementId, 'details'],
     queryFn: async () => {
       return await getSettlement(settlementId);
     },
@@ -34,7 +34,7 @@ export function useDeleteSettlementMutation() {
   return useMutation({
     mutationFn: deleteSettlement,
     onSuccess: (_, settlementId) => {
-      queryClient.removeQueries({ queryKey: ['settlement', settlementId] });
+      queryClient.removeQueries({ queryKey: ['settlement', settlementId, 'details'] });
       queryClient.invalidateQueries({ queryKey: ['settlements'] });
     },
   });
