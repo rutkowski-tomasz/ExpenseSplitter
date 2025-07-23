@@ -13,6 +13,7 @@ import { JoinSettlement } from "~/pages/JoinSettlement";
 import NotFound from "~/pages/NotFound";
 import { useAuthStore } from "~/stores/authStore";
 import { SettlementCreatePage } from "~/pages/SettlementCreatePage";
+import { SettlementEditPage } from "~/pages/SettlementEditPage";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ function AppContent() {
           <Route path="/expenses/:expenseId" element={<ExpenseDetail />} />
           <Route path="/join-settlement" element={<JoinSettlement />} />
           <Route path="/create-settlement" element={<SettlementCreatePage />} />
+          <Route path="/edit-settlement/:settlementId" element={<SettlementEditPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

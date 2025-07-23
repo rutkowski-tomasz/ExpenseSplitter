@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Share2, MoreVertical, DollarSign, Loader2 } from 'lucide-react';
+import { ArrowLeft, Plus, Share2, MoreVertical, DollarSign, Loader2, Edit, Trash2 } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
-import { useGetSettlementQuery } from './settlement-details-api';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog';
+import { toast } from '~/hooks/use-toast';
+import { useGetSettlementQuery, useDeleteSettlementMutation } from './settlement-details-api';
 import { SettlementBalances } from '~/features/settlement-balances/SettlementBalances';
 
 // Mock data for development (to be replaced with API data)
@@ -41,27 +44,58 @@ const mockExpenses = [
   },
 ];
 
-const mockBalances = [
-  { id: '1', name: 'You', balance: 75.50 },
-  { id: '2', name: 'Alice', balance: -25.00 },
-  { id: '3', name: 'Bob', balance: -30.50 },
-  { id: '4', name: 'Carol', balance: -20.00 },
-];
-
-const mockReimbursements = [
-  { from: 'Alice', to: 'You', amount: 25.00 },
-  { from: 'Bob', to: 'You', amount: 30.50 },
-  { from: 'Carol', to: 'You', amount: 20.00 },
-];
-
 export function SettlementDetails() {
   const { settlementId } = useParams<{ settlementId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('expenses');
   
   const { data: settlement, isLoading, error } = useGetSettlementQuery(settlementId || '');
+  const deleteSettlementMutation = useDeleteSettlementMutation();
 
+  const handleShare = async () => {
+    if (!settlement) return;
+    
+    const shareUrl = `${window.location.origin}/join-settlement?inviteCode=${settlement.inviteCode}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link copied!",
+        description: "Settlement invite link has been copied to clipboard.",
+      });
+    } catch (err) {
+      toast({
+        title: "Failed to copy",
+        description: "Could not copy link to clipboard.",
+        variant: "destructive",
+      });
+    }
+  };
 
+  const handleEdit = () => {
+    navigate(`/edit-settlement/${settlementId}`);
+  };
+
+  const handleDelete = () => {
+    if (!settlementId) return;
+    
+    deleteSettlementMutation.mutate(settlementId, {
+      onSuccess: () => {
+        toast({
+          title: "Settlement deleted",
+          description: "The settlement has been successfully deleted.",
+        });
+        navigate('/dashboard');
+      },
+      onError: (error) => {
+        toast({
+          title: "Delete failed",
+          description: error instanceof Error ? error.message : "Failed to delete settlement.",
+          variant: "destructive",
+        });
+      },
+    });
+  };
 
   if (isLoading) {
     return (
@@ -156,12 +190,49 @@ export function SettlementDetails() {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon">
-              <Share2 className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="w-5 h-5" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleShare}>
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleEdit}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </DropdownMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Settlement</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete "{settlement?.name}"? This action cannot be undone and all associated expenses will be lost.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDelete}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        disabled={deleteSettlementMutation.isPending}
+                      >
+                        {deleteSettlementMutation.isPending ? 'Deleting...' : 'Delete'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

@@ -1,2 +1,2 @@
 import { SettlementForm } from '~/features/settlement-form/SettlementForm';
-export { SettlementForm as SettlementCreatePage };
+export { SettlementForm as SettlementEditPage }; 
