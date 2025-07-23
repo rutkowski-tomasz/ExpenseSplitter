@@ -42,7 +42,7 @@ export function SettlementDetails() {
   };
 
   const handleEdit = () => {
-    navigate(`/edit-settlement/${settlementId}`);
+    navigate(`/settlements/${settlementId}/edit`);
   };
 
   const handleDelete = () => {
@@ -231,7 +231,7 @@ export function SettlementDetails() {
         </Card>
 
         <Button 
-          onClick={() => navigate(`/settlements/${settlementId}/add-expense`)}
+          onClick={() => navigate(`/settlements/${settlementId}/expenses/add`)}
           className="w-full h-14"
         >
           <Plus className="mr-2 w-5 h-5" />

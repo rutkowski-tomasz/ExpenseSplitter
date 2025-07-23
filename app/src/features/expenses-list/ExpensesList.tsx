@@ -80,7 +80,7 @@ export function ExpensesList({ settlementId, participants }: ExpensesListProps) 
         <Card 
           key={expense.id} 
           className="shadow-card border-0 cursor-pointer hover:shadow-lg transition-shadow"
-          onClick={() => navigate(`/expenses/${expense.id}`)}
+          onClick={() => navigate(`/settlements/${settlementId}/expenses/${expense.id}`)}
         >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">

@@ -58,13 +58,13 @@ function AppContent() {
         <Route path="/register" element={<RegisterPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/create-settlement" element={<SettlementCreatePage />} />
           <Route path="/settlements/:settlementId" element={<SettlementDetailsPage />} />
-          <Route path="/settlements/:settlementId/add-expense" element={<ExpenseCreatePage />} />
-          <Route path="/expenses/:expenseId" element={<ExpenseDetailsPage />} />
+          <Route path="/settlements/:settlementId/edit" element={<SettlementEditPage />} />
+          <Route path="/settlements/:settlementId/expenses/add" element={<ExpenseCreatePage />} />
+          <Route path="/settlements/:settlementId/expenses/:expenseId" element={<ExpenseDetailsPage />} />
           <Route path="/settlements/:settlementId/expenses/:expenseId/edit" element={<ExpenseEditPage />} />
           <Route path="/join-settlement" element={<JoinSettlement />} />
-          <Route path="/create-settlement" element={<SettlementCreatePage />} />
-          <Route path="/edit-settlement/:settlementId" element={<SettlementEditPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

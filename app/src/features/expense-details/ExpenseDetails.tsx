@@ -10,15 +10,15 @@ import { toast } from '~/hooks/use-toast';
 import { useGetExpenseDetailsWithSettlementQuery, useDeleteExpenseMutation } from './expense-details-api';
 
 export function ExpenseDetails() {
-  const { expenseId } = useParams<{ expenseId: string }>();
+  const { settlementId, expenseId } = useParams<{ settlementId: string; expenseId: string }>();
   const navigate = useNavigate();
   
   const { data: expense, isLoading, error } = useGetExpenseDetailsWithSettlementQuery(expenseId || '');
   const deleteExpenseMutation = useDeleteExpenseMutation();
 
   const handleEdit = () => {
-    if (expense) {
-      navigate(`/settlements/${expense.settlementId}/expenses/${expenseId}/edit`);
+    if (settlementId && expenseId) {
+      navigate(`/settlements/${settlementId}/expenses/${expenseId}/edit`);
     }
   };
 
@@ -31,7 +31,7 @@ export function ExpenseDetails() {
           title: "Expense deleted",
           description: "The expense has been successfully deleted.",
         });
-        navigate(`/settlements/${expense?.settlementId}`);
+        navigate(`/settlements/${settlementId}`);
       },
       onError: (error) => {
         toast({
@@ -132,7 +132,7 @@ export function ExpenseDetails() {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => navigate(`/settlements/${expense.settlementId}`)}
+            onClick={() => navigate(`/settlements/${settlementId}`)}
             className="shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
