@@ -1,4 +1,5 @@
 import { Plus, Search, Loader2, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/ui/button';
 import { SettlementCard } from '~/components/SettlementCard';
 import { Card, CardContent } from '~/components/ui/card';
@@ -6,10 +7,10 @@ import { getAllSettlementsQuery } from './settlements-list-api';
 import { formatLastActivity } from '~/lib/utils';
 
 interface SettlementsListProps {
-  onNavigate: (page: string, data?: any) => void;
 }
 
-export function SettlementsList({ onNavigate }: SettlementsListProps) {
+export function SettlementsList({ }: SettlementsListProps) {
+  const navigate = useNavigate();
   const { data: settlementsData, isLoading, error, refetch } = getAllSettlementsQuery(1, 50);
 
   const settlements = settlementsData?.settlements || [];
@@ -79,7 +80,7 @@ export function SettlementsList({ onNavigate }: SettlementsListProps) {
             <p className="text-sm text-muted-foreground mb-4">
               Create your first settlement to get started
             </p>
-            <Button onClick={() => onNavigate('createSettlement')}>
+            <Button onClick={() => navigate('/create-settlement')}>
               <Plus className="mr-2 w-4 h-4" />
               Create Settlement
             </Button>
@@ -109,7 +110,7 @@ export function SettlementsList({ onNavigate }: SettlementsListProps) {
             lastActivity: formatLastActivity(settlement.lastActivity),
             userBalance: settlement.userBalance,
           }}
-          onClick={() => onNavigate('settlement', { id: settlement.id })}
+          onClick={() => navigate(`/settlement/${settlement.id}`)}
         />
       ))}
     </div>

@@ -1,25 +1,12 @@
 import { LogOutIcon, JoystickIcon, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/ui/button';
-import { useToast } from '~/hooks/use-toast';
 import { useAuthStore } from '~/stores/authStore';
 import { SettlementsList } from '~/features/settlements-list/SettlementsList';
 
-interface DashboardProps {
-  onNavigate: (page: string, data?: any) => void;
-  onLogout: () => void;
-}
-
-export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
-  const { toast } = useToast();
-
-  const handleLogout = () => {
-    useAuthStore.getState().logout();
-    onLogout();
-    toast({
-      title: "Logged out",
-      description: "See you next time!",
-    });
-  };
+export function DashboardPage() {
+  const navigate = useNavigate();
+  const { username, logout } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -32,12 +19,14 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">ExpenseSplitter</h1>
-              <p className="text-sm text-muted-foreground">Welcome back!</p>
+              <p className="text-sm text-muted-foreground">
+                Welcome back{username ? `, ${username}` : ''}!
+              </p>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
+            <Button variant="ghost" size="icon" onClick={() => logout()}>
               <LogOutIcon className="w-5 h-5" />
             </Button>
           </div>
@@ -47,7 +36,7 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
       <div className="p-4 space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <Button 
-            onClick={() => onNavigate('createSettlement')}
+            onClick={() => navigate('/create-settlement')}
             className="h-16 flex-col gap-2"
           >
             <Plus className="w-6 h-6" />
@@ -56,7 +45,7 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
           
           <Button 
             variant="secondary"
-            onClick={() => onNavigate('joinSettlement')}
+            onClick={() => navigate('/join-settlement')}
             className="h-16 flex-col gap-2"
           >
             <JoystickIcon className="w-6 h-6" />
@@ -64,7 +53,7 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
           </Button>
         </div>
 
-        <SettlementsList onNavigate={onNavigate} />
+        <SettlementsList />
       </div>
     </div>
   );

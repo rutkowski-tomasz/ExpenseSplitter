@@ -126,5 +126,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: () => {
     set({ username: null, token: null, isAuthenticated: false, error: null });
     clearStoredAuth();
+    window.location.href = '/';
   },
 }));

@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import Index from "./pages/Index";
-import { DashboardWrapper } from "./pages/DashboardWrapper";
+import { DashboardPage } from "./pages/DashboardPage";
 import { SettlementDetailWrapper } from "./pages/SettlementDetailWrapper";
 import { CreateExpenseWrapper } from "./pages/CreateExpenseWrapper";
 import { ExpenseDetail } from "./pages/ExpenseDetail";
@@ -51,7 +51,7 @@ function AppContent() {
       <Routes>
         <Route index element={<Index />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardWrapper />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settlement/:settlementId" element={<SettlementDetailWrapper />} />
           <Route path="/settlement/:settlementId/add-expense" element={<CreateExpenseWrapper />} />
           <Route path="/expense/:expenseId" element={<ExpenseDetail />} />
