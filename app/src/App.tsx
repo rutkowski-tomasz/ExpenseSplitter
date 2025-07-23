@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { useEffect } from "react";
 import Index from "~/pages/Index";
 import { DashboardPage } from "~/pages/DashboardPage";
-import { SettlementDetailWrapper } from "~/pages/SettlementDetailWrapper";
+import { SettlementDetailsPage } from "~/pages/SettlementDetailsPage";
 import { CreateExpenseWrapper } from "~/pages/CreateExpenseWrapper";
 import { ExpenseDetail } from "~/pages/ExpenseDetail";
 import { JoinSettlement } from "~/pages/JoinSettlement";
@@ -52,7 +52,7 @@ function AppContent() {
         <Route index element={<Index />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/settlements/:settlementId" element={<SettlementDetailWrapper />} />
+          <Route path="/settlements/:settlementId" element={<SettlementDetailsPage />} />
           <Route path="/settlements/:settlementId/add-expense" element={<CreateExpenseWrapper />} />
           <Route path="/expenses/:expenseId" element={<ExpenseDetail />} />
           <Route path="/join-settlement" element={<JoinSettlement />} />

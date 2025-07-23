@@ -1,0 +1,1 @@
+export { SettlementDetails as SettlementDetailsPage } from '~/features/settlement-details/SettlementDetails'; 
