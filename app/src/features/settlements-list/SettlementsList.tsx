@@ -1,7 +1,7 @@
 import { Plus, Search, Loader2, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/ui/button';
-import { SettlementCard } from '~/components/SettlementCard';
+import { SettlementCard } from './SettlementCard';
 import { Card, CardContent } from '~/components/ui/card';
 import { getAllSettlementsQuery } from './settlements-list-api';
 import { formatLastActivity } from '~/lib/utils';
