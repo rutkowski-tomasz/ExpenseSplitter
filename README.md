@@ -6,15 +6,16 @@ ExpenseSplitter is a Domain-Driven Design (DDD) implemented API, meticulously cr
 
 # 🦩 Features / patterns
 
-1. Bold split into: Domain, Application, Infrastructure, and Presentation layers
+1. API Bold split into: Domain, Application, Infrastructure, Presentation layers
 2. **Domain layer**: Entities, ValueObjects, DomainEvents, Domain Servies, Strongly typed IDs
 3. **Application Layer**: CQRS using MediatR with ICommand, IQuery, ICommandHandler, IQueryHandler abstractions, Logging for ICommandHandler, Validators with handling middleware, Result-driven communication, Idempotent/duplicated request handling, Railway-oriented programming (showcase)
 4. **Presentation Layer**: Minimal API with Swagger documentation, Trace ID middleware, Rate limiting.
-5. **Infrastructure Layer**: EF Core (DbContext, Entity mapping, DB migrations, Repositories), Authentication & Authorization, Database migrations
-6. **Testing**: Automated testing in CI, code coverage collection and history comparison, Architecture tests, testcontainers integration testing
-7. **CI/CD**: Dependabot integration, auto weekly nuget packages updates, Trivy scanning, SonarQube static-code analysis, automatic semantic-release, docker image publishing
-7. Docker support with docker-compose orchestration
-8. **Observability**: OpenTelemetry integration for comprehensive monitoring, tracing, and logging with Grafana Cloud
+5. **Frontend (app)**: App built using Vertical Slice Architecture with React, TypeScript, Vite, and Tailwind CSS 
+6. **Infrastructure Layer**: EF Core (DbContext, Entity mapping, DB migrations, Repositories), Authentication & Authorization, Database migrations
+7. **Testing**: Automated testing in CI, code coverage collection and history comparison, Architecture tests, testcontainers integration testing
+8. **CI/CD**: Dependabot integration, auto weekly nuget packages updates, Trivy scanning, SonarQube static-code analysis, automatic semantic-release, docker image publishing
+9. Docker support with docker-compose orchestration
+10. **Observability**: OpenTelemetry integration for comprehensive monitoring, tracing, and logging with Grafana Cloud
 
 
 # 🛹 Big picture
@@ -54,6 +55,7 @@ To let you quickly understand the domain and relationships of the project entiti
 
 # 👨‍💻 Development
 
+
 ## Environment Configuration
 
 The application uses environment variables for configuration. Copy the example environment file and configure it with your values:
@@ -77,7 +79,7 @@ cd app && npm run dev
 ## Start dependencies
 
 ```sh
-docker-compose up -d expensesplitter-db expensesplitter-idp expensesplitter-cache
+docker-compose up -d expensesplitter-db expensesplitter-idp expensesplitter-cache expensesplitter-pgadmin
 ```
 
 ## Create db migration

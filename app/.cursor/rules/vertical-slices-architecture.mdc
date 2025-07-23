@@ -30,7 +30,7 @@ Each feature slice has its own directory, all feature code keeps its code locall
   - other components are extracted away from the main page file, usually according to how the component is structured/designed (e.g. separate component for a specific datatable, separate for filtering, separate for stats etc - as long as they exist)
 - Composables
 - Stores
-  - apart from existing global stores (e.g. [auth.ts](mdc:stores/auth.ts)) don't create new global stores
+  - apart from existing global stores (e.g. [authStore.ts](mdc:stores/authStore.ts)) don't create new global stores
 - Models:
   - types and interfaces
   - files should be called `-models.ts`
