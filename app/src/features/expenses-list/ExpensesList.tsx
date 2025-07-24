@@ -1,9 +1,11 @@
-import { Loader2, Receipt, Calendar, User } from 'lucide-react';
+import { Receipt, Calendar, User } from 'lucide-react';
 import { Card, CardContent } from '~/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useGetExpensesForSettlementQuery } from './expenses-list-api';
 import { ExpenseListItem } from './expenses-list-models';
 import { ParticipantName } from '../participant-name/ParticipantName';
+import { CardLoading } from '../loading/CardLoading';
+import { CardError } from '../error/CardError';
 
 interface ExpensesListProps {
   settlementId: string;
@@ -15,33 +17,11 @@ export function ExpensesList({ settlementId, participants, claimedParticipantId 
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetExpensesForSettlementQuery(settlementId);
 
-  if (isLoading) {
-    return (
-      <Card className="shadow-card border-0">
-        <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-            <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
-          </div>
-          <h3 className="font-semibold mb-2">Loading expenses...</h3>
-          <p className="text-sm text-muted-foreground">Please wait while we fetch your expenses</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (isLoading)
+    return <CardLoading />;
 
-  if (error) {
-    return (
-      <Card className="shadow-card border-0">
-        <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Receipt className="w-8 h-8 text-red-600" />
-          </div>
-          <h3 className="font-semibold mb-2">Failed to load expenses</h3>
-          <p className="text-sm text-muted-foreground">Please check your connection and try again</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (error)
+    return <CardError />;
 
   if (!data?.expenses?.length) {
     return (

@@ -2,6 +2,8 @@ import { Plus, Search, Loader2, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/ui/button';
 import { SettlementCard } from './SettlementCard';
+import { CardLoading } from '../loading/CardLoading';
+import { CardError } from '../error/CardError';
 import { Card, CardContent } from '~/components/ui/card';
 import { getAllSettlementsQuery } from './settlements-list-api';
 import { formatLastActivity } from '~/lib/utils';
@@ -22,16 +24,7 @@ export function SettlementsList({ }: SettlementsListProps) {
           <h2 className="text-lg font-semibold text-foreground">Your Settlements</h2>
           <span className="text-sm text-muted-foreground">...</span>
         </div>
-        
-        <Card className="shadow-card border-0">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
-            </div>
-            <h3 className="font-semibold mb-2">Loading settlements...</h3>
-            <p className="text-sm text-muted-foreground">Please wait while we fetch your data</p>
-          </CardContent>
-        </Card>
+        <CardLoading />
       </div>
     );
   }
@@ -43,7 +36,6 @@ export function SettlementsList({ }: SettlementsListProps) {
           <h2 className="text-lg font-semibold text-foreground">Your Settlements</h2>
           <span className="text-sm text-muted-foreground">Error</span>
         </div>
-        
         <Card className="shadow-card border-0">
           <CardContent className="p-8 text-center">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">

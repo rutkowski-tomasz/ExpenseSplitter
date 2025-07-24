@@ -2,9 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
 import { Avatar, AvatarFallback } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import { Loader2, DollarSign } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { useGetSettlementBalancesQuery } from './settlement-balances-api';
 import { ParticipantName } from '../participant-name/ParticipantName';
+import { CardLoading } from '../loading/CardLoading';
+import { CardError } from '../error/CardError';
 
 interface Participant {
   id: string;
@@ -25,33 +27,11 @@ export function SettlementBalances({ settlementId, participants, claimedParticip
     return participant?.nickname || 'Unknown';
   };
 
-  if (isLoading) {
-    return (
-      <Card className="shadow-card border-0">
-        <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-            <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
-          </div>
-          <h3 className="font-semibold mb-2">Loading balances...</h3>
-          <p className="text-sm text-muted-foreground">Please wait while we calculate balances</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (isLoading)
+    return <CardLoading />;
 
-  if (error) {
-    return (
-      <Card className="shadow-card border-0">
-        <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <DollarSign className="w-8 h-8 text-red-600" />
-          </div>
-          <h3 className="font-semibold mb-2">Failed to load balances</h3>
-          <p className="text-sm text-muted-foreground">Please check your connection and try again</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (error)
+    return <CardError />;
 
   if (!reimbursementData) {
     return null;
