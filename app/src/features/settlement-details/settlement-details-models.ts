@@ -16,4 +16,5 @@ export interface GetSettlementResponse {
 export interface GetSettlementResponseParticipant {
   id: string;
   nickname: string;
+  hasAnyExpenses: boolean;
 } 

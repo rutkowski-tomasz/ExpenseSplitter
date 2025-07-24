@@ -49,7 +49,8 @@ internal sealed class GetSettlementQueryHandler(
             settlementUser.ParticipantId?.Value,
             settlement.Participants.Select(x => new GetSettlementQueryResultParticipant(
                 x.Id.Value,
-                x.Nickname
+                x.Nickname,
+                expenses.Any(e => e.Allocations.Any(a => a.ParticipantId == x.Id))
             ))
         );
 

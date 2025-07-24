@@ -13,5 +13,6 @@ public sealed record GetSettlementQueryResult(
 
 public sealed record GetSettlementQueryResultParticipant(
     Guid Id,
-    string Nickname
+    string Nickname,
+    bool HasAnyExpenses
 );

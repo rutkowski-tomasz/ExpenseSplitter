@@ -164,36 +164,51 @@ export function SettlementForm() {
             <CardTitle>Participants</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {participants.map((participant, index) => (
-              <div key={index} className="flex gap-2 items-center">
-                <div className="flex-1 relative">
-                  <Input
-                    type="text"
-                    placeholder={`Participant ${index + 1} name`}
-                    {...form.register(`participants.${index}`)}
-                    className="h-12 rounded-xl"
-                    disabled={isSubmitting}
-                  />
-                  {index === 0 && !isEditMode && (
-                    <Badge variant="secondary" className="absolute right-2 top-1/2 -translate-y-1/2 text-xs">
-                      You
-                    </Badge>
+            {participants.map((participant, index) => {
+              // Find the original participant data for this participant
+              const originalParticipant = originalParticipants.find(p => p.nickname === participant);
+              
+              // Determine if this participant is "you"
+              const isCurrentUser = isEditMode 
+                ? originalParticipant?.id === settlement?.claimedParticipantId
+                : index === 0;
+              
+              // Determine if remove button should be shown
+              const canRemove = participants.length > 1 && 
+                !isCurrentUser && 
+                (!originalParticipant || !originalParticipant.hasAnyExpenses);
+
+              return (
+                <div key={index} className="flex gap-2 items-center">
+                  <div className="flex-1 relative">
+                    <Input
+                      type="text"
+                      placeholder={`Participant ${index + 1} name`}
+                      {...form.register(`participants.${index}`)}
+                      className="h-12 rounded-xl"
+                      disabled={isSubmitting}
+                    />
+                    {isCurrentUser && (
+                      <Badge variant="secondary" className="absolute right-2 top-1/2 -translate-y-1/2 text-xs">
+                        You
+                      </Badge>
+                    )}
+                  </div>
+                  {canRemove && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeParticipant(index)}
+                      className="h-12 w-12 shrink-0"
+                      disabled={isSubmitting}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
                   )}
                 </div>
-                {participants.length > 1 && (index > 0 || isEditMode) && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeParticipant(index)}
-                    className="h-12 w-12 shrink-0"
-                    disabled={isSubmitting}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
+              );
+            })}
             {form.formState.errors.participants && (
               <div className="text-destructive text-sm mt-1">
                 {form.formState.errors.participants.message}

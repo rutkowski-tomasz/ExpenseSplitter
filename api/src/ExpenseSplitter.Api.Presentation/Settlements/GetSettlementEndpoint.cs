@@ -19,7 +19,8 @@ public record GetSettlementResponse(
 
 public record GetSettlementResponseParticipant(
     Guid Id,
-    string Nickname
+    string Nickname,
+    bool HasAnyExpenses
 );
 
 public class GetSettlementEndpoint() : Endpoint<GetSettlementRequest, GetSettlementQuery, GetSettlementQueryResult, GetSettlementResponse>(
@@ -39,7 +40,8 @@ public class GetSettlementEndpoint() : Endpoint<GetSettlementRequest, GetSettlem
         result.ClaimedParticipantId,
         result.Participants.Select(participant => new GetSettlementResponseParticipant(
             participant.Id,
-            participant.Nickname
+            participant.Nickname,
+            participant.HasAnyExpenses
         ))
     )
 );
