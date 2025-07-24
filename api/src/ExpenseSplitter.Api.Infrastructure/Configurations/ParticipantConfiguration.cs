@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ExpenseSplitter.Api.Domain.Participants;
 using ExpenseSplitter.Api.Domain.Settlements;
+using ExpenseSplitter.Api.Domain.SettlementUsers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,8 +22,14 @@ public class ParticipantConfiguration : IEntityTypeConfiguration<Participant>
             .HasOne<Settlement>()
             .WithMany()
             .HasForeignKey(participant => participant.SettlementId)
-            .HasPrincipalKey(settlement => settlement.Id);   // Add this line
+            .HasPrincipalKey(settlement => settlement.Id);
 
         builder.Property(participant => participant.Nickname);
+
+        builder
+            .HasMany(p => p.SettlementUsers)
+            .WithOne()
+            .HasForeignKey(su => su.ParticipantId)
+            .IsRequired(false);
     }
 }

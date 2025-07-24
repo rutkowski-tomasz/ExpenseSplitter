@@ -20,6 +20,7 @@ public sealed class SettlementUser : AggregateRoot<SettlementUserId>
     public SettlementId SettlementId { get; private set; }
     public UserId UserId { get; private set; }
     public ParticipantId? ParticipantId { get; private set; }
+    public Participant? Participant { get; private set; }
 
     public static SettlementUser Create(SettlementId settlementId, UserId userId)
     {

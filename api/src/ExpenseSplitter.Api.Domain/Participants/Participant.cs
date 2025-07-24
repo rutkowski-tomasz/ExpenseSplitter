@@ -1,10 +1,13 @@
 ﻿using ExpenseSplitter.Api.Domain.Abstractions;
 using ExpenseSplitter.Api.Domain.Settlements;
+using ExpenseSplitter.Api.Domain.SettlementUsers;
 
 namespace ExpenseSplitter.Api.Domain.Participants;
 
 public sealed class Participant : Entity<ParticipantId>
 {
+    private readonly List<SettlementUser> settlementUsers = [];
+
     private Participant(
         ParticipantId id,
         SettlementId settlementId,
@@ -18,6 +21,8 @@ public sealed class Participant : Entity<ParticipantId>
     public SettlementId SettlementId { get; private set; }
 
     public string Nickname { get; private set; }
+
+    public IReadOnlyList<SettlementUser> SettlementUsers => settlementUsers.AsReadOnly();
 
     internal static Result<Participant> Create(SettlementId settlementId, string nickname)
     {

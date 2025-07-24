@@ -1,4 +1,5 @@
-﻿using ExpenseSplitter.Api.Application.Abstractions.Cqrs;
+﻿using ExpenseSplitter.Api.Application.Abstractions.Authentication;
+using ExpenseSplitter.Api.Application.Abstractions.Cqrs;
 using ExpenseSplitter.Api.Domain.Abstractions;
 using ExpenseSplitter.Api.Domain.Expenses;
 using ExpenseSplitter.Api.Domain.Participants;
@@ -12,20 +13,23 @@ internal sealed class GetSettlementsQueryHandler : IQueryHandler<GetAllSettlemen
     private readonly ISettlementRepository settlementRepository;
     private readonly IExpenseRepository expenseRepository;
     private readonly ISettlementUserRepository settlementUserRepository;
+    private readonly IUserContext userContext;
 
     public GetSettlementsQueryHandler(
         ISettlementRepository settlementRepository,
         IExpenseRepository expenseRepository,
-        ISettlementUserRepository settlementUserRepository)
+        ISettlementUserRepository settlementUserRepository,
+        IUserContext userContext)
     {
         this.settlementRepository = settlementRepository;
         this.expenseRepository = expenseRepository;
         this.settlementUserRepository = settlementUserRepository;
+        this.userContext = userContext;
     }
 
     public async Task<Result<GetAllSettlementsQueryResult>> Handle(GetAllSettlementsQuery query, CancellationToken cancellationToken)
     {
-        var settlements = await settlementRepository.GetPaged(query.Page, query.PageSize, cancellationToken);
+        var settlements = await settlementRepository.GetPaged(userContext.UserId, query.Page, query.PageSize, cancellationToken);
         
         var settlementResults = new List<GetAllSettlementsQueryResultSettlement>();
         

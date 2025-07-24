@@ -39,8 +39,15 @@ public class SettlementConfiguration : IEntityTypeConfiguration<Settlement>
             .HasForeignKey(x => x.SettlementId)
             .HasPrincipalKey(x => x.Id)
             .OnDelete(DeleteBehavior.Cascade);
-
         builder.Navigation(x => x.Participants).AutoInclude();
+
+        builder
+            .HasMany(s => s.SettlementUsers)
+            .WithOne()
+            .HasForeignKey(x => x.SettlementId)
+            .HasPrincipalKey(x => x.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.Navigation(x => x.SettlementUsers).AutoInclude();
 
         builder.Property<uint>("Version").IsRowVersion();
     }

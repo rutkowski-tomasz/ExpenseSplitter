@@ -20,19 +20,22 @@ public class SettlementUserConfiguration : IEntityTypeConfiguration<SettlementUs
         builder.Property(settlementUser => settlementUser.Id)
             .HasConversion(settlementUserId => settlementUserId.Value, value => new SettlementUserId(value));
 
-        builder
-            .HasOne<Settlement>()
-            .WithMany()
-            .HasForeignKey(settlementUser => settlementUser.SettlementId);
+        builder.Property(su => su.SettlementId)
+            .HasConversion(id => id.Value, value => new SettlementId(value));
+
+        builder.Property(su => su.UserId)
+            .HasConversion(id => id.Value, value => new UserId(value));
+
+        builder.Property(su => su.ParticipantId)
+            .HasConversion(
+                id => id == null ? (Guid?)null : id.Value,
+                value => value == null ? null : new ParticipantId(value.Value)
+            );
 
         builder
-            .HasOne<Participant>()
-            .WithMany()
-            .HasForeignKey(settlementUser => settlementUser.ParticipantId);
-
-        builder
-            .HasOne<User>()
-            .WithMany()
-            .HasForeignKey(settlementUser => settlementUser.UserId);
+            .HasOne(su => su.Participant)
+            .WithMany(p => p.SettlementUsers)
+            .HasForeignKey(su => su.ParticipantId)
+            .IsRequired(false);
     }
 }

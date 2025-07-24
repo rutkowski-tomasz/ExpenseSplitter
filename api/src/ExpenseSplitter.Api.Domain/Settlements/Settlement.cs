@@ -1,7 +1,7 @@
 ﻿using ExpenseSplitter.Api.Domain.Abstractions;
-using ExpenseSplitter.Api.Domain.Common;
 using ExpenseSplitter.Api.Domain.Participants;
 using ExpenseSplitter.Api.Domain.Settlements.Events;
+using ExpenseSplitter.Api.Domain.SettlementUsers;
 using ExpenseSplitter.Api.Domain.Users;
 
 namespace ExpenseSplitter.Api.Domain.Settlements;
@@ -9,6 +9,7 @@ namespace ExpenseSplitter.Api.Domain.Settlements;
 public sealed class Settlement : AggregateRoot<SettlementId>
 {
     private readonly List<Participant> participants = [];
+    private readonly List<SettlementUser> settlementUsers = [];
 
     private Settlement(
         SettlementId id,
@@ -31,6 +32,7 @@ public sealed class Settlement : AggregateRoot<SettlementId>
     public DateTime CreatedOnUtc { get; private set; }
     public DateTime UpdatedOnUtc { get; private set; }
     public IReadOnlyList<Participant> Participants => participants.AsReadOnly();
+    public IReadOnlyList<SettlementUser> SettlementUsers => settlementUsers.AsReadOnly();
 
     public static Result<Settlement> Create(string name, string inviteCode, UserId creatorUserId, DateTime createdOnUtc)
     {
