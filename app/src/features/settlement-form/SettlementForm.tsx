@@ -7,10 +7,12 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
+import { Badge } from '~/components/ui/badge';
 import { useCreateSettlementMutation, useUpdateSettlementMutation } from './settlement-form-api';
 import { useGetSettlementQuery } from '~/features/settlement-details/settlement-details-api';
 import { settlementFormSchema, type SettlementFormData } from './settlement-form-models';
 import { GetSettlementResponseParticipant } from '~/features/settlement-details/settlement-details-models';
+import { useAuthStore } from '~/stores/authStore';
 import { Helmet } from 'react-helmet';
 
 export function SettlementForm() {
@@ -18,6 +20,7 @@ export function SettlementForm() {
   const navigate = useNavigate();
   const isEditMode = !!settlementId;
   const [originalParticipants, setOriginalParticipants] = useState<GetSettlementResponseParticipant[]>([]);
+  const { username } = useAuthStore();
   
   const createMutation = useCreateSettlementMutation();
   const updateMutation = useUpdateSettlementMutation();
@@ -31,7 +34,7 @@ export function SettlementForm() {
     resolver: zodResolver(settlementFormSchema),
     defaultValues: {
       name: '',
-      participants: [''],
+      participants: [username || ''],
     },
   });
 
@@ -44,8 +47,11 @@ export function SettlementForm() {
         name: settlement.name,
         participants: settlement.participants.map(p => p.nickname),
       });
+    } else if (!isEditMode && username && participants[0] !== username) {
+      // Initialize first participant with username for new settlements
+      form.setValue('participants.0', username);
     }
-  }, [settlement, isEditMode, form]);
+  }, [settlement, isEditMode, form, username, participants]);
 
   const addParticipant = () => {
     form.setValue('participants', [...participants, '']);
@@ -189,15 +195,22 @@ export function SettlementForm() {
           </CardHeader>
           <CardContent className="space-y-4">
             {participants.map((participant, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  type="text"
-                  placeholder={`Participant ${index + 1} name`}
-                  {...form.register(`participants.${index}`)}
-                  className="h-12 rounded-xl flex-1"
-                  disabled={isSubmitting}
-                />
-                {participants.length > 1 && (
+              <div key={index} className="flex gap-2 items-center">
+                <div className="flex-1 relative">
+                  <Input
+                    type="text"
+                    placeholder={`Participant ${index + 1} name`}
+                    {...form.register(`participants.${index}`)}
+                    className="h-12 rounded-xl"
+                    disabled={isSubmitting}
+                  />
+                  {index === 0 && !isEditMode && (
+                    <Badge variant="secondary" className="absolute right-2 top-1/2 -translate-y-1/2 text-xs">
+                      You
+                    </Badge>
+                  )}
+                </div>
+                {participants.length > 1 && (index > 0 || isEditMode) && (
                   <Button
                     type="button"
                     variant="ghost"

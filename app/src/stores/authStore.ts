@@ -54,15 +54,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: false,
   isInitialized: false,
 
-  initializeAuth: () => {
+  initializeAuth: async () => {
     const storedAuth = getStoredAuth();
     if (storedAuth && storedAuth.token && storedAuth.isAuthenticated) {
-      set({
-        username: storedAuth.username,
-        token: storedAuth.token,
-        isAuthenticated: true,
-        isInitialized: true,
-      });
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/Users/me`, {
+          headers: { Authorization: `Bearer ${storedAuth.token}` },
+        });
+        if (!response.ok) {
+          set({ isInitialized: true });
+          clearStoredAuth();
+          return;
+        }
+        const user = await response.json();
+        set({
+          username: user.nickname,
+          token: storedAuth.token,
+          isAuthenticated: true,
+          isInitialized: true,
+        });
+        setStoredAuth({
+          username: user.nickname,
+          token: storedAuth.token,
+          isAuthenticated: true,
+        });
+      } catch {
+        set({ isInitialized: true });
+        clearStoredAuth();
+      }
     } else {
       set({ isInitialized: true });
     }
@@ -78,9 +97,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return err(await response.json());
       }
       const data = await response.json();
+      const token = data.accessToken;
+      const meResponse = await fetch(`${API_BASE_URL}/api/v1/Users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!meResponse.ok) {
+        set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+        clearStoredAuth();
+        return err(await meResponse.json());
+      }
+      const user = await meResponse.json();
       const authData = {
-        username: JSON.parse(atob(data.accessToken.split('.')[1])).preferred_username,
-        token: data.accessToken,
+        username: user.nickname,
+        token,
         isAuthenticated: true,
       };
       set({ ...authData, isLoading: false });

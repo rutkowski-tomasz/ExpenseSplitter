@@ -39,6 +39,7 @@ public class CreateSettlementCommandHandler(
         }
 
         var settlementUser = SettlementUser.Create(settlement.Id, userContext.UserId);
+        settlementUser.SetParticipantId(settlement.Participants[0].Id);
         settlementUserRepository.Add(settlementUser);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
