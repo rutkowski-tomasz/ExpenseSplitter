@@ -13,6 +13,12 @@ async function deleteSettlement(settlementId: string): Promise<void> {
   });
 }
 
+async function leaveSettlement(settlementId: string): Promise<void> {
+  await apiCall(`/api/v1/Settlements/${settlementId}/leave`, {
+    method: 'POST',
+  });
+}
+
 export function useGetSettlementQuery(
   settlementId: string, 
   options?: Partial<UseQueryOptions<GetSettlementResponse>>
@@ -33,6 +39,17 @@ export function useDeleteSettlementMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSettlement,
+    onSuccess: (_, settlementId) => {
+      queryClient.removeQueries({ queryKey: ['settlement', settlementId, 'details'] });
+      queryClient.invalidateQueries({ queryKey: ['settlements'] });
+    },
+  });
+}
+
+export function useLeaveSettlementMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: leaveSettlement,
     onSuccess: (_, settlementId) => {
       queryClient.removeQueries({ queryKey: ['settlement', settlementId, 'details'] });
       queryClient.invalidateQueries({ queryKey: ['settlements'] });

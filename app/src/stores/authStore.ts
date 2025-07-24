@@ -16,6 +16,7 @@ export interface ApiError {
 
 type AuthState = {
   username: string | null;
+  userId: string | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -31,7 +32,7 @@ const getStoredAuth = () => {
   return stored ? JSON.parse(stored) : null;
 };
 
-const setStoredAuth = (auth: { username: string | null; token: string | null; isAuthenticated: boolean }) => {
+const setStoredAuth = (auth: { username: string | null; userId: string | null; token: string | null; isAuthenticated: boolean }) => {
   localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(auth));
 };
 
@@ -49,6 +50,7 @@ const authCall = async (path: string, body: any) => {
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   username: null,
+  userId: null,
   token: null,
   isAuthenticated: false,
   isLoading: false,
@@ -69,12 +71,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const user = await response.json();
         set({
           username: user.nickname,
+          userId: user.id,
           token: storedAuth.token,
           isAuthenticated: true,
           isInitialized: true,
         });
         setStoredAuth({
           username: user.nickname,
+          userId: user.id,
           token: storedAuth.token,
           isAuthenticated: true,
         });
@@ -92,7 +96,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const response = await authCall('/api/v1/Users/login', { email, password });
       if (!response.ok) {
-        set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+        set({ isLoading: false, isAuthenticated: false, token: null, username: null, userId: null });
         clearStoredAuth();
         return err(await response.json());
       }
@@ -102,13 +106,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!meResponse.ok) {
-        set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+        set({ isLoading: false, isAuthenticated: false, token: null, username: null, userId: null });
         clearStoredAuth();
         return err(await meResponse.json());
       }
       const user = await meResponse.json();
       const authData = {
         username: user.nickname,
+        userId: user.id,
         token,
         isAuthenticated: true,
       };
@@ -116,7 +121,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       setStoredAuth(authData);
       return ok(true);
     } catch (e: any) {
-      set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+      set({ isLoading: false, isAuthenticated: false, token: null, username: null, userId: null });
       clearStoredAuth();
       return err({ title: 'Network error', detail: e.message, status: undefined });
     }
@@ -127,21 +132,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const response = await authCall('/api/v1/Users/register', { email, nickname, password });
       if (!response.ok) {
-        set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+        set({ isLoading: false, isAuthenticated: false, token: null, username: null, userId: null });
         clearStoredAuth();
         return err(await response.json());
       }
       set({ isLoading: false });
       return ok(true);
     } catch (e: any) {
-      set({ isLoading: false, isAuthenticated: false, token: null, username: null });
+      set({ isLoading: false, isAuthenticated: false, token: null, username: null, userId: null });
       clearStoredAuth();
       return err({ title: 'Network error', detail: e.message, status: undefined });
     }
   },
 
   logout: () => {
-    set({ username: null, token: null, isAuthenticated: false });
+    set({ username: null, userId: null, token: null, isAuthenticated: false });
     clearStoredAuth();
     window.location.href = '/login';
   },

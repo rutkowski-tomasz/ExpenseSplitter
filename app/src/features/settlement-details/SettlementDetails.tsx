@@ -7,20 +7,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog';
 import { toast } from '~/hooks/use-toast';
-import { useGetSettlementQuery, useDeleteSettlementMutation } from './settlement-details-api';
+import { useGetSettlementQuery, useDeleteSettlementMutation, useLeaveSettlementMutation } from './settlement-details-api';
 import { SettlementBalances } from '~/features/settlement-balances/SettlementBalances';
 import { ExpensesList } from '~/features/expenses-list/ExpensesList';
 import { useGetExpensesForSettlementQuery } from '~/features/expenses-list/expenses-list-api';
+import { useAuthStore } from '~/stores/authStore';
 import { Helmet } from 'react-helmet';
 
 export function SettlementDetails() {
   const { settlementId } = useParams<{ settlementId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('expenses');
+  const { userId } = useAuthStore();
   
   const { data: settlement, isLoading, error } = useGetSettlementQuery(settlementId || '');
   const { data: expensesData } = useGetExpensesForSettlementQuery(settlementId || '');
   const deleteSettlementMutation = useDeleteSettlementMutation();
+  const leaveSettlementMutation = useLeaveSettlementMutation();
 
   const handleShare = async () => {
     if (!settlement) return;
@@ -65,6 +68,27 @@ export function SettlementDetails() {
         toast({
           title: "Delete failed",
           description: error instanceof Error ? error.message : "Failed to delete settlement.",
+          variant: "destructive",
+        });
+      },
+    });
+  };
+
+  const handleLeave = () => {
+    if (!settlementId) return;
+    
+    leaveSettlementMutation.mutate(settlementId, {
+      onSuccess: () => {
+        toast({
+          title: "Left settlement",
+          description: "You have successfully left the settlement.",
+        });
+        navigate('/settlements');
+      },
+      onError: (error) => {
+        toast({
+          title: "Leave failed",
+          description: error instanceof Error ? error.message : "Failed to leave settlement.",
           variant: "destructive",
         });
       },
@@ -148,6 +172,8 @@ export function SettlementDetails() {
     return null;
   }
 
+  const isCreator = userId === settlement.creatorUserId;
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Helmet>
@@ -189,32 +215,61 @@ export function SettlementDetails() {
                   <User className="w-4 h-4 mr-2" />
                   Claim participant
                 </DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Settlement</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Are you sure you want to delete "{settlement?.name}"? This action cannot be undone and all associated expenses will be lost.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction 
-                        onClick={handleDelete}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        disabled={deleteSettlementMutation.isPending}
-                      >
-                        {deleteSettlementMutation.isPending ? 'Deleting...' : 'Delete'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                {isCreator ? (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete (with all expenses and participants)
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Settlement</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{settlement?.name}"? This action cannot be undone and all associated expenses will be lost.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={handleDelete}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          disabled={deleteSettlementMutation.isPending}
+                        >
+                          {deleteSettlementMutation.isPending ? 'Deleting...' : 'Delete'}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                ) : (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Leave
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Leave Settlement</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to leave "{settlement?.name}"? You will no longer have access to this settlement and its expenses.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={handleLeave}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          disabled={leaveSettlementMutation.isPending}
+                        >
+                          {leaveSettlementMutation.isPending ? 'Leaving...' : 'Leave'}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

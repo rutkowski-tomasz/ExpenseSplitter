@@ -4,6 +4,7 @@ public sealed record GetSettlementQueryResult(
     Guid Id,
     string Name,
     string InviteCode,
+    Guid CreatorUserId,
     decimal TotalCost,
     decimal? YourCost,
     Guid? ClaimedParticipantId,

@@ -43,6 +43,7 @@ internal sealed class GetSettlementQueryHandler(
             settlement.Id.Value,
             settlement.Name,
             settlement.InviteCode,
+            settlement.CreatorUserId.Value,
             totalCost,
             yourCost,
             settlementUser.ParticipantId?.Value,

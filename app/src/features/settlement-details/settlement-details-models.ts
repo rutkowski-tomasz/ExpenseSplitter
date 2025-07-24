@@ -9,6 +9,7 @@ export interface GetSettlementResponse {
   totalCost: number;
   yourCost?: number;
   claimedParticipantId?: string;
+  creatorUserId: string;
   participants: GetSettlementResponseParticipant[];
 }
 
