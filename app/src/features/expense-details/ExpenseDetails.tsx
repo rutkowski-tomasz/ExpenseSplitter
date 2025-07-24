@@ -1,51 +1,21 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, MoreVertical, Edit, Trash2, Receipt } from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
 import { Avatar, AvatarFallback } from '~/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog';
-import { toast } from '~/hooks/use-toast';
-import { useGetExpenseAndSettlementQuery, useDeleteExpenseMutation } from './expense-details-api';
+import { useGetExpenseAndSettlementQuery } from './expense-details-api';
 import { Helmet } from 'react-helmet';
 import { Loading } from '../loading/Loading';
 import { Error } from '../error/Error';
 import { ParticipantName } from '../participant-name/ParticipantName';
+import { ExpenseMenu } from '~/features/expense-menu/ExpenseMenu';
 
 export function ExpenseDetails() {
   const { settlementId, expenseId } = useParams<{ settlementId: string; expenseId: string }>();
   const navigate = useNavigate();
   
   const { data: expense, isLoading, error } = useGetExpenseAndSettlementQuery(expenseId || '', settlementId || '');
-  const deleteExpenseMutation = useDeleteExpenseMutation();
-
-  const handleEdit = () => {
-    if (settlementId && expenseId) {
-      navigate(`/settlements/${settlementId}/expenses/${expenseId}/edit`);
-    }
-  };
-
-  const handleDelete = () => {
-    if (!expenseId) return;
-    
-    deleteExpenseMutation.mutate({ expenseId }, {
-      onSuccess: () => {
-        toast({
-          title: "Expense deleted",
-          description: "The expense has been successfully deleted.",
-        });
-        navigate(`/settlements/${settlementId}`);
-      },
-      onError: (error) => {
-        toast({
-          title: "Delete failed",
-          description: error instanceof Error ? error.message : "Failed to delete expense.",
-          variant: "destructive",
-        });
-      },
-    });
-  };
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -89,45 +59,11 @@ export function ExpenseDetails() {
           </div>
           
           <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="w-5 h-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleEdit}>
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete Expense</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Are you sure you want to delete "{expense.title}"? This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction 
-                        onClick={handleDelete}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        disabled={deleteExpenseMutation.isPending}
-                      >
-                        {deleteExpenseMutation.isPending ? 'Deleting...' : 'Delete'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ExpenseMenu
+              expenseId={expenseId || ''}
+              settlementId={settlementId || ''}
+              expenseTitle={expense.title}
+            />
           </div>
         </div>
       </div>
