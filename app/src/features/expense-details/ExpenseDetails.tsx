@@ -9,6 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from '~/hooks/use-toast';
 import { useGetExpenseAndSettlementQuery, useDeleteExpenseMutation } from './expense-details-api';
 import { Helmet } from 'react-helmet';
+import { ParticipantName } from '../participant-name/ParticipantName';
 
 export function ExpenseDetails() {
   const { settlementId, expenseId } = useParams<{ settlementId: string; expenseId: string }>();
@@ -224,7 +225,9 @@ export function ExpenseDetails() {
         {/* Paid By */}
         <Card className="shadow-card border-0">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Paid by</CardTitle>
+            <CardTitle className="text-lg">
+              Paid by
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-3">
@@ -234,7 +237,12 @@ export function ExpenseDetails() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <div className="font-medium">{expense.payingParticipantName}</div>
+                <div className="font-medium">
+                  <ParticipantName
+                    name={expense.payingParticipantName}
+                    isClaimed={expense.payingParticipantId === expense.claimedParticipantId}
+                  />
+                </div>
                 <div className="text-sm text-muted-foreground">Paid ${expense.amount.toFixed(2)}</div>
               </div>
             </div>
@@ -255,7 +263,12 @@ export function ExpenseDetails() {
                       {allocation.participantName.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">{allocation.participantName}</span>
+                  <span className="font-medium">
+                    <ParticipantName
+                      name={allocation.participantName}
+                      isClaimed={allocation.participantId === expense.claimedParticipantId}
+                    />
+                  </span>
                 </div>
                 <Badge variant="secondary" className="rounded-full">
                   ${allocation.amount.toFixed(2)}

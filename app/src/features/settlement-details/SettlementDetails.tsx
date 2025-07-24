@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Share2, MoreVertical, DollarSign, Loader2, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Share2, MoreVertical, DollarSign, Loader2, Edit, Trash2, User } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
@@ -44,6 +44,10 @@ export function SettlementDetails() {
 
   const handleEdit = () => {
     navigate(`/settlements/${settlementId}/edit`);
+  };
+
+  const handleClaimParticipant = () => {
+    navigate(`/settlements/${settlementId}/claim`);
   };
 
   const handleDelete = () => {
@@ -139,6 +143,11 @@ export function SettlementDetails() {
     return null;
   }
 
+  if (!settlement.claimedParticipantId) {
+    navigate(`/settlements/${settlementId}/claim`);
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Helmet>
@@ -175,6 +184,10 @@ export function SettlementDetails() {
                 <DropdownMenuItem onClick={handleEdit}>
                   <Edit className="w-4 h-4 mr-2" />
                   Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleClaimParticipant}>
+                  <User className="w-4 h-4 mr-2" />
+                  Claim participant
                 </DropdownMenuItem>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -252,6 +265,7 @@ export function SettlementDetails() {
             <ExpensesList 
               settlementId={settlementId || ''} 
               participants={settlement.participants} 
+              claimedParticipantId={settlement.claimedParticipantId}
             />
           </TabsContent>
 
@@ -259,6 +273,7 @@ export function SettlementDetails() {
             <SettlementBalances 
               settlementId={settlementId || ''} 
               participants={settlement.participants} 
+              claimedParticipantId={settlement.claimedParticipantId}
             />
           </TabsContent>
         </Tabs>

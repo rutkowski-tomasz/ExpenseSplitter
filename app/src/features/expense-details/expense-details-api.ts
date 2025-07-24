@@ -29,6 +29,7 @@ const getExpenseAndSettlement = async (expenseId: string, settlementId: string):
     ...expense,
     payingParticipantName,
     settlementName: settlement.name,
+    claimedParticipantId: settlement.claimedParticipantId,
     allocations: allocationsWithNames,
   };
 };

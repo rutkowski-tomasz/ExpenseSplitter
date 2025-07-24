@@ -1,3 +1,8 @@
+export interface ClaimParticipantRequest {
+  settlementId: string;
+  participantId: string;
+}
+
 export interface GetSettlementRequest {
   settlementId: string;
 }
@@ -5,10 +10,7 @@ export interface GetSettlementRequest {
 export interface GetSettlementResponse {
   id: string;
   name: string;
-  inviteCode: string;
   totalCost: number;
-  yourCost?: number;
-  claimedParticipantId?: string;
   participants: GetSettlementResponseParticipant[];
 }
 

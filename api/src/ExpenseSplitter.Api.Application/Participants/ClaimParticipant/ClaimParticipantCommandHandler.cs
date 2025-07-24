@@ -1,3 +1,4 @@
+using ExpenseSplitter.Api.Application.Abstractions.Clock;
 using ExpenseSplitter.Api.Application.Abstractions.Cqrs;
 using ExpenseSplitter.Api.Domain.Abstractions;
 using ExpenseSplitter.Api.Domain.Participants;
@@ -9,6 +10,7 @@ namespace ExpenseSplitter.Api.Application.Participants.ClaimParticipant;
 internal sealed class ClaimParticipantCommandHandler(
     ISettlementUserRepository settlementUserRepository,
     ISettlementRepository settlementRepository,
+    IDateTimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork
 ) : ICommandHandler<ClaimParticipantCommand>
 {
@@ -29,6 +31,7 @@ internal sealed class ClaimParticipantCommandHandler(
             return ParticipantErrors.NotFound;
         }
 
+        settlement.LastModified = dateTimeProvider.UtcNow;
         settlementUser.SetParticipantId(participantId);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

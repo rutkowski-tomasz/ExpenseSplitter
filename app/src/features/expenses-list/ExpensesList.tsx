@@ -3,13 +3,15 @@ import { Card, CardContent } from '~/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useGetExpensesForSettlementQuery } from './expenses-list-api';
 import { ExpenseListItem } from './expenses-list-models';
+import { ParticipantName } from '../participant-name/ParticipantName';
 
 interface ExpensesListProps {
   settlementId: string;
   participants: Array<{ id: string; nickname: string; }>;
+  claimedParticipantId?: string;
 }
 
-export function ExpensesList({ settlementId, participants }: ExpensesListProps) {
+export function ExpensesList({ settlementId, participants, claimedParticipantId }: ExpensesListProps) {
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetExpensesForSettlementQuery(settlementId);
 
@@ -93,7 +95,12 @@ export function ExpensesList({ settlementId, participants }: ExpensesListProps) 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <User className="w-3 h-3" />
-                    <span>Paid by {expense.payingParticipantName}</span>
+                    <span>
+                      Paid by{' '}
+                      <ParticipantName
+                        name={expense.payingParticipantName}
+                        isClaimed={expense.payingParticipantId === claimedParticipantId}
+                      /></span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar className="w-3 h-3" />

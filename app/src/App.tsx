@@ -17,6 +17,7 @@ import { SettlementCreatePage } from "~/pages/SettlementCreatePage";
 import { SettlementEditPage } from "~/pages/SettlementEditPage";
 import { ExpenseCreatePage } from "./pages/ExpenseCreatePage";
 import { ExpenseEditPage } from "~/pages/ExpenseEditPage";
+import { ClaimParticipantPage } from "~/pages/ClaimParticipantPage";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,7 @@ function AppContent() {
           <Route path="/settlements/create" element={<SettlementCreatePage />} />
           <Route path="/settlements/join" element={<JoinSettlementPage />} />
           <Route path="/settlements/:settlementId" element={<SettlementDetailsPage />} />
+          <Route path="/settlements/:settlementId/claim" element={<ClaimParticipantPage />} />
           <Route path="/settlements/:settlementId/edit" element={<SettlementEditPage />} />
           <Route path="/settlements/:settlementId/expenses/create" element={<ExpenseCreatePage />} />
           <Route path="/settlements/:settlementId/expenses/:expenseId" element={<ExpenseDetailsPage />} />

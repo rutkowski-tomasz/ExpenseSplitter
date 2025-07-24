@@ -45,6 +45,7 @@ internal sealed class GetSettlementQueryHandler(
             settlement.InviteCode,
             totalCost,
             yourCost,
+            settlementUser.ParticipantId?.Value,
             settlement.Participants.Select(x => new GetSettlementQueryResultParticipant(
                 x.Id.Value,
                 x.Nickname

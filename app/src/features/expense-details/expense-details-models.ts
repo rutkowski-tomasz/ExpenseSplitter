@@ -19,6 +19,7 @@ export interface ExpenseDetailsWithNamesResponse {
   title: string;
   payingParticipantId: string;
   payingParticipantName: string;
+  claimedParticipantId: string;
   paymentDate: string;
   amount: number;
   settlementId: string;

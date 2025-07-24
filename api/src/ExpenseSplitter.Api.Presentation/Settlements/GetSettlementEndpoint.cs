@@ -12,6 +12,7 @@ public record GetSettlementResponse(
     string InviteCode,
     decimal TotalCost,
     decimal? YourCost,
+    Guid? ClaimedParticipantId,
     IEnumerable<GetSettlementResponseParticipant> Participants
 );
 
@@ -33,6 +34,7 @@ public class GetSettlementEndpoint() : Endpoint<GetSettlementRequest, GetSettlem
         result.InviteCode,
         result.TotalCost,
         result.YourCost,
+        result.ClaimedParticipantId,
         result.Participants.Select(participant => new GetSettlementResponseParticipant(
             participant.Id,
             participant.Nickname

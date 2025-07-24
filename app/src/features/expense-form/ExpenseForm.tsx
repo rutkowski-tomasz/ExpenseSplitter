@@ -15,6 +15,7 @@ import { useGetExpenseAndSettlementQuery } from '~/features/expense-details/expe
 import { expenseFormSchema, type ExpenseFormData } from './expense-form-models';
 import { toast } from '~/hooks/use-toast';
 import { Helmet } from 'react-helmet';
+import { ParticipantName } from '../participant-name/ParticipantName';
 
 interface ExpenseFormProps {
   expenseId?: string;
@@ -69,7 +70,10 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
       formInitialized.current = true;
     } else if (settlement && settlement.participants.length > 0 && !isEditMode) {
       // Initialize form for new expense
-      if (!form.getValues('payingParticipantId')) {
+      const claimedId = settlement.claimedParticipantId;
+      if (claimedId && settlement.participants.some(p => p.id === claimedId)) {
+        form.setValue('payingParticipantId', claimedId);
+      } else if (!form.getValues('payingParticipantId')) {
         form.setValue('payingParticipantId', settlement.participants[0].id);
       }
       formInitialized.current = true;
@@ -301,7 +305,10 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
                 <SelectContent>
                   {settlement.participants.map((participant) => (
                     <SelectItem key={participant.id} value={participant.id}>
-                      {participant.nickname}
+                      <ParticipantName
+                        name={participant.nickname}
+                        isClaimed={participant.id === settlement.claimedParticipantId}
+                      />
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -348,7 +355,10 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
                   <div key={participant.id} className="flex items-center gap-3">
                     <div className="flex-1">
                       <Label className="text-sm font-medium">
-                        {participant.nickname}
+                        <ParticipantName
+                          name={participant.nickname}
+                          isClaimed={participant.id === settlement.claimedParticipantId}
+                        />
                       </Label>
                     </div>
                     <div className="w-32">

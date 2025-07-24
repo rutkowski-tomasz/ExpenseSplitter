@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Loader2, DollarSign } from 'lucide-react';
 import { useGetSettlementBalancesQuery } from './settlement-balances-api';
+import { ParticipantName } from '../participant-name/ParticipantName';
 
 interface Participant {
   id: string;
@@ -13,9 +14,10 @@ interface Participant {
 interface SettlementBalancesProps {
   settlementId: string;
   participants: Participant[];
+  claimedParticipantId?: string;
 }
 
-export function SettlementBalances({ settlementId, participants }: SettlementBalancesProps) {
+export function SettlementBalances({ settlementId, participants, claimedParticipantId }: SettlementBalancesProps) {
   const { data: reimbursementData, isLoading, error } = useGetSettlementBalancesQuery(settlementId);
 
   const getParticipantName = (participantId: string) => {
@@ -71,7 +73,12 @@ export function SettlementBalances({ settlementId, participants }: SettlementBal
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium">{participantName}</div>
+                      <div className="font-medium">
+                        <ParticipantName
+                          name={participantName}
+                          isClaimed={balance.participantId === claimedParticipantId}
+                        />
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         {balance.value > 0 ? 'Gets back' : balance.value < 0 ? 'Owes' : 'Settled up'}
                       </div>
@@ -124,9 +131,19 @@ export function SettlementBalances({ settlementId, participants }: SettlementBal
                       </AvatarFallback>
                     </Avatar>
                     <div className="text-sm">
-                      <span className="font-medium">{fromParticipantName}</span>
+                      <span className="font-medium">
+                        <ParticipantName
+                          name={fromParticipantName}
+                          isClaimed={reimbursement.fromParticipantId === claimedParticipantId}
+                        />  
+                      </span>
                       <span className="text-muted-foreground"> pays </span>
-                      <span className="font-medium">{toParticipantName}</span>
+                      <span className="font-medium">
+                        <ParticipantName
+                          name={toParticipantName}
+                          isClaimed={reimbursement.toParticipantId === claimedParticipantId}
+                        />
+                      </span>
                     </div>
                   </div>
                   <div className="text-right">
