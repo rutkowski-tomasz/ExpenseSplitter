@@ -30,8 +30,8 @@ internal sealed class GetSettlementQueryHandler(
             return SettlementErrors.NotFound;
         }
 
-        etagService.AttachEtagToResponse(settlement);
-        if (etagService.HasIfNoneMatchConflict(settlement))
+        etagService.AttachEtagToResponse(settlement.LastModified);
+        if (etagService.HasIfNoneMatchConflict(settlement.LastModified))
         {
             return SettlementErrors.IfNoneMatchNotModified;
         }

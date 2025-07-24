@@ -2,7 +2,6 @@
 using ExpenseSplitter.Api.Application.Abstractions.Clock;
 using ExpenseSplitter.Api.Application.Abstractions.Cqrs;
 using ExpenseSplitter.Api.Domain.Abstractions;
-using ExpenseSplitter.Api.Domain.Participants;
 using ExpenseSplitter.Api.Domain.Settlements;
 using ExpenseSplitter.Api.Domain.SettlementUsers;
 

@@ -25,7 +25,7 @@ export function SettlementDetails() {
   const handleShare = async () => {
     if (!settlement) return;
     
-    const shareUrl = `${window.location.origin}/join-settlement?inviteCode=${settlement.inviteCode}`;
+    const shareUrl = `${window.location.origin}/settlements/join?inviteCode=${settlement.inviteCode}`;
     
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -235,7 +235,7 @@ export function SettlementDetails() {
         </Card>
 
         <Button 
-          onClick={() => navigate(`/settlements/${settlementId}/expenses/add`)}
+          onClick={() => navigate(`/settlements/${settlementId}/expenses/create`)}
           className="w-full h-14"
         >
           <Plus className="mr-2 w-5 h-5" />

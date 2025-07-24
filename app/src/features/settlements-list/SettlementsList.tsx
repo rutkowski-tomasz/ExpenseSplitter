@@ -80,7 +80,7 @@ export function SettlementsList({ }: SettlementsListProps) {
             <p className="text-sm text-muted-foreground mb-4">
               Create your first settlement to get started
             </p>
-            <Button onClick={() => navigate('/create-settlement')}>
+            <Button onClick={() => navigate('/settlements/create')}>
               <Plus className="mr-2 w-4 h-4" />
               Create Settlement
             </Button>

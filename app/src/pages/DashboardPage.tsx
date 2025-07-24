@@ -39,7 +39,7 @@ export function DashboardPage() {
       <div className="p-4 space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <Button 
-            onClick={() => navigate('/create-settlement')}
+            onClick={() => navigate('/settlements/create')}
             className="h-16 flex-col gap-2"
           >
             <Plus className="w-6 h-6" />
@@ -48,7 +48,7 @@ export function DashboardPage() {
           
           <Button 
             variant="secondary"
-            onClick={() => navigate('/join-settlement')}
+            onClick={() => navigate('/settlements/join')}
             className="h-16 flex-col gap-2"
           >
             <JoystickIcon className="w-6 h-6" />

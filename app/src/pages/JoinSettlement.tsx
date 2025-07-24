@@ -92,7 +92,7 @@ export function JoinSettlement() {
             <h3 className="font-semibold mb-2">How to join a settlement</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>1. Get an invite code from a settlement member</p>
-              <p>2. Enter the code above and tap "Join Settlement"</p>
+              <p>2. Enter the code or link above and tap "Join Settlement"</p>
               <p>3. You'll be added to the settlement and can start adding expenses</p>
             </div>
           </CardContent>
