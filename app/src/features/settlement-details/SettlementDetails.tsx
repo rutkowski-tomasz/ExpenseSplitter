@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Share2, MoreVertical, DollarSign, Loader2, Edit, Trash2, User } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/ui/dropdown-menu';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '~/components/ui/alert-dialog';
-import { toast } from '~/hooks/use-toast';
-import { useGetSettlementQuery, useDeleteSettlementMutation, useLeaveSettlementMutation } from './settlement-details-api';
+import { useGetSettlementQuery } from './settlement-details-api';
 import { SettlementBalances } from '~/features/settlement-balances/SettlementBalances';
 import { ExpensesList } from '~/features/expenses-list/ExpensesList';
 import { useGetExpensesForSettlementQuery } from '~/features/expenses-list/expenses-list-api';
@@ -15,6 +12,7 @@ import { useAuthStore } from '~/stores/authStore';
 import { Helmet } from 'react-helmet';
 import { Loading } from '../loading/Loading';
 import { Error } from '../error/Error';
+import { SettlementMenu } from '~/features/settlement-menu/SettlementMenu';
 
 export function SettlementDetails() {
   const { settlementId } = useParams<{ settlementId: string }>();
@@ -24,78 +22,6 @@ export function SettlementDetails() {
   
   const { data: settlement, isLoading, error } = useGetSettlementQuery(settlementId || '');
   const { data: expensesData } = useGetExpensesForSettlementQuery(settlementId || '');
-  const deleteSettlementMutation = useDeleteSettlementMutation();
-  const leaveSettlementMutation = useLeaveSettlementMutation();
-
-  const handleShare = async () => {
-    if (!settlement) return;
-    
-    const shareUrl = `${window.location.origin}/settlements/join?inviteCode=${settlement.inviteCode}`;
-    
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      toast({
-        title: "Link copied!",
-        description: "Settlement invite link has been copied to clipboard.",
-      });
-    } catch (err) {
-      toast({
-        title: "Failed to copy",
-        description: "Could not copy link to clipboard.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleEdit = () => {
-    navigate(`/settlements/${settlementId}/edit`);
-  };
-
-  const handleClaimParticipant = () => {
-    navigate(`/settlements/${settlementId}/claim`);
-  };
-
-  const handleDelete = () => {
-    if (!settlementId) return;
-    
-    deleteSettlementMutation.mutate(settlementId, {
-      onSuccess: () => {
-        toast({
-          title: "Settlement deleted",
-          description: "The settlement has been successfully deleted.",
-        });
-        navigate('/dashboard');
-      },
-      onError: (error) => {
-        toast({
-          title: "Delete failed",
-          description: error instanceof Error ? error.message : "Failed to delete settlement.",
-          variant: "destructive",
-        });
-      },
-    });
-  };
-
-  const handleLeave = () => {
-    if (!settlementId) return;
-    
-    leaveSettlementMutation.mutate(settlementId, {
-      onSuccess: () => {
-        toast({
-          title: "Left settlement",
-          description: "You have successfully left the settlement.",
-        });
-        navigate('/settlements');
-      },
-      onError: (error) => {
-        toast({
-          title: "Leave failed",
-          description: error instanceof Error ? error.message : "Failed to leave settlement.",
-          variant: "destructive",
-        });
-      },
-    });
-  };
 
   if (isLoading)
     return <Loading />;
@@ -130,82 +56,12 @@ export function SettlementDetails() {
           </div>
           
           <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="w-5 h-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleShare}>
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleEdit}>
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleClaimParticipant}>
-                  <User className="w-4 h-4 mr-2" />
-                  Claim participant
-                </DropdownMenuItem>
-                {userId === settlement.creatorUserId ? (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete (with all expenses and participants)
-                      </DropdownMenuItem>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Settlement</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete "{settlement?.name}"? This action cannot be undone and all associated expenses will be lost.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction 
-                          onClick={handleDelete}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          disabled={deleteSettlementMutation.isPending}
-                        >
-                          {deleteSettlementMutation.isPending ? 'Deleting...' : 'Delete'}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                ) : (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Leave
-                      </DropdownMenuItem>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Leave Settlement</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to leave "{settlement?.name}"? You will no longer have access to this settlement and its expenses.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction 
-                          onClick={handleLeave}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                          disabled={leaveSettlementMutation.isPending}
-                        >
-                          {leaveSettlementMutation.isPending ? 'Leaving...' : 'Leave'}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <SettlementMenu
+              settlementName={settlement.name}
+              isCreator={userId === settlement.creatorUserId}
+              settlementId={settlementId || ''}
+              settlementInviteCode={settlement.inviteCode}
+            />
           </div>
         </div>
       </div>
