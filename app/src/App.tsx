@@ -10,7 +10,7 @@ import { RegisterPage } from "~/pages/RegisterPage";
 import { DashboardPage } from "~/pages/DashboardPage";
 import { SettlementDetailsPage } from "~/pages/SettlementDetailsPage";
 import { ExpenseDetailsPage } from "~/pages/ExpenseDetailsPage";
-import { JoinSettlement } from "~/pages/JoinSettlement";
+import { JoinSettlementPage } from "~/pages/JoinSettlementPage";
 import NotFoundPage from "~/pages/NotFoundPage";
 import { useAuthStore } from "~/stores/authStore";
 import { SettlementCreatePage } from "~/pages/SettlementCreatePage";
@@ -59,7 +59,7 @@ function AppContent() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settlements/create" element={<SettlementCreatePage />} />
-          <Route path="/settlements/join" element={<JoinSettlement />} />
+          <Route path="/settlements/join" element={<JoinSettlementPage />} />
           <Route path="/settlements/:settlementId" element={<SettlementDetailsPage />} />
           <Route path="/settlements/:settlementId/edit" element={<SettlementEditPage />} />
           <Route path="/settlements/:settlementId/expenses/create" element={<ExpenseCreatePage />} />
