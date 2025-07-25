@@ -128,7 +128,28 @@ export function SettlementBalances({ settlementId, participants, claimedParticip
                   </div>
                   <div className="text-right">
                     <div className="font-bold">${reimbursement.value.toFixed(2)}</div>
-                    <Button size="sm" variant="secondary" className="mt-1 h-6 text-xs">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="mt-1 h-6 text-xs"
+                      onClick={() => {
+                        const prefill = {
+                          name: `Settlement payment`,
+                          paymentDate: new Date().toISOString().split('T')[0],
+                          payingParticipantId: reimbursement.fromParticipantId,
+                          allocations: participants.map(p => ({
+                            participantId: p.id,
+                            value:
+                              p.id === reimbursement.toParticipantId
+                                ? reimbursement.value
+                                : 0,
+                          })),
+                        };
+                        window.location.assign(
+                          `/settlements/${settlementId}/expenses/create?prefill=${encodeURIComponent(JSON.stringify(prefill))}`
+                        );
+                      }}
+                    >
                       Settle
                     </Button>
                   </div>

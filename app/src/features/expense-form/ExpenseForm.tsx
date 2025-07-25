@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Plus, X, Calculator, DollarSign } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,6 +26,7 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
   const { settlementId, expenseId: paramExpenseId } = useParams<{ settlementId: string; expenseId: string }>();
   const expenseId = propExpenseId || paramExpenseId;
   const navigate = useNavigate();
+  const location = useLocation();
   const isEditMode = !!expenseId;
   const formInitialized = useRef(false);
   
@@ -59,6 +60,23 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
     // Only initialize form once to prevent overriding user changes
     if (formInitialized.current) return;
 
+    // Prefill from query param if present and not in edit mode
+    if (!isEditMode && location.search.includes('prefill=')) {
+      try {
+        const params = new URLSearchParams(location.search);
+        const prefillRaw = params.get('prefill');
+        if (prefillRaw) {
+          const prefill = JSON.parse(decodeURIComponent(prefillRaw));
+          if (prefill.name) form.setValue('name', prefill.name);
+          if (prefill.paymentDate) form.setValue('paymentDate', prefill.paymentDate);
+          if (prefill.payingParticipantId) form.setValue('payingParticipantId', prefill.payingParticipantId);
+          if (Array.isArray(prefill.allocations)) form.setValue('allocations', prefill.allocations);
+          formInitialized.current = true;
+          return;
+        }
+      } catch {}
+    }
+
     if (isEditMode && existingExpense) {
       // Populate form with existing expense data
       form.setValue('name', existingExpense.title);
@@ -79,7 +97,7 @@ export function ExpenseForm({ expenseId: propExpenseId }: ExpenseFormProps) {
       }
       formInitialized.current = true;
     }
-  }, [settlement, existingExpense, isEditMode, form]);
+  }, [settlement, existingExpense, isEditMode, form, location.search]);
 
   // Separate effect for initializing allocations in new expense mode
   useEffect(() => {
