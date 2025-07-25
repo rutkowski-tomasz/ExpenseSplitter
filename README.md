@@ -22,7 +22,32 @@ ExpenseSplitter is a Domain-Driven Design (DDD) implemented API, meticulously cr
 
 To let you quickly understand the domain and relationships of the project entities I decided to create a class diagram.
 
-![ExpenseSplitter.Api class diagram](ExpenseSplitter.Diagram.drawio.png "Class diagram")
+![ExpenseSplitter.Api class diagram](images/ExpenseSplitter.Diagram.drawio.png "Class diagram")
+
+# 📸 App Screenshots
+
+Get a quick glance at the look of ExpenseSplitter in action:
+
+<table>
+  <tr>
+    <td align="center"><img src="images/0-login.png" width="250"/><br/>Login</td>
+    <td align="center"><img src="images/1-create-settlement.png" width="250"/><br/>Create Settlement</td>
+    <td align="center"><img src="images/2-add-expense.png" width="250"/><br/>Add Expense</td>
+    <td align="center"><img src="images/3-dashboard.png" width="250"/><br/>Dashboard</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="images/4-settlement-example1.png" width="250"/><br/>Settlement Example 1</td>
+    <td align="center"><img src="images/5-settlement-example1-reimbursement.png" width="250"/><br/>Reimbursement Example 1</td>
+    <td align="center"><img src="images/6-settelement-example2.png" width="250"/><br/>Settlement Example 2</td>
+    <td align="center"><img src="images/6-settlement-example2-reimbursement.png" width="250"/><br/>Reimbursement Example 2</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="images/7-join-settlement.png" width="250"/><br/>Join Settlement</td>
+    <td align="center"><img src="images/8-claim-participant.png" width="250"/><br/>Claim Participant</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 
 ## 🗺️ Endpoints map
 
