@@ -12,6 +12,7 @@ ARG PROJECT_NAME
 WORKDIR /build
 COPY [".editorconfig", "./"]
 COPY ["Directory.Build.props", "./"]
+COPY ["Directory.Packages.props", "./"]
 COPY ["src/*/*.csproj", "./"]
 RUN for file in $(ls *.csproj); do mkdir -p src/${file%.*}/ && mv $file src/${file%.*}/; done
 RUN dotnet restore "src/${PROJECT_NAME}/${PROJECT_NAME}.csproj"
