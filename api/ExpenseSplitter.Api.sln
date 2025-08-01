@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{380D94B8-7
 		test\Directory.Build.props = test\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{5FF67CF3-03A3-4A18-9948-F7F1896A617B}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "../docker-compose.dcproj", "{5FF67CF3-03A3-4A18-9948-F7F1896A617B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseSplitter.Api.Application", "src\ExpenseSplitter.Api.Application\ExpenseSplitter.Api.Application.csproj", "{229AC857-16F9-4EE7-89AB-47EFED6983F9}"
 EndProject
