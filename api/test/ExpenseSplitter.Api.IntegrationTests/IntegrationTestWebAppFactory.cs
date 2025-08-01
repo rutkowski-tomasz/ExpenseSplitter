@@ -68,10 +68,9 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         var mockHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
         var context = new DefaultHttpContext();
         
-        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-        {
+        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity([
             new(ClaimTypes.NameIdentifier, TestUserId)
-        }));
+        ]));
 
         context.User = claimsPrincipal;
         mockHttpContextAccessor.HttpContext.Returns(context);

@@ -46,10 +46,9 @@ public class GlobalExceptionHandlerTests
     {
         // Arrange
         var context = CreateHttpContextWithProblemDetailsService();
-        var validationException = new ValidationException(new List<ValidationError> 
-        {
+        var validationException = new ValidationException([
             new("Property1", "Message1")
-        });
+        ]);
 
         // Act
         var result = await _handler.TryHandleAsync(context, validationException, CancellationToken.None);

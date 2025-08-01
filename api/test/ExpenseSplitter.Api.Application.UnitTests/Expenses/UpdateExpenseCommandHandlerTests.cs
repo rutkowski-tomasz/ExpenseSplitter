@@ -128,10 +128,9 @@ public class UpdateExpenseCommandHandlerTests
     {
         var request = fixture
             .Build<UpdateExpenseCommand>()
-            .With(x => x.Allocations, new List<UpdateExpenseCommandAllocation>
-            {
+            .With(x => x.Allocations, [
                 new(Guid.CreateVersion7(), Guid.CreateVersion7(), -1M)
-            })
+            ])
             .Create();
 
         var result = await handler.Handle(request, default);
@@ -148,11 +147,10 @@ public class UpdateExpenseCommandHandlerTests
             
         var request = fixture
             .Build<UpdateExpenseCommand>()
-            .With(x => x.Allocations, new List<UpdateExpenseCommandAllocation>
-            {
+            .With(x => x.Allocations, [
                 new (expense.Allocations[1].Id.Value, settlement.Participants[1].Id.Value, 3M),
                 new (expense.Allocations[0].Id.Value, settlement.Participants[0].Id.Value, 1M)
-            })
+            ])
             .Create();
 
         var result = await handler.Handle(request, default);
@@ -167,11 +165,10 @@ public class UpdateExpenseCommandHandlerTests
     {
         var request = fixture
             .Build<UpdateExpenseCommand>()
-            .With(x => x.Allocations, new List<UpdateExpenseCommandAllocation>
-            {
+            .With(x => x.Allocations, [
                 new (null, Guid.CreateVersion7(), -0.01M),
                 new (null, Guid.CreateVersion7(), 1M)
-            })
+            ])
             .Create();
         
         var result = await handler.Handle(request, default);
@@ -188,11 +185,10 @@ public class UpdateExpenseCommandHandlerTests
 
         var request = fixture
             .Build<UpdateExpenseCommand>()
-            .With(x => x.Allocations, new List<UpdateExpenseCommandAllocation>
-            {
+            .With(x => x.Allocations, [
                 new (expense.Allocations[0].Id.Value, expense.Allocations[0].ParticipantId.Value, -1M),
                 new (expense.Allocations[1].Id.Value, expense.Allocations[1].ParticipantId.Value, 3M)
-            })
+            ])
             .Create();
 
         var result = await handler.Handle(request, default);
@@ -209,10 +205,9 @@ public class UpdateExpenseCommandHandlerTests
 
         var request = fixture
             .Build<UpdateExpenseCommand>()
-            .With(x => x.Allocations, new List<UpdateExpenseCommandAllocation>
-            {
+            .With(x => x.Allocations, [
                 new (expense.Allocations[1].Id.Value, expense.Allocations[1].ParticipantId.Value, expense.Allocations[1].Amount.Value)
-            })
+            ])
             .Create();
 
         var result = await handler.Handle(request, default);
@@ -229,11 +224,10 @@ public class UpdateExpenseCommandHandlerTests
         
         var request = fixture
             .Build<UpdateExpenseCommand>()
-            .With(x => x.Allocations, new List<UpdateExpenseCommandAllocation>
-            {
+            .With(x => x.Allocations, [
                 new (expense.Allocations[0].Id.Value, expense.Allocations[0].ParticipantId.Value, 1M),
                 new (expense.Allocations[1].Id.Value, expense.Allocations[1].ParticipantId.Value, 3M)
-            })
+            ])
             .Create();
 
         unitOfWork

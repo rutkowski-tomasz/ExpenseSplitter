@@ -129,11 +129,10 @@ public class UpdateSettlementCommandHandlerTests
         var command = ComposeCommand()
             .With(
                 x => x.Participants, 
-                new List<UpdateSettlementCommandParticipant> 
-                {
+                [
                     new (null, "Krzysztof"),
                     new (settlement.Participants[1].Id.Value, settlement.Participants[1].Nickname)
-                }
+                ]
             )
             .Create();
 
