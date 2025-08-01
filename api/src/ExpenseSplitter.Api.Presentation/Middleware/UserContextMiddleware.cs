@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
-using ExpenseSplitter.Api.Application.Abstractions.Authentication;
 using Serilog.Context;
 
 namespace ExpenseSplitter.Api.Presentation.Middleware;

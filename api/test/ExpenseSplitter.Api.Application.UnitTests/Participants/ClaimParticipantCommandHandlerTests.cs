@@ -1,3 +1,4 @@
+using ExpenseSplitter.Api.Application.Abstractions.Clock;
 using ExpenseSplitter.Api.Application.Participants.ClaimParticipant;
 using ExpenseSplitter.Api.Domain.Abstractions;
 using ExpenseSplitter.Api.Domain.Participants;
@@ -29,9 +30,13 @@ public class ClaimParticipantCommandHandlerTests
             .GetById(Arg.Any<SettlementId>(), Arg.Any<CancellationToken>())
             .Returns(settlement);
 
+        var dateTimeProvider = Substitute.For<IDateTimeProvider>();
+        dateTimeProvider.UtcNow.Returns(new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+
         handler = new ClaimParticipantCommandHandler(
             settlementUserRepository,
             settlementRepository,
+            dateTimeProvider,
             unitOfWork
         );
     }
