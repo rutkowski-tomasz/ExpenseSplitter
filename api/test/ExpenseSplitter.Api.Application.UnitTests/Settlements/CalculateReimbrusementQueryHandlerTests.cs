@@ -123,17 +123,15 @@ public class CalculateReimbursementQueryHandlerTests
         result.IsSuccess.Should().BeTrue();
     
         result.Value.Should().BeEquivalentTo(new CalculateReimbursementQueryResult(
-            new List<CalculateReimbursementQueryResultBalance>
-            {
+            [
                 new(a.Id.Value, 10),
                 new(b.Id.Value, 15),
                 new(c.Id.Value, -25)
-            },
-            new List<CalculateReimbursementQueryResultSuggestedReimbursement>
-            {
+            ],
+            [
                 new(c.Id.Value, a.Id.Value, 10),
                 new(c.Id.Value, b.Id.Value, 15)
-            }
+            ]
         ));
     }
     
