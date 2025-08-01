@@ -1,3 +1,4 @@
+using ExpenseSplitter.Api.Application.Abstractions.Authentication;
 using ExpenseSplitter.Api.Application.Settlements.LeaveSettlement;
 using ExpenseSplitter.Api.Domain.Abstractions;
 using ExpenseSplitter.Api.Domain.Settlements;
@@ -9,6 +10,8 @@ public class LeaveSettlementCommandHandlerTests
 {
     private readonly Fixture fixture = CustomFixture.Create();
     private readonly ISettlementUserRepository settlementUserRepository = Substitute.For<ISettlementUserRepository>();
+    private readonly ISettlementRepository settlementRepository = Substitute.For<ISettlementRepository>();
+    private readonly IUserContext userContext = Substitute.For<IUserContext>();
     private readonly IUnitOfWork unitOfWorkMock = Substitute.For<IUnitOfWork>();
     private readonly LeaveSettlementCommandHandler handler;
 
@@ -20,6 +23,8 @@ public class LeaveSettlementCommandHandlerTests
 
         handler = new LeaveSettlementCommandHandler(
             settlementUserRepository,
+            settlementRepository,
+            userContext,
             unitOfWorkMock
         );
     }

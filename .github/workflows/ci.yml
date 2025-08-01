@@ -16,6 +16,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,6 +69,9 @@ jobs:
   scan:
     name: Scan
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
 
     steps:
       - name: Checkout
@@ -140,6 +146,9 @@ jobs:
   migrate:
     name: DB Migration Script
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
 
     steps:
       - name: Checkout
