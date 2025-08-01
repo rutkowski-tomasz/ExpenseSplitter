@@ -2,4 +2,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ExpenseSplitter.Api.Application\ExpenseSplitter.Api.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" />
+    <PackageReference Include="System.Text.RegularExpressions" />
+  </ItemGroup>
 </Project>
