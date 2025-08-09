@@ -17,6 +17,22 @@ Authorization: Bearer {{login.response.body.accessToken}}
 
 ###
 
+# @name listSettlementsWithCursorInitial
+GET {{baseUrl}}/api/v1/settlements/cursor
+?cursor=
+&limit=1
+Authorization: Bearer {{login.response.body.accessToken}}
+
+###
+
+# @name listSettlementsWithCursor
+GET {{baseUrl}}/api/v1/settlements/cursor
+?cursor={{listSettlementsWithCursorInitial.response.body.nextCursor}}
+&limit=1
+Authorization: Bearer {{login.response.body.accessToken}}
+
+###
+
 # @name createSettlement
 POST {{baseUrl}}/api/v1/settlements
 Authorization: Bearer {{login.response.body.accessToken}}

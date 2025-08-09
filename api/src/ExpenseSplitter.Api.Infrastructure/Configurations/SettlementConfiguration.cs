@@ -23,6 +23,9 @@ public class SettlementConfiguration : IEntityTypeConfiguration<Settlement>
         builder.Property(settlement => settlement.InviteCode).HasMaxLength(20);
 
         builder.HasIndex(settlement => settlement.InviteCode).IsUnique();
+        
+        builder.HasIndex(settlement => new { settlement.UpdatedOnUtc, settlement.Id })
+            .HasDatabaseName("IX_settlements_updatedatutc_id");
 
         builder
             .HasOne<User>()
