@@ -42,7 +42,7 @@ jobs:
         run: dotnet test --collect:"XPlat Code Coverage" *.sln
 
       - name: Generate report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.12
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.13
         with:
           reports: 'api/test/*Test*/TestResults/*/coverage.cobertura.xml'
           targetdir: 'api/CoverageReports'
@@ -209,7 +209,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.33.0
+        uses: aquasecurity/trivy-action@0.33.1
         if: ${{ env.PushImage == 'true' }}
         with:
           image-ref: '${{ steps.image_tag.outputs.image_tag }}:${{ needs.version.outputs.new_version }}'
