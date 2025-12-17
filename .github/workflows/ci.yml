@@ -160,6 +160,9 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Restore dependencies
+        run: dotnet restore *.slnx
+
       # Alternative: dotnet ef migrations bundle
       - name: Create migration script
         run: |
