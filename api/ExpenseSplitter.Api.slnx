@@ -1,0 +1,36 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path=".runsettings" />
+    <File Path="Directory.Build.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path="../.github/workflows/ci.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/requests/">
+    <File Path="requests/Expense.http" />
+    <File Path="requests/Settlement.http" />
+    <File Path="requests/User.http" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ExpenseSplitter.Api.Application/ExpenseSplitter.Api.Application.csproj" />
+    <Project Path="src/ExpenseSplitter.Api.Domain/ExpenseSplitter.Api.Domain.csproj" />
+    <Project Path="src/ExpenseSplitter.Api.Infrastructure/ExpenseSplitter.Api.Infrastructure.csproj" />
+    <Project Path="src/ExpenseSplitter.Api.Presentation/ExpenseSplitter.Api.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/ExpenseSplitter.Api.Application.UnitTests/ExpenseSplitter.Api.Application.UnitTests.csproj" />
+    <Project Path="test/ExpenseSplitter.Api.ArchitectureTests/ExpenseSplitter.Api.ArchitectureTests.csproj" />
+    <Project Path="test/ExpenseSplitter.Api.Domain.UnitTests/ExpenseSplitter.Api.Domain.UnitTests.csproj" />
+    <Project Path="test/ExpenseSplitter.Api.Infrastructure.UnitTests/ExpenseSplitter.Api.Infrastructure.UnitTests.csproj" />
+    <Project Path="test/ExpenseSplitter.Api.IntegrationTests/ExpenseSplitter.Api.IntegrationTests.csproj" />
+    <Project Path="test/ExpenseSplitter.Api.Presentation.UnitTests/ExpenseSplitter.Api.Presentation.UnitTests.csproj" />
+  </Folder>
+  <Project Path="../docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

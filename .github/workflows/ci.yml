@@ -39,7 +39,7 @@ jobs:
         continue-on-error: true
 
       - name: Test
-        run: dotnet test --collect:"XPlat Code Coverage" *.sln
+        run: dotnet test --collect:"XPlat Code Coverage" *.slnx
 
       - name: Generate report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.12
@@ -86,7 +86,7 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Test with coverage
-        run: dotnet test --collect:"XPlat Code Coverage;Format=opencover" *.sln
+        run: dotnet test --collect:"XPlat Code Coverage;Format=opencover" *.slnx
 
       - name: SonarQube Scan
         env:
@@ -104,7 +104,7 @@ jobs:
             /d:sonar.test.exclusions="**/bin/**,**/obj/**"
 
       - name: Build
-        run: dotnet build --no-restore *.sln
+        run: dotnet build --no-restore *.slnx
 
       - name: SonarQube End
         env:
