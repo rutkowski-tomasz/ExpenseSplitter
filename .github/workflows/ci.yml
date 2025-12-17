@@ -160,11 +160,15 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Restore dependencies
+        run: dotnet restore src/ExpenseSplitter.Api.Infrastructure/ExpenseSplitter.Api.Infrastructure.csproj
+
       # Alternative: dotnet ef migrations bundle
       - name: Create migration script
-        run: |
-          dotnet tool install --global dotnet-ef
-          dotnet ef migrations script --project src/ExpenseSplitter.Api.Infrastructure --startup-project src/ExpenseSplitter.Api.Presentation  --output migration.sql --idempotent
+        run: dotnet ef migrations script --project src/ExpenseSplitter.Api.Infrastructure --startup-project src/ExpenseSplitter.Api.Presentation  --output migration.sql --idempotent
 
       - name: Upload migration script
         uses: actions/upload-artifact@v4
