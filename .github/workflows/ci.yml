@@ -21,7 +21,7 @@ jobs:
         working-directory: api
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v5
@@ -29,7 +29,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restore coverage history
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: api/CoverageHistory
           key: coverage-history-${{ github.ref_name }}-${{ github.sha }}
@@ -42,7 +42,7 @@ jobs:
         run: dotnet test --collect:"XPlat Code Coverage" *.sln
 
       - name: Generate report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.12
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.1
         with:
           reports: 'api/test/*Test*/TestResults/*/coverage.cobertura.xml'
           targetdir: 'api/CoverageReports'
@@ -51,13 +51,13 @@ jobs:
           filefilters: '-*/Migrations/*'
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: CoverageReports
           path: api/CoverageReports
 
       - name: Save coverage history
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: api/CoverageHistory
           key: coverage-history-${{ github.ref_name }}-${{ github.sha }}
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v5
@@ -120,7 +120,7 @@ jobs:
       new_version: ${{ steps.version.outputs.new_version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Bump version and tag
         id: version
@@ -152,7 +152,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v5
@@ -166,7 +166,7 @@ jobs:
           dotnet ef migrations script --project src/ExpenseSplitter.Api.Infrastructure --startup-project src/ExpenseSplitter.Api.Presentation  --output migration.sql --idempotent
 
       - name: Upload migration script
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: migration.sql
           path: api/migration.sql
@@ -179,7 +179,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -209,7 +209,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.33.0
+        uses: aquasecurity/trivy-action@0.33.1
         if: ${{ env.PushImage == 'true' }}
         with:
           image-ref: '${{ steps.image_tag.outputs.image_tag }}:${{ needs.version.outputs.new_version }}'
