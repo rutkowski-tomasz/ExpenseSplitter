@@ -66,50 +66,51 @@ jobs:
       - name: Publish coverage in build summary
         run: cat CoverageReports/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
 
-  scan:
-    name: Scan
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: api
+  # SonarQube disabled, just for demo purpose
+  # scan:
+  #   name: Scan
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: api
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v5
 
-      - name: Setup Dotnet
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
+  #     - name: Setup Dotnet
+  #       uses: actions/setup-dotnet@v5
+  #       with:
+  #         dotnet-version: '10.0.x'
 
-      - name: Install SonarScanner for .NET
-        run: dotnet tool install --global dotnet-sonarscanner
+  #     - name: Install SonarScanner for .NET
+  #       run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Test with coverage
-        run: dotnet test --collect:"XPlat Code Coverage;Format=opencover" *.slnx
+  #     - name: Test with coverage
+  #       run: dotnet test --collect:"XPlat Code Coverage;Format=opencover" *.slnx
 
-      - name: SonarQube Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
-        run: |
-          dotnet sonarscanner begin \
-            /k:"rutkowski-tomasz_ExpenseSplitter.Api" \
-            /o:"rutkowski-tomasz" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.opencover.reportsPaths="test/*Test*/TestResults/*/coverage.opencover.xml" \
-            /d:sonar.coverage.exclusions="**/*Test*/**,**/Migrations/**,**/Program.cs,**/Startup.cs" \
-            /d:sonar.test.inclusions="test/**/*" \
-            /d:sonar.test.exclusions="**/bin/**,**/obj/**"
+  #     - name: SonarQube Scan
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: https://sonarcloud.io
+  #       run: |
+  #         dotnet sonarscanner begin \
+  #           /k:"rutkowski-tomasz_ExpenseSplitter.Api" \
+  #           /o:"rutkowski-tomasz" \
+  #           /d:sonar.host.url="https://sonarcloud.io" \
+  #           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+  #           /d:sonar.cs.opencover.reportsPaths="test/*Test*/TestResults/*/coverage.opencover.xml" \
+  #           /d:sonar.coverage.exclusions="**/*Test*/**,**/Migrations/**,**/Program.cs,**/Startup.cs" \
+  #           /d:sonar.test.inclusions="test/**/*" \
+  #           /d:sonar.test.exclusions="**/bin/**,**/obj/**"
 
-      - name: Build
-        run: dotnet build --no-restore *.slnx
+  #     - name: Build
+  #       run: dotnet build --no-restore *.slnx
 
-      - name: SonarQube End
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+  #     - name: SonarQube End
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   version:
     name: Version
