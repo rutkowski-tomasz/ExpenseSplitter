@@ -2,8 +2,6 @@
     <ItemGroup>
         <PackageReference Include="MediatR" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
-        <PackageReference Include="System.Net.Http" />
-        <PackageReference Include="System.Text.RegularExpressions" />
     </ItemGroup>
 
     <ItemGroup>
