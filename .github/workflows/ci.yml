@@ -42,7 +42,7 @@ jobs:
         run: dotnet test --collect:"XPlat Code Coverage" *.slnx
 
       - name: Generate report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.1
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.3
         with:
           reports: 'api/test/*Test*/TestResults/*/coverage.cobertura.xml'
           targetdir: 'api/CoverageReports'
@@ -51,7 +51,7 @@ jobs:
           filefilters: '-*/Migrations/*'
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: CoverageReports
           path: api/CoverageReports
@@ -170,7 +170,7 @@ jobs:
           dotnet ef migrations script --project src/ExpenseSplitter.Api.Infrastructure --startup-project src/ExpenseSplitter.Api.Presentation  --output migration.sql --idempotent
 
       - name: Upload migration script
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: migration.sql
           path: api/migration.sql
@@ -213,7 +213,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.34.2
         if: ${{ env.PushImage == 'true' }}
         with:
           image-ref: '${{ steps.image_tag.outputs.image_tag }}:${{ needs.version.outputs.new_version }}'
