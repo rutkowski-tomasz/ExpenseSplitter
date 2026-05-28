@@ -98,7 +98,7 @@ dotnet run --project api/src/ExpenseSplitter.Api.Presentation/ExpenseSplitter.Ap
 ## Run App (frontend)
 
 ```sh
-cd app && npm run dev
+cd app && pnpm dev
 ```
 
 ## Start dependencies
