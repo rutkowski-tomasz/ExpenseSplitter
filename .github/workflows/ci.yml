@@ -38,8 +38,11 @@ jobs:
             coverage-history-main-
         continue-on-error: true
 
+      - name: Build
+        run: dotnet build --no-restore --nologo -v minimal *.slnx
+
       - name: Test
-        run: dotnet test --collect:"XPlat Code Coverage" *.slnx
+        run: dotnet test --no-build --no-restore --nologo -v quiet --logger "console;verbosity=minimal" --collect:"XPlat Code Coverage" *.slnx
 
       - name: Generate report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.5.1
