@@ -38,11 +38,14 @@ jobs:
             coverage-history-main-
         continue-on-error: true
 
+      - name: Restore dependencies
+        run: dotnet restore --nologo ExpenseSplitter.Api.slnx
+
       - name: Build
-        run: dotnet build --no-restore --nologo -v minimal *.slnx
+        run: dotnet build --no-restore --nologo -v minimal ExpenseSplitter.Api.slnx
 
       - name: Test
-        run: dotnet test --no-build --no-restore --nologo -v quiet --logger "console;verbosity=minimal" --collect:"XPlat Code Coverage" *.slnx
+        run: dotnet test --no-build --no-restore --nologo -v quiet --logger "console;verbosity=minimal" --collect:"XPlat Code Coverage" ExpenseSplitter.Api.slnx
 
       - name: Generate report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.5.1
@@ -164,7 +167,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore *.slnx
+        run: dotnet restore --nologo ExpenseSplitter.Api.slnx
 
       # Alternative: dotnet ef migrations bundle
       - name: Create migration script
