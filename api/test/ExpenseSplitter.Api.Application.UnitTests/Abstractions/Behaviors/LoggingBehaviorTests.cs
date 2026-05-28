@@ -17,6 +17,8 @@ public class LoggingBehaviorTests
     public LoggingBehaviorTests()
     {
         logger = Substitute.For<ILogger<TestCommand>>();
+        logger.IsEnabled(LogLevel.Information).Returns(true);
+        logger.IsEnabled(LogLevel.Error).Returns(true);
         loggingBehavior = new LoggingBehavior<TestCommand, Result<int>>(logger);
         request = new TestCommand();
     }
@@ -45,7 +47,10 @@ public class LoggingBehaviorTests
             Arg.Any<Exception>(),
             Arg.Any<Func<Arg.AnyType, Exception?, string>>());
 
-        logger.ReceivedCalls().Should().HaveCount(2);
+        logger.ReceivedCalls()
+            .Count(call => call.GetMethodInfo().Name == nameof(ILogger.Log))
+            .Should()
+            .Be(2);
     }
 
     [Fact]
@@ -72,6 +77,9 @@ public class LoggingBehaviorTests
             Arg.Any<Exception>(),
             Arg.Any<Func<Arg.AnyType, Exception?, string>>());
 
-        logger.ReceivedCalls().Should().HaveCount(2);
+        logger.ReceivedCalls()
+            .Count(call => call.GetMethodInfo().Name == nameof(ILogger.Log))
+            .Should()
+            .Be(2);
     }
 }
