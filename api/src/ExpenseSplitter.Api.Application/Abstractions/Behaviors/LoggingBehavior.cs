@@ -13,28 +13,36 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<TRequest> logger) : IP
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var name = request.GetType().Name;
-
-        logger.LogInformation("Processing request {RequestName}", name);
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            var requestName = request.GetType().Name;
+            logger.LogInformation("Processing request {RequestName}", requestName);
+        }
 
         var result = await next(cancellationToken);
 
         if (result.IsFailure)
         {
-            logger.LogError(
-                "Request failure {@RequestName}, {@Error}, {@DateTimeUtc}",
-                typeof(TRequest).Name,
-                result.AppError,
-                DateTime.UtcNow
-            );
+            if (logger.IsEnabled(LogLevel.Error))
+            {
+                logger.LogError(
+                    "Request failure {RequestName}, {Error}, {DateTimeUtc}",
+                    typeof(TRequest).Name,
+                    result.AppError,
+                    DateTime.UtcNow
+                );
+            }
         }
         else
         {
-            logger.LogInformation(
-                "Request success {@RequestName}, {@DateTimeUtc}",
-                typeof(TRequest).Name,
-                DateTime.UtcNow
-            );
+            if (logger.IsEnabled(LogLevel.Information))
+            {
+                logger.LogInformation(
+                    "Request success {RequestName}, {DateTimeUtc}",
+                    typeof(TRequest).Name,
+                    DateTime.UtcNow
+                );
+            }
         }
         
         return result;

@@ -34,17 +34,17 @@ public class Result
 
 public class Result<TValue> : Result
 {
-    private readonly TValue? value;
+    private TValue? InnerValue { get; }
 
     protected internal Result(TValue? value, bool isSuccess, AppError appError)
         : base(isSuccess, appError)
     {
-        this.value = value;
+        InnerValue = value;
     }
 
     [NotNull]
     public TValue Value => IsSuccess
-        ? value!
+        ? InnerValue!
         : throw new InvalidOperationException("The value of a failure result can not be accessed.");
 
     public static implicit operator Result<TValue>(TValue? value) => Create(value);
