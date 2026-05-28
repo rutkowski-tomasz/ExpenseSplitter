@@ -349,7 +349,7 @@ dotnet_diagnostic.IDE0290.severity = none
 # S112: General or reserved exceptions should never be thrown
 dotnet_diagnostic.S112.severity = none
 
-# S2094: Utility classes should not have public constructors
+# S1118: Utility classes should not have public constructors
 dotnet_diagnostic.S1118.severity = none
 
 # S2094: Classes should not be empty
@@ -367,12 +367,22 @@ dotnet_diagnostic.S4136.severity = none
 # S6605: Collection-specific "Exists" method should be used instead of the "Any" extension
 dotnet_diagnostic.S6605.severity = none
 
+# IDE0058: Expression value is never used.
 dotnet_diagnostic.IDE0058.severity = suggestion
+# IDE0055: Fix formatting.
 dotnet_diagnostic.IDE0055.severity = suggestion
+# CA1515: Consider making public types internal when they are not part of the public API.
 dotnet_diagnostic.CA1515.severity = suggestion
+# CS1591: Missing XML comment for publicly visible type or member.
 dotnet_diagnostic.CS1591.severity = none
+
+[test/**/*.cs]
+# CA1873: Avoid expensive log argument evaluation when logging is disabled (disabled for tests only).
+dotnet_diagnostic.CA1873.severity = none
 
 [**/Migrations/**]
 generated_code = true
+# IDE0005: Remove unnecessary using directives.
 dotnet_diagnostic.IDE0005.severity = none
+# S1186: Methods should not be empty.
 dotnet_diagnostic.S1186.severity = none
