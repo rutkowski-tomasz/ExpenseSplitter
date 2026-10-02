@@ -1,24 +1,46 @@
 version: 2
 updates:
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-    open-pull-requests-limit: 10
-    groups:
-      dotnet:
-        patterns:
-          - "*" # Prefer a single PR per solution update.
-  # NuGet packages
   - package-ecosystem: "nuget"
-    directory: "/"
+    directories: ["/"]
     schedule:
-      interval: "weekly"
-      day: "wednesday"
-    open-pull-requests-limit: 25
+      interval: "monthly"
     groups:
-      dotnet:
-        patterns:
-          - "*"
+      minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      major:
+        patterns: ["*"]
+        update-types: ["major"]
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: "npm"
+    directories: ["/app"]
+    schedule:
+      interval: "monthly"
+    groups:
+      minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      major:
+        patterns: ["*"]
+        update-types: ["major"]
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: "github-actions"
+    directories: ["/"]
+    schedule:
+      interval: "monthly"
+    groups:
+      minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      major:
+        patterns: ["*"]
+        update-types: ["major"]
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
