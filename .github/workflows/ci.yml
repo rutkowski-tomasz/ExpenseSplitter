@@ -48,7 +48,7 @@ jobs:
         run: dotnet test --no-build --no-restore --nologo -v quiet --logger "console;verbosity=minimal" --collect:"XPlat Code Coverage" ExpenseSplitter.Api.slnx
 
       - name: Generate report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.11
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.5.12
         with:
           reports: 'api/test/*Test*/TestResults/*/coverage.cobertura.xml'
           targetdir: 'api/CoverageReports'
